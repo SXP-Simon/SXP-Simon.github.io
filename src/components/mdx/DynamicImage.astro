@@ -1,0 +1,88 @@
+﻿---
+interface Props {
+  src: string;
+  darkSrc?: string;
+  alt: string;
+  title?: string;
+  class?: string;
+}
+
+const {
+  src,
+  darkSrc,
+  alt,
+  title,
+  class: className = "",
+} = Astro.props;
+---
+
+<figure class="my-6 not-prose">
+  <div
+    class:list={[
+      "dynamic-image-wrapper relative min-h-[240px] sm:min-h-[320px] w-full overflow-hidden rounded-2xl border border-border bg-muted/20 p-2 shadow-xs transition-all",
+      className,
+    ]}
+  >
+    {/* Skeleton Loader */}
+    <div
+      class="skeleton-loader absolute inset-0 z-10 flex flex-col items-center justify-center gap-2.5 bg-muted/40 backdrop-blur-xs transition-opacity duration-500 select-none dark:bg-[#18181b]/90"
+    >
+      <div
+        class="border-accent/20 border-t-accent size-9 animate-spin rounded-full border-2"
+      >
+      </div>
+      <span class="text-foreground/75 animate-pulse text-xs font-medium"
+        >正在加载动态图表...</span
+      >
+      <div
+        class="shimmer-wave via-foreground/5 pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent to-transparent"
+      >
+      </div>
+    </div>
+
+    {/* Primary / Light Image */}
+    <img
+      src={src}
+      alt={alt}
+      class:list={[
+        "dynamic-img block w-full rounded-xl object-contain opacity-0 transition-opacity duration-500",
+        { "dark:hidden": !!darkSrc },
+      ]}
+      loading="lazy"
+      onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+      onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+    />
+
+    {/* Optional Dark Mode Image */}
+    {
+      darkSrc && (
+        <img
+          src={darkSrc}
+          alt={alt}
+          class="dynamic-img hidden w-full rounded-xl object-contain opacity-0 transition-opacity duration-500 dark:block"
+          loading="lazy"
+          onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+          onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+        />
+      )
+    }
+  </div>
+  {
+    title && (
+      <figcaption class="text-muted-foreground mt-2 text-center text-xs">
+        {title}
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  @keyframes shimmerAnimation {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  .shimmer-wave {
+    animation: shimmerAnimation 1.8s infinite linear;
+  }
+</style>

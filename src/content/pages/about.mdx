@@ -3,6 +3,9 @@ title: "关于"
 description: "关于 Helian，全栈与 Agent 学习者，二次元爱好者"
 ---
 
+import GitHubInsights from "@/components/mdx/GitHubInsights.astro";
+import DynamicImage from "@/components/mdx/DynamicImage.astro";
+
 # 你好，我是 Helian
 
 > 成一事者，矢志不渝之愚者。
@@ -21,35 +24,17 @@ description: "关于 Helian，全栈与 Agent 学习者，二次元爱好者"
 
 ## GitHub 动态与技术洞察 (GitHub Insights)
 
-<div class="my-6 overflow-hidden rounded-2xl border border-border bg-foreground/5 p-2 not-prose">
-  {/* Light Mode */}
-  <img 
-    src="https://yourinsights.vercel.app/api/insight?username=sxp-simon&theme=github_light&graph=true&languages=true&streak=true&stats=true&header=true&summary=true&profile=true&hide_langs=Tex%2CMDX%2CAstro" 
-    alt="Helian's GitHub Insights (Light)" 
-    class="w-full rounded-xl object-contain dark:hidden"
-    loading="lazy"
-  />
-  {/* Dark Mode */}
-  <img 
-    src="https://yourinsights.vercel.app/api/insight?username=sxp-simon&theme=github_dark&graph=true&languages=true&streak=true&stats=true&header=true&summary=true&profile=true&hide_langs=Tex%2CMDX%2CAstro" 
-    alt="Helian's GitHub Insights (Dark)" 
-    class="w-full rounded-xl object-contain hidden dark:block"
-    loading="lazy"
-  />
-</div>
+<GitHubInsights username="sxp-simon" hideLangs="Tex,MDX,Astro" />
 
 ---
 
 ## 二次元与追番状态 (Anime & AniList Metrics)
 
-<div class="my-6 overflow-hidden rounded-2xl border border-border bg-foreground/5 p-2 not-prose">
-  <img 
-    src="https://fastly.jsdelivr.net/gh/SXP-Simon/SXP-Simon/metrics.right.svg" 
-    alt="Helian's AniList & Metrics" 
-    class="w-full rounded-xl object-contain"
-    loading="lazy"
-  />
-</div>
+<DynamicImage 
+  src="https://fastly.jsdelivr.net/gh/SXP-Simon/SXP-Simon/metrics.right.svg" 
+  alt="Helian's AniList & Metrics" 
+  title="基于 GitHub Actions 每日自动同步的 AniList 追番与阅读数据"
+/>
 
 ---
 

@@ -1,0 +1,93 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  username?: string;
+  hideLangs?: string;
+}
+
+const { username = "sxp-simon", hideLangs = "Tex,MDX,Astro" } = Astro.props;
+
+const lightSrc = `https://yourinsights.vercel.app/api/insight?username=${username}&theme=github_light&graph=true&languages=true&streak=true&stats=true&header=true&summary=true&profile=true&hide_langs=${encodeURIComponent(hideLangs)}`;
+const darkSrc = `https://yourinsights.vercel.app/api/insight?username=${username}&theme=github_dark&graph=true&languages=true&streak=true&stats=true&header=true&summary=true&profile=true&hide_langs=${encodeURIComponent(hideLangs)}`;
+const userGitHubUrl = `https://github.com/${username}`;
+---
+
+<figure class="my-6 not-prose">
+  <div
+    class="dynamic-image-wrapper relative min-h-[360px] sm:min-h-[480px] w-full overflow-hidden rounded-2xl border border-border bg-muted/20 p-2 shadow-xs transition-all"
+  >
+    {/* Skeleton Loader with React-style Streaming Shimmer */}
+    <div
+      class="skeleton-loader absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-muted/40 backdrop-blur-xs transition-opacity duration-500 select-none dark:bg-[#18181b]/90"
+    >
+      <div class="relative flex items-center justify-center">
+        <div
+          class="border-accent/20 border-t-accent size-12 animate-spin rounded-full border-2"
+        >
+        </div>
+        <Icon
+          name="tabler:brand-github"
+          class="text-accent absolute inset-0 m-auto size-5 animate-pulse"
+        />
+      </div>
+
+      <div
+        class="text-foreground/80 flex items-center gap-2 text-xs font-medium"
+      >
+        <span class="inline-block size-2 animate-ping rounded-full bg-emerald-500"
+        ></span>
+        <span>正在实时生成 GitHub 洞察图表...</span>
+      </div>
+
+      <p class="text-muted-foreground text-[11px]">
+        初次生成或冷启动约需 1~2 秒，请稍候
+      </p>
+
+      {/* Streaming Shimmer Bar */}
+      <div
+        class="shimmer-wave via-foreground/5 pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent to-transparent"
+      >
+      </div>
+    </div>
+
+    {/* Light Mode Image */}
+    <img
+      src={lightSrc}
+      alt={`${username}'s GitHub Insights`}
+      class="insight-img w-full rounded-xl object-contain opacity-0 transition-opacity duration-500 dark:hidden"
+      loading="eager"
+      onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+      onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+    />
+
+    {/* Dark Mode Image */}
+    <img
+      src={darkSrc}
+      alt={`${username}'s GitHub Insights`}
+      class="insight-img hidden w-full rounded-xl object-contain opacity-0 transition-opacity duration-500 dark:block"
+      loading="eager"
+      onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+      onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+    />
+  </div>
+  <figcaption class="text-muted-foreground mt-2 text-center text-xs">
+    由 <a
+      href={userGitHubUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hover:text-accent underline underline-offset-2">@{username}</a
+    > 实时技术动态聚合驱动
+  </figcaption>
+</figure>
+
+<style>
+  @keyframes shimmerAnimation {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  .shimmer-wave {
+    animation: shimmerAnimation 1.8s infinite linear;
+  }
+</style>
