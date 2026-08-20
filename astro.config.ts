@@ -19,6 +19,7 @@ import {
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { transformerFileName } from "./src/utils/transformers/fileName";
+import { remarkReadingTime } from "./src/utils/remark-reading-time";
 import icon from "astro-icon";
 import config from "./astro-paper.config";
 
@@ -42,6 +43,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [
+        remarkReadingTime,
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
         remarkMath,

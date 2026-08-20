@@ -75,18 +75,14 @@ import { LinkPreview } from "astro-embed";
 
 ```mermaid
 graph TD
-    classDef flow fill:#1e293b,stroke:#475569,stroke-width:1.5px,color:#f8fafc;
-    classDef loop fill:#1e293b,stroke:#0066FF,stroke-width:2px,color:#f8fafc;
-    classDef action fill:#1e293b,stroke:#FF2442,stroke-width:2px,color:#f8fafc;
-
-    subgraph Traditional [传统 Chatbot 范式: Request-Response 确定性指令分发]
-        A["IM 消息输入"]:::flow --> B["中间件过滤 / 正则命令解析"]:::flow --> C["业务 Handler"]:::flow --> D["返回响应消息"]:::flow
+    subgraph Traditional ["传统 Chatbot 范式: Request-Response 确定性指令分发"]
+        A["IM 消息输入"] --> B["中间件过滤 / 正则命令解析"] --> C["业务 Handler"] --> D["返回响应消息"]
     end
 
-    subgraph Modern [现代 Agent Harness 范式: Autonomous Cognitive Loop 目标导向循环]
-        E["目标 / 上下文"]:::flow --> F["Prompt 动态组装"]:::loop
-        F --> G["LLM 推理与决策"]:::loop
-        G --> H["PTC / Tool 沙箱执行"]:::action
+    subgraph Modern ["现代 Agent Harness 范式: Autonomous Cognitive Loop 目标导向循环"]
+        E["目标 / 上下文"] --> F["Prompt 动态组装"]
+        F --> G["LLM 推理与决策"]
+        G --> H["PTC / Tool 沙箱执行"]
         H -->|"Observation 观测结果"| F
     end
 ```
@@ -239,20 +235,17 @@ export class MyDatabaseService extends Service {
 
 ```mermaid
 graph TD
-    classDef highlight fill:#1e293b,stroke:#07C160,stroke-width:2px,color:#f8fafc;
-    classDef warning fill:#1e293b,stroke:#EAB308,stroke-width:2px,color:#f8fafc;
-
-    subgraph AstrBot 核心架构突破
-        A1["@filter.llm_tool 装饰器<br/>Type Hints + Docstring 自动提取 Schema"]:::highlight
-        A2["全链路认知介入钩子<br/>@filter.on_llm_request / on_llm_response"]:::highlight
-        A3["生成器式流式推流<br/>yield event.plain_result(...)"]:::highlight
-        A4["metadata.yaml 驱动 WebUI 动态表单"]:::highlight
+    subgraph S1 ["AstrBot 核心架构突破"]
+        A1["@filter.llm_tool 装饰器<br/>Type Hints + Docstring 自动提取 Schema"]
+        A2["全链路认知介入钩子<br/>@filter.on_llm_request / on_llm_response"]
+        A3["生成器式流式推流<br/>yield event.plain_result(...)"]
+        A4["metadata.yaml 驱动 WebUI 动态表单"]
     end
 
-    subgraph 潜在生命周期暗礁
-        B1["terminate() 约定式清理 (缺乏框架强制追踪)"]:::warning
-        B2["全局扁平 Context (多 Agent / 租户状态踩踏)"]:::warning
-        B3["单步 JSON Tool Calling (高 Token/网络往返)"]:::warning
+    subgraph S2 ["潜在生命周期暗礁"]
+        B1["terminate() 约定式清理 (缺乏框架强制追踪)"]
+        B2["全局扁平 Context (多 Agent / 租户状态踩踏)"]
+        B3["单步 JSON Tool Calling (高 Token/网络往返)"]
     end
 
     A1 --> B1
@@ -378,18 +371,12 @@ AstrBot 的插件与工具早期全部注册在全局平铺的命名空间中。
 
 ```mermaid
 graph TD
-    classDef root fill:#0f172a,stroke:#475569,stroke-width:2px,color:#f8fafc;
-    classDef seam fill:#1e293b,stroke:#0066FF,stroke-width:2px,color:#f8fafc;
-    classDef scope fill:#1e293b,stroke:#07C160,stroke-width:2px,color:#f8fafc;
-    classDef ptc fill:#1e293b,stroke:#FF2442,stroke-width:2px,color:#f8fafc;
-    classDef lifo fill:#1e293b,stroke:#A855F7,stroke-width:2px,color:#f8fafc;
+    DSH["DeepSeek Harness (dsh) 微内核架构"]
 
-    DSH["DeepSeek Harness (dsh) 微内核架构"]:::root
-
-    DSH --> S1["Capability Seam 三角色解耦<br/>(Definition - Provider - Consumer)"]:::seam
-    DSH --> S2["Preset 双层 Scope 链<br/>(Standing Fiber 树 + WeakMap 影子路由)"]:::scope
-    DSH --> S3["PTC (Code Mode) 沙箱执行<br/>(worker_threads + 零信任原型剥离 + 双重硬超时)"]:::ptc
-    DSH --> S4["可逆副作用与 LIFO 事务回滚<br/>(支撑大模型动态自修改而宿主不崩溃)"]:::lifo
+    DSH --> S1["Capability Seam 三角色解耦<br/>(Definition - Provider - Consumer)"]
+    DSH --> S2["Preset 双层 Scope 链<br/>(Standing Fiber 树 + WeakMap 影子路由)"]
+    DSH --> S3["PTC (Code Mode) 沙箱执行<br/>(worker_threads + 零信任原型剥离 + 双重硬超时)"]
+    DSH --> S4["可逆副作用与 LIFO 事务回滚<br/>(支撑大模型动态自修改而宿主不崩溃)"]
 ```
 
 ### 4.1 Cordis 的正名：自进化 Agent 为什么必须依赖代数级可逆性？
@@ -427,22 +414,18 @@ DSH 将所有基础设施抽象为 **Capability Seam**，包含三个严格角�
 
 ```mermaid
 graph LR
-    classDef seam fill:#1e293b,stroke:#0066FF,stroke-width:2px,color:#f8fafc;
-    classDef consumer fill:#1e293b,stroke:#07C160,stroke-width:2px,color:#f8fafc;
-    classDef provider fill:#1e293b,stroke:#FF2442,stroke-width:2px,color:#f8fafc;
-
-    subgraph Consumer [3. 业务工具消费者 (面向契约编程)]
-        TB["dsh-tool-bash<br/>(只调用 ctx.shell.exec)"]:::consumer
-        TG["dsh-tool-git<br/>(只调用 ctx.shell.exec)"]:::consumer
+    subgraph Consumer ["3. 业务工具消费者 (面向契约编程)"]
+        TB["dsh-tool-bash<br/>(只调用 ctx.shell.exec)"]
+        TG["dsh-tool-git<br/>(只调用 ctx.shell.exec)"]
     end
 
-    subgraph Seam [1. Service Definition (能力接缝契约)]
-        SEAM["Context.service('shell')<br/>ShellService 抽象接口"]:::seam
+    subgraph Seam ["1. Service Definition (能力接缝契约)"]
+        SEAM["Context.service('shell')<br/>ShellService 抽象接口"]
     end
 
-    subgraph Providers [2. Provider (环境实现方: 配置热切换)]
-        PL["dsh-bash-local<br/>(node:child_process 本地进程)"]:::provider
-        PS["dsh-bash-sandbox<br/>(Docker / Landlock 内核微沙箱)"]:::provider
+    subgraph Providers ["2. Provider (环境实现方: 配置热切换)"]
+        PL["dsh-bash-local<br/>(node:child_process 本地进程)"]
+        PS["dsh-bash-sandbox<br/>(Docker / Landlock 内核微沙箱)"]
     end
 
     TB --> SEAM
