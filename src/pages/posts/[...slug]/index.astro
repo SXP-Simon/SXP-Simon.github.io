@@ -115,7 +115,7 @@ const ogImage = ogImageUrl
   <main
     id="main-content"
     class:list={[
-      "app-layout xl:max-w-6xl",
+      "app-layout xl:max-w-6xl w-full min-w-0 overflow-x-clip",
       { "mt-8": !config.features.showBackButton },
     ]}
     data-pagefind-body
@@ -163,15 +163,15 @@ const ogImage = ogImageUrl
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
 
-    <div class="relative xl:flex xl:items-start xl:gap-10">
-      <div class="min-w-0 flex-1 w-full">
+    <div class="relative xl:flex xl:items-start xl:gap-10 w-full min-w-0">
+      <div class="min-w-0 flex-1 w-full max-w-full">
         {/* Mobile / Tablet Collapsible TOC */}
         <TableOfContents {headings} variant="inline" />
 
         <article
           id="article"
           class:list={[
-            "mt-6 w-full",
+            "mt-6 w-full min-w-0 max-w-full overflow-x-clip",
             "app-prose max-w-full",
             "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
           ]}

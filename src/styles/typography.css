@@ -60,13 +60,23 @@
     }
 
     table {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      border-collapse: collapse;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+
       th,
       td {
-        @apply border-border border p-2;
+        @apply border-border border px-3.5 py-2.5 text-sm;
       }
 
       th {
-        @apply py-1.5;
+        @apply font-semibold bg-foreground/5 py-2.5;
+        white-space: nowrap;
       }
 
       th[align="center"],
