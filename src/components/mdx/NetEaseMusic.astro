@@ -1,0 +1,17 @@
+---
+interface Props {
+  id: string | number;
+  type?: 2 | 0;
+  auto?: 0 | 1;
+}
+
+const { id, type = 2, auto = 0 } = Astro.props;
+---
+
+<div class="my-4 w-full max-w-md overflow-hidden rounded-lg border border-border shadow-sm">
+  <iframe
+    class="w-full border-0 h-[86px]"
+    loading="lazy"
+    src={`//music.163.com/outchain/player?type=${type}&id=${id}&auto=${auto}&height=66`}
+  ></iframe>
+</div>

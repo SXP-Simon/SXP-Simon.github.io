@@ -1,0 +1,22 @@
+---
+interface Props {
+  bvid?: string;
+  aid?: string;
+  page?: number;
+  autoplay?: boolean;
+}
+
+const { bvid, aid, page = 1, autoplay = false } = Astro.props;
+const src = bvid
+  ? `https://player.bilibili.com/player.html?bvid=${bvid}&page=${page}&autoplay=${autoplay ? 1 : 0}`
+  : `https://player.bilibili.com/player.html?aid=${aid}&page=${page}&autoplay=${autoplay ? 1 : 0}`;
+---
+
+<div class="my-6 aspect-video w-full overflow-hidden rounded-xl border border-border shadow-sm">
+  <iframe
+    src={src}
+    allowfullscreen
+    loading="lazy"
+    class="size-full border-0"
+  ></iframe>
+</div>
