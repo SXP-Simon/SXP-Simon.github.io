@@ -262,25 +262,15 @@ const ogImage = ogImageUrl
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
 
     for (const codeBlock of codeBlocks) {
-      const wrapper = document.createElement("div");
-      wrapper.style.position = "relative";
-
-      const computedStyle = getComputedStyle(codeBlock);
-      const hasFileNameOffset =
-        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
-
-      const topClass = hasFileNameOffset
-        ? "top-(--file-name-offset)"
-        : "-top-3";
+      if (codeBlock.querySelector(".copy-code")) continue;
+      codeBlock.classList.add("relative");
 
       const copyButton = document.createElement("button");
-      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.className =
+        "copy-code absolute top-2.5 right-3 z-10 rounded-md bg-muted/70 hover:bg-muted border border-border/60 px-2 py-0.5 text-xs leading-5 text-foreground/80 hover:text-foreground font-medium transition-colors backdrop-blur-xs cursor-pointer select-none";
       copyButton.innerHTML = copyButtonLabel;
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
-
-      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
-      wrapper.appendChild(codeBlock);
 
       copyButton.addEventListener("click", async () => {
         await copyCode(codeBlock, copyButton);
@@ -297,7 +287,7 @@ const ogImage = ogImageUrl
 
       setTimeout(() => {
         button.innerText = copyButtonLabel;
-      }, 700);
+      }, 1200);
     }
   }
   attachCopyButtons();
