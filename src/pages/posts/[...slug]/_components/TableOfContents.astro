@@ -3,9 +3,10 @@ import type { MarkdownHeading } from "astro";
 
 type Props = {
   headings: MarkdownHeading[];
+  variant?: "sidebar" | "inline";
 };
 
-const { headings } = Astro.props;
+const { headings, variant = "sidebar" } = Astro.props;
 
 // Filter to h2 and h3
 const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
@@ -13,9 +14,9 @@ const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 
 {
   tocHeadings.length > 0 && (
-    <>
-      {/* Mobile Inline Collapsible TOC */}
-      <details class="toc-mobile my-6 rounded-xl border border-border bg-foreground/5 p-4 xl:hidden not-prose">
+    variant === "inline" ? (
+      /* Mobile / Tablet Collapsible TOC */
+      <details class="toc-inline my-6 rounded-xl border border-border bg-foreground/5 p-4 xl:hidden not-prose">
         <summary class="cursor-pointer font-medium text-foreground hover:text-accent flex items-center gap-2 select-none">
           <svg class="size-4 text-accent inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
           <span>目录导航 ({tocHeadings.length})</span>
@@ -35,18 +36,18 @@ const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
           </ul>
         </nav>
       </details>
-
-      {/* Desktop Sticky Sidebar TOC */}
-      <aside class="toc-sidebar hidden xl:block not-prose w-64 shrink-0 text-sm">
-        <div class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto px-4 py-2 border-s border-border">
+    ) : (
+      /* Desktop Sticky Sidebar TOC */
+      <aside class="toc-sidebar hidden xl:block not-prose w-64 shrink-0 sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto text-sm">
+        <div class="border-s border-border/60 ps-4">
           <h2 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
             <svg class="size-4 text-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
             <span>本页目录</span>
           </h2>
           <nav id="toc-nav">
-            <ul class="flex flex-col gap-1 text-[13px] leading-relaxed">
+            <ul class="flex flex-col gap-0.5 text-[13px] leading-relaxed">
               {tocHeadings.map(heading => (
-                <li class={heading.depth === 3 ? "ms-3 text-xs" : ""}>
+                <li class={heading.depth === 3 ? "ms-3 text-xs" : "font-medium"}>
                   <a
                     href={`#${heading.slug}`}
                     data-slug={heading.slug}
@@ -60,7 +61,7 @@ const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
           </nav>
         </div>
       </aside>
-    </>
+    )
   )
 }
 
@@ -71,42 +72,58 @@ const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
 
     const slugs = links.map(link => link.getAttribute("data-slug"));
     const headingElements = slugs
-      .map(slug => document.getElementById(slug))
+      .map(slug => {
+        try {
+          return document.getElementById(slug) || document.getElementById(decodeURIComponent(slug));
+        } catch {
+          return document.getElementById(slug);
+        }
+      })
       .filter(Boolean);
 
     if (headingElements.length === 0) return;
 
-    let activeLink = null;
+    let activeSlug = null;
 
-    function setActive(id) {
-      if (activeLink) {
-        activeLink.classList.remove("text-accent", "font-semibold", "!border-accent");
-        activeLink.classList.add("text-muted-foreground");
+    function updateActiveHeading() {
+      const scrollPosition = window.scrollY + 140;
+      let current = null;
+
+      for (let i = 0; i < headingElements.length; i++) {
+        const heading = headingElements[i];
+        if (heading.offsetTop <= scrollPosition) {
+          current = heading.id;
+        } else {
+          break;
+        }
       }
-      const targetLink = links.find(link => link.getAttribute("data-slug") === id);
-      if (targetLink) {
-        targetLink.classList.remove("text-muted-foreground");
-        targetLink.classList.add("text-accent", "font-semibold", "!border-accent");
-        activeLink = targetLink;
+
+      if (!current && headingElements.length > 0) {
+        current = headingElements[0].id;
+      }
+
+      if (current && current !== activeSlug) {
+        activeSlug = current;
+        links.forEach(link => {
+          const linkSlug = link.getAttribute("data-slug");
+          const isMatch =
+            linkSlug === current ||
+            linkSlug === encodeURIComponent(current) ||
+            (linkSlug && decodeURIComponent(linkSlug) === current);
+
+          if (isMatch) {
+            link.classList.remove("text-muted-foreground", "border-transparent");
+            link.classList.add("text-accent", "font-semibold", "!border-accent");
+          } else {
+            link.classList.remove("text-accent", "font-semibold", "!border-accent");
+            link.classList.add("text-muted-foreground", "border-transparent");
+          }
+        });
       }
     }
 
-    const observer = new IntersectionObserver(
-      entries => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-            break;
-          }
-        }
-      },
-      {
-        rootMargin: "0px 0px -65% 0px",
-        threshold: 0.1,
-      }
-    );
-
-    headingElements.forEach(el => observer.observe(el));
+    window.addEventListener("scroll", updateActiveHeading, { passive: true });
+    updateActiveHeading();
   }
 
   initTocScrollSpy();

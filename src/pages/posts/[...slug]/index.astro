@@ -163,10 +163,10 @@ const ogImage = ogImageUrl
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
 
-    <div class="relative xl:grid xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-10 items-start">
-      <div class="min-w-0 w-full">
-        {/* Table of Contents for Mobile / Inline */}
-        <TableOfContents {headings} />
+    <div class="relative xl:flex xl:items-start xl:gap-10">
+      <div class="min-w-0 flex-1 w-full">
+        {/* Mobile / Tablet Collapsible TOC */}
+        <TableOfContents {headings} variant="inline" />
 
         <article
           id="article"
@@ -197,7 +197,7 @@ const ogImage = ogImageUrl
       </div>
 
       {/* Desktop Sticky Sidebar TOC */}
-      <TableOfContents {headings} />
+      <TableOfContents {headings} variant="sidebar" />
     </div>
   </main>
   <Footer />
