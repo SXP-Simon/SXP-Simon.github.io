@@ -143,4 +143,55 @@
       @apply border-border rounded-sm border px-0.5 py-px;
     }
   }
+
+  /* ===== Mermaid Diagrams Styling & Dark Mode Contrast ===== */
+  .mermaid-diagram {
+    svg {
+      max-width: 100%;
+      height: auto;
+      font-family: inherit;
+    }
+  }
+
+  html[data-theme="dark"] .mermaid-diagram {
+    .node rect,
+    .node polygon,
+    .node circle,
+    .node path {
+      fill: #1e293b !important;
+      stroke: #475569 !important;
+    }
+
+    .node text,
+    .node .label text,
+    .node span,
+    .label text,
+    .edgeLabel,
+    .edgeLabel text,
+    .actor text,
+    .messageText,
+    .labelText {
+      fill: #f8fafc !important;
+      color: #f8fafc !important;
+    }
+
+    .flowchart-link,
+    .messageLine0,
+    .messageLine1 {
+      stroke: #94a3b8 !important;
+    }
+
+    .marker,
+    #crosshead path {
+      fill: #94a3b8 !important;
+      stroke: #94a3b8 !important;
+    }
+
+    .edgeLabel rect,
+    .edgeLabel polygon {
+      fill: #0f172a !important;
+      opacity: 0.95;
+    }
+  }
 }
+
