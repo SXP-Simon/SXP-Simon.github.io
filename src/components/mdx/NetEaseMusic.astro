@@ -31,10 +31,16 @@ const {
   artist: propArtist,
 } = Astro.props;
 
-// 1. Extract raw ID and auto-detect type from URL if passed as URL
-const rawInput = String(url || propId || "");
+// 1. Extract raw ID and auto-detect type from URL if passed as URL or share text
+let rawInput = String(url || propId || "").trim();
 let resolvedId = rawInput;
 let resolvedType: MusicType = propType ?? "song";
+
+// Extract clean URL if embedded in share text like "分享专辑...: http://..."
+const urlMatch = rawInput.match(/https?:\/\/[^\s]+/i);
+if (urlMatch) {
+  rawInput = urlMatch[0];
+}
 
 if (rawInput.includes("163.com") || rawInput.includes("http")) {
   try {
@@ -42,15 +48,27 @@ if (rawInput.includes("163.com") || rawInput.includes("http")) {
     const searchParams = parsedUrl.searchParams;
     if (searchParams.has("id")) {
       resolvedId = searchParams.get("id") || "";
+    } else {
+      // Try extracting id from pathname, e.g. /album/45304/ or /song/123/
+      const pathMatch = parsedUrl.pathname.match(/\/(album|song|playlist|program|dj)\/(\d+)/i);
+      if (pathMatch) {
+        resolvedId = pathMatch[2];
+        const matchedType = pathMatch[1].toLowerCase();
+        if (matchedType === "album") resolvedType = "album";
+        else if (matchedType === "playlist") resolvedType = "playlist";
+        else if (matchedType === "program" || matchedType === "dj") resolvedType = "program";
+        else if (matchedType === "song") resolvedType = "song";
+      }
     }
-    const path = parsedUrl.pathname + parsedUrl.hash;
-    if (path.includes("program") || path.includes("dj")) {
+
+    const fullPath = parsedUrl.pathname + parsedUrl.hash;
+    if (fullPath.includes("program") || fullPath.includes("dj")) {
       resolvedType = "program";
-    } else if (path.includes("playlist")) {
+    } else if (fullPath.includes("playlist")) {
       resolvedType = "playlist";
-    } else if (path.includes("album")) {
+    } else if (fullPath.includes("album")) {
       resolvedType = "album";
-    } else if (path.includes("song")) {
+    } else if (fullPath.includes("song")) {
       resolvedType = "song";
     }
   } catch {
@@ -86,7 +104,7 @@ if (resolvedType === 0 || resolvedType === "playlist") {
   directUrl = `https://music.163.com/#/program?id=${resolvedId}`;
 }
 
-// 3. Auto-fetch Song / Program / Playlist title & artist if not manually specified
+// 3. Auto-fetch Song / Program / Playlist / Album title & artist if not manually specified
 let displayTitle = propTitle;
 let displayArtist = propArtist;
 
@@ -125,17 +143,35 @@ if (!displayTitle) {
         }
       }
     } else if (numType === 0) {
-      // Playlist
+      // Playlist (v6 API with fallback)
       const res = await fetch(
-        `https://music.163.com/api/playlist/detail?id=${resolvedId}`,
+        `https://music.163.com/api/v6/playlist/detail?id=${resolvedId}`,
         { headers: { "User-Agent": "Mozilla/5.0" } }
       );
       if (res.ok) {
         const data = await res.json();
-        if (data.result?.name) {
-          displayTitle = data.result.name;
-          if (!displayArtist && data.result.creator?.nickname) {
-            displayArtist = `创建者: ${data.result.creator.nickname}`;
+        const pl = data.playlist || data.result;
+        if (pl?.name) {
+          displayTitle = pl.name;
+          if (!displayArtist && pl.creator?.nickname) {
+            displayArtist = `歌单创建者: ${pl.creator.nickname}`;
+          }
+        }
+      }
+    } else if (numType === 1) {
+      // Album
+      const res = await fetch(
+        `https://music.163.com/api/album/${resolvedId}`,
+        { headers: { "User-Agent": "Mozilla/5.0" } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.album?.name) {
+          displayTitle = data.album.name;
+          if (!displayArtist && (data.album.artist?.name || data.album.artists?.[0]?.name)) {
+            displayArtist =
+              data.album.artist?.name ||
+              data.album.artists.map((a: { name: string }) => a.name).join(" / ");
           }
         }
       }

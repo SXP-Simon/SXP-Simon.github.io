@@ -186,28 +186,34 @@ import { Icon } from "astro-icon/components";
 ## 6. 音频与音乐播放组件
 
 ### 网易云音乐嵌入（`<NetEaseMusic />`）
-支持官方单曲、专辑、歌单以及**社区/播客声音（电台节目）**嵌入，**构建时自动抓取曲名与作者，无需手动填写**：
+支持官方单曲、专辑、歌单以及**社区/播客声音（电台节目）**嵌入，**构建时全自动抓取曲名、艺术家与封面，无需手动填写**：
 
-#### 示例 1：官方单曲（只需填 ID，自动识别曲名与歌手）
+#### 示例 1：官方单曲（零配置，自动拉取曲名与歌手）
 <NetEaseMusic id="32098307" />
 
-#### 示例 2：社区声音 / 播客（直接贴网易云分享链接，自动解析类型与标题）
+#### 示例 2：社区声音 / 播客（直接贴网易云分享链接）
 <NetEaseMusic url="https://y.music.163.com/m/program?id=2488308450" />
+
+#### 示例 3：精选歌单（大卡片模式，带完整曲目列表与封面）
+<NetEaseMusic url="https://music.163.com/m/playlist?id=2432266321&creatorId=1607315848" />
+
+#### 示例 4：原声专辑（増田俊郎《蟲師》原声大碟）
+<NetEaseMusic url="http://music.163.com/album/45304/?userid=1607315848" />
 
 ```mdx
 import NetEaseMusic from "@/components/mdx/NetEaseMusic.astro";
 
-<!-- 1. 极简零配置：只需传入单曲 ID，组件自动拉取歌名与歌手 -->
+<!-- 1. 单曲：直接传入 ID 或单曲链接 -->
 <NetEaseMusic id="32098307" />
 
-<!-- 2. 直接粘贴网易云分享链接（单曲/播客声音/歌单均可自动解析） -->
+<!-- 2. 社区声音 / 播客：直接粘贴分享链接 -->
 <NetEaseMusic url="https://y.music.163.com/m/program?id=2488308450" />
 
-<!-- 3. 完整歌单卡片（450px 大封面模式） -->
-<NetEaseMusic type="playlist" id="3778678" />
+<!-- 3. 精选歌单：直接粘贴歌单链接（自动呈现 450px 巨幅卡片） -->
+<NetEaseMusic url="https://music.163.com/m/playlist?id=2432266321&creatorId=1607315848" />
 
-<!-- 4. 也支持手动覆盖自定义标题与艺术家 -->
-<NetEaseMusic id="32098307" title="Wings of Courage" artist="川田まみ" />
+<!-- 4. 音乐专辑：直接粘贴专辑链接 -->
+<NetEaseMusic url="http://music.163.com/album/45304/?userid=1607315848" />
 ```
 
 ### 自定义极简音频播放器（`<AudioPlayer />`）
