@@ -13,8 +13,8 @@ description: 专为快速上手打造的博文写作全景参考手册。包含�
 ---
 
 import { Icon } from "astro-icon/components";
-import { YouTube, LinkPreview } from "astro-embed";
-import CodePen from "@/components/mdx/CodePen.astro";
+import { Tweet, YouTube, LinkPreview } from "astro-embed";
+import SocialEmbed from "@/components/mdx/SocialEmbed.astro";
 import Bilibili from "@/components/mdx/Bilibili.astro";
 import NetEaseMusic from "@/components/mdx/NetEaseMusic.astro";
 import AudioPlayer from "@/components/mdx/AudioPlayer.astro";
@@ -35,7 +35,7 @@ import GitHubCard from "@/components/mdx/GitHubCard.astro";
 - [5. 图片优化与灯箱缩放（Medium Zoom）](#5-图片优化与灯箱缩放medium-zoom)
 - [6. 音频与音乐播放组件](#6-音频与音乐播放组件)
 - [7. 视频与多媒体嵌入](#7-视频与多媒体嵌入)
-- [8. 国际社交与在线代码沙盒](#8-国际社交与在线代码沙盒)
+- [8. 社交媒体与帖子引用嵌入（知乎 / 小红书 / Reddit / X）](#8-社交媒体与帖子引用嵌入知乎--小红书--reddit--x)
 - [9. GitHub 开源项目卡片](#9-github-开源项目卡片)
 - [10. LaTeX 数学公式排版（KaTeX）](#10-latex-数学公式排版katex)
 - [11. Mermaid 矢量流程图与时序图](#11-mermaid-矢量流程图与时序图)
@@ -245,17 +245,88 @@ import { YouTube } from "astro-embed";
 
 ---
 
-## 8. 国际社交与在线代码沙盒
+## 8. 社交媒体与帖子引用嵌入（知乎 / 小红书 / Reddit / X）
 
-### CodePen 在线可交互代码编辑器（`<CodePen />`）
-读者可直接在博文内查看前端动效，甚至实时修改 CSS/JS 进行调试：
+支持在博文中优雅地引用国内外主流社交媒体与社区的精彩动态、观点或热帖：
 
-<CodePen id="https://codepen.io/gayane-gasparyan/pen/jOmaBQK" />
+### 知乎精选回答引用
+<SocialEmbed
+  platform="zhihu"
+  author="知乎答主"
+  handle="优秀科技创作者"
+  date="2026年"
+  title="如何评价 Astro 框架与现代化静态站点生成器？"
+  content="Astro 的 Island Architecture（孤岛架构）真正做到了在默认 0 客户端 JS 的前提下，允许在同一页面自由混用 React、Vue 或纯 Svelte 组件，兼顾极致的加载性能与开发灵活性..."
+  url="https://www.zhihu.com"
+  likes="2.4k"
+  comments="386"
+/>
+
+### 小红书笔记引用
+<SocialEmbed
+  platform="xiaohongshu"
+  author="数字游民Helian"
+  handle="@helian"
+  content="记录搭建极简博客的第一天！AstroPaper 主题真的太懂极简审美了，黑白灰配色配上代码高亮和 LaTeX 公式，写技术笔记和日常随笔非常舒服～"
+  url="https://www.xiaohongshu.com"
+  image="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80"
+  likes="1.2k"
+  comments="88"
+/>
+
+### Reddit 社区热帖引用
+<SocialEmbed
+  platform="reddit"
+  author="u/web_developer"
+  handle="r/webdev"
+  title="Why static-first architecture is taking over personal blogs in 2026"
+  content="Moving from heavy SPA frameworks to zero-JS static HTML with Pagefind search gave me 100/100 Lighthouse performance scores across the board."
+  url="https://www.reddit.com"
+  likes="4.5k"
+  comments="521"
+/>
+
+### X (Twitter) 动态嵌入
+<SocialEmbed
+  platform="x"
+  author="Astro"
+  handle="@astrodotbuild"
+  date="Aug 20, 2026"
+  content="Just shipped Astro 7.0! Delivering next-generation content collections, faster build times, and zero-JS markdown rendering."
+  url="https://x.com/astrodotbuild"
+  likes="8.9k"
+  comments="640"
+/>
 
 ```mdx
-import CodePen from "@/components/mdx/CodePen.astro";
+import SocialEmbed from "@/components/mdx/SocialEmbed.astro";
 
-<CodePen id="https://codepen.io/gayane-gasparyan/pen/jOmaBQK" />
+<!-- 引用知乎回答 / 文章 -->
+<SocialEmbed
+  platform="zhihu"
+  author="答主名称"
+  title="问题或文章标题"
+  content="引用的精华摘要内容..."
+  url="https://www.zhihu.com/..."
+  likes="1.2k"
+/>
+
+<!-- 引用小红书笔记（支持带封面配图） -->
+<SocialEmbed
+  platform="xiaohongshu"
+  author="博主昵称"
+  content="笔记核心文字..."
+  image="https://..."
+  url="https://www.xiaohongshu.com/..."
+/>
+
+<!-- 引用 Reddit / 微信公众号 / X / 即刻 -->
+<SocialEmbed
+  platform="reddit"
+  author="u/author"
+  content="..."
+  url="https://reddit.com/..."
+/>
 ```
 
 ---

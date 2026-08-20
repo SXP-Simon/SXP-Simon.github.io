@@ -1,0 +1,173 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  platform:
+    | "zhihu"
+    | "xiaohongshu"
+    | "reddit"
+    | "jike"
+    | "wechat"
+    | "bilibili"
+    | "x";
+  url: string;
+  author: string;
+  handle?: string;
+  avatar?: string;
+  date?: string;
+  title?: string;
+  content: string;
+  image?: string;
+  likes?: number | string;
+  comments?: number | string;
+}
+
+const {
+  platform,
+  url,
+  author,
+  handle,
+  avatar,
+  date,
+  title,
+  content,
+  image,
+  likes,
+  comments,
+} = Astro.props;
+
+const platformConfig = {
+  zhihu: {
+    name: "知乎",
+    icon: "simple-icons:zhihu",
+    color: "text-[#0066FF]",
+    bgHover: "hover:border-[#0066FF]/50",
+  },
+  xiaohongshu: {
+    name: "小红书",
+    icon: "simple-icons:xiaohongshu",
+    color: "text-[#FF2442]",
+    bgHover: "hover:border-[#FF2442]/50",
+  },
+  reddit: {
+    name: "Reddit",
+    icon: "simple-icons:reddit",
+    color: "text-[#FF4500]",
+    bgHover: "hover:border-[#FF4500]/50",
+  },
+  jike: {
+    name: "即刻",
+    icon: "lucide:sparkles",
+    color: "text-[#FFE411]",
+    bgHover: "hover:border-yellow-400/50",
+  },
+  wechat: {
+    name: "微信公众号",
+    icon: "simple-icons:wechat",
+    color: "text-[#07C160]",
+    bgHover: "hover:border-[#07C160]/50",
+  },
+  bilibili: {
+    name: "哔哩哔哩动态",
+    icon: "simple-icons:bilibili",
+    color: "text-[#00A1D6]",
+    bgHover: "hover:border-[#00A1D6]/50",
+  },
+  x: {
+    name: "X (Twitter)",
+    icon: "simple-icons:x",
+    color: "text-foreground",
+    bgHover: "hover:border-accent",
+  },
+}[platform];
+---
+
+<div class="my-6 max-w-xl not-prose">
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener noreferrer"
+    class={`group block rounded-2xl border border-border bg-foreground/5 p-4.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${platformConfig.bgHover}`}
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        {
+          avatar ? (
+            <img
+              src={avatar}
+              alt={author}
+              class="size-10 rounded-full border border-border object-cover"
+            />
+          ) : (
+            <div class="size-10 rounded-full border border-border bg-foreground/10 flex items-center justify-center font-bold text-foreground">
+              {author.charAt(0)}
+            </div>
+          )
+        }
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <span class="font-semibold text-foreground text-sm truncate">{author}</span>
+            {handle && <span class="text-xs text-foreground/50 truncate">{handle}</span>}
+          </div>
+          {date && <p class="text-xs text-foreground/40 mt-0.5">{date}</p>}
+        </div>
+      </div>
+
+      <!-- Platform Badge -->
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border bg-background/50 text-xs font-medium">
+        <Icon name={platformConfig.icon} class={`size-3.5 ${platformConfig.color}`} />
+        <span class="text-foreground/70">{platformConfig.name}</span>
+      </div>
+    </div>
+
+    <!-- Title (if question or article) -->
+    {
+      title && (
+        <h4 class="mt-3 text-base font-semibold text-foreground group-hover:text-accent transition-colors leading-snug">
+          {title}
+        </h4>
+      )
+    }
+
+    <!-- Content Snippet -->
+    <p class={`mt-2.5 text-sm text-foreground/80 leading-relaxed ${image ? "line-clamp-3" : "line-clamp-4"}`}>
+      {content}
+    </p>
+
+    <!-- Optional Thumbnail Image -->
+    {
+      image && (
+        <div class="mt-3 overflow-hidden rounded-xl border border-border max-h-56">
+          <img src={image} alt="post visual" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        </div>
+      )
+    }
+
+    <!-- Footer Stats / CTA -->
+    <div class="mt-3.5 pt-3 border-t border-border/60 flex items-center justify-between text-xs text-foreground/50">
+      <div class="flex items-center gap-4">
+        {
+          likes !== undefined && (
+            <span class="flex items-center gap-1">
+              <Icon name="lucide:heart" class="size-3.5 text-red-500/80" />
+              {likes}
+            </span>
+          )
+        }
+        {
+          comments !== undefined && (
+            <span class="flex items-center gap-1">
+              <Icon name="lucide:message-circle" class="size-3.5" />
+              {comments}
+            </span>
+          )
+        }
+      </div>
+      <span class="flex items-center gap-1 text-accent font-medium group-hover:underline">
+        查看原帖
+        <Icon name="lucide:arrow-up-right" class="size-3.5" />
+      </span>
+    </div>
+  </a>
+</div>

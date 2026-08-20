@@ -17,19 +17,32 @@ const items = await Promise.all(
       (url.startsWith("mailto:") || name === "mail"
         ? `Send an email to ${site.title}`
         : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
-    return { url, title, Icon };
+    return { name, url, title, Icon };
   })
 );
 ---
 
 <div class="flex flex-wrap items-center gap-1">
   {
-    items.map(({ url, title, Icon }) =>
+    items.map(({ name, url, title, Icon }) =>
       Icon ? (
-        <LinkButton href={url} class="p-2 hover:rotate-6 sm:p-1" title={title}>
-          <Icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
-          <span class="sr-only">{title}</span>
-        </LinkButton>
+        name === "wechat" ? (
+          <button
+            type="button"
+            class="group inline-flex items-center p-2 hover:rotate-6 sm:p-1 text-foreground/80 hover:text-accent transition-colors"
+            title={title}
+            data-wechat="night-helianthus"
+            onclick="navigator.clipboard.writeText(this.dataset.wechat); alert('微信号已复制到剪贴板: night-helianthus');"
+          >
+            <Icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
+            <span class="sr-only">{title}</span>
+          </button>
+        ) : (
+          <LinkButton href={url} class="p-2 hover:rotate-6 sm:p-1" title={title}>
+            <Icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
+            <span class="sr-only">{title}</span>
+          </LinkButton>
+        )
       ) : null
     )
   }

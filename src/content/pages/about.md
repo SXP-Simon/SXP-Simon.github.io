@@ -22,6 +22,8 @@ description: "关于 Helian 和这个博客"
 你可以通过以下方式与我取得联系或关注我的动态：
 
 - **GitHub**: [@SXP-Simon](https://github.com/SXP-Simon)
-- **Domain**: [heliannuits.me](https://heliannuits.me)
+- **网易云音乐**: [Helian's Home](https://music.163.com/#/user/home?id=1607315848)
+- **微信 (WeChat)**: `night-helianthus`
+- **独立域名**: [heliannuits.me](https://heliannuits.me)
 
 很高兴与你在这里相遇。
