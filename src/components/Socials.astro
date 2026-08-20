@@ -29,10 +29,10 @@ const items = await Promise.all(
         name === "wechat" ? (
           <button
             type="button"
-            class="group inline-flex items-center p-2 hover:rotate-6 sm:p-1 text-foreground/80 hover:text-accent transition-colors"
+            class="group inline-flex items-center p-2 hover:rotate-6 sm:p-1 text-foreground/80 hover:text-accent transition-colors cursor-pointer"
             title={title}
             data-wechat="night-helianthus"
-            onclick="navigator.clipboard.writeText(this.dataset.wechat); alert('微信号已复制到剪贴板: night-helianthus');"
+            onclick="navigator.clipboard.writeText(this.dataset.wechat).then(() => window.showToast?.('已复制微信号: night-helianthus'));"
           >
             <Icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
             <span class="sr-only">{title}</span>

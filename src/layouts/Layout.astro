@@ -123,5 +123,32 @@ const rssHref = getRelativeLocaleUrl(
     <script>
       import "@/scripts/theme";
     </script>
+    <script is:inline>
+      window.showToast = function (message, iconHtml) {
+        let toast = document.getElementById("global-toast");
+        if (!toast) {
+          toast = document.createElement("div");
+          toast.id = "global-toast";
+          toast.className =
+            "fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex items-center gap-2.5 px-4 py-2.5 rounded-full text-sm font-medium shadow-2xl border backdrop-blur-md transition-all duration-300 transform opacity-0 translate-y-3 scale-95 bg-foreground text-background border-border/20";
+          document.body.appendChild(toast);
+        }
+
+        const defaultIcon = `<svg class="size-4 text-emerald-400 inline-block shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
+        toast.innerHTML = (iconHtml || defaultIcon) + `<span>${message}</span>`;
+
+        requestAnimationFrame(() => {
+          toast.classList.remove("opacity-0", "translate-y-3", "scale-95");
+          toast.classList.add("opacity-100", "translate-y-0", "scale-100");
+        });
+
+        if (window.__toastTimer) clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(() => {
+          toast.classList.remove("opacity-100", "translate-y-0", "scale-100");
+          toast.classList.add("opacity-0", "translate-y-3", "scale-95");
+        }, 2200);
+      };
+    </script>
   </body>
 </html>
