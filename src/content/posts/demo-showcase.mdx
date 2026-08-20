@@ -1,58 +1,143 @@
 ---
 author: Helian
-pubDatetime: 2026-08-20T16:25:00Z
-title: 博客全组件综合展示 Demo Page
+pubDatetime: 2026-08-20T16:30:00Z
+title: Astro 博客全组件与排版功能全景参考手册
 featured: true
 draft: false
 tags:
-  - Demo
+  - 手册
   - 组件
-  - 排版
   - Astro
-description: 欢迎来到博客组件全景展示页！这里汇集了本站支持的所有排版样式、多媒体播放器、数学公式、流程图、代码高亮以及社交嵌入组件。
+  - 排版
+description: 专为快速上手打造的博文写作全景参考手册。包含本站支持的所有排版规范、代码高亮、多媒体播放器、LaTeX 公式、Mermaid 图表、矢量图标及社交嵌入组件的用法与实际效果展示。
 ---
 
 import { Icon } from "astro-icon/components";
-import { Tweet, YouTube } from "astro-embed";
+import { YouTube, LinkPreview } from "astro-embed";
 import CodePen from "@/components/mdx/CodePen.astro";
 import Bilibili from "@/components/mdx/Bilibili.astro";
 import NetEaseMusic from "@/components/mdx/NetEaseMusic.astro";
 import AudioPlayer from "@/components/mdx/AudioPlayer.astro";
 import GitHubCard from "@/components/mdx/GitHubCard.astro";
 
-欢迎访问 **Helian's Blog** 全组件展示页面。
+欢迎查阅 **Helian's Blog** 全组件与语法全景参考手册。
 
-本页面专为集中检验和体验当前博客系统所支持的全部排版能力、交互组件与富媒体生态而设计。
+你可以把本篇文档当做日常博文写作的 **组件字典与模板仓库**。在这里，你可以直观查看所有组件的真实渲染效果，并直接复制对应的代码片段应用到你的新文章中。
 
 ---
 
-## 目录导航
+## 目录索引
 
-- [1. 矢量图标库（Iconify 20万+ 图标）](#1-矢量图标库iconify-20万-图标)
+- [1. 基础排版与文本样式](#1-基础排版与文本样式)
 - [2. 提示卡片（Callouts / Alerts）](#2-提示卡片callouts--alerts)
-- [3. 代码块与语法高亮（Shiki + Copy Button）](#3-代码块与语法高亮shiki--copy-button)
-- [4. 图片与灯箱缩放（Medium Zoom）](#4-图片与灯箱缩放medium-zoom)
-- [5. 国内音视频组件（Bilibili & 网易云）](#5-国内音视频组件bilibili--网易云)
-- [6. 国际社交与沙盒嵌入（CodePen & YouTube & X）](#6-国际社交与沙盒嵌入codepen--youtube--x)
-- [7. GitHub 开源项目动态卡片](#7-github-开源项目动态卡片)
-- [8. LaTeX 学术数学公式（KaTeX）](#8-latex-学术数学公式katex)
-- [9. Mermaid 流程图与时序图](#9-mermaid-流程图与时序图)
-- [10. 任务清单、表格与折叠详情](#10-任务清单表格与折叠详情)
+- [3. 现代代码高亮系统（Shiki）](#3-现代代码高亮系统shiki)
+- [4. 矢量图标库（astro-icon + Iconify）](#4-矢量图标库astro-icon--iconify)
+- [5. 图片优化与灯箱缩放（Medium Zoom）](#5-图片优化与灯箱缩放medium-zoom)
+- [6. 音频与音乐播放组件](#6-音频与音乐播放组件)
+- [7. 视频与多媒体嵌入](#7-视频与多媒体嵌入)
+- [8. 国际社交与在线代码沙盒](#8-国际社交与在线代码沙盒)
+- [9. GitHub 开源项目卡片](#9-github-开源项目卡片)
+- [10. LaTeX 数学公式排版（KaTeX）](#10-latex-数学公式排版katex)
+- [11. Mermaid 矢量流程图与时序图](#11-mermaid-矢量流程图与时序图)
+- [12. 任务清单、表格与折叠详情](#12-任务清单表格与折叠详情)
+- [13. Frontmatter 博文配置参数速查](#13-frontmatter-博文配置参数速查)
 
 ---
 
-## 1. 矢量图标库（Iconify 20万+ 图标）
+## 1. 基础排版与文本样式
 
-无需引入笨重的静态字体包，构建时自动编译为轻量 SVG 矢量图标：
+本站基于 Tailwind Typography 进行了细致的字阶、行距与呼吸感调优：
+
+### 文本修饰与强调
+* **粗体强调**：`**粗体文字**`
+* *斜体强调*：`*斜体文字*`
+* ~~删除线~~：`~~删除线内容~~`
+* `行内代码片段`：`\`const x = 42;\``
+* [超链接展示](https://heliannuits.me)：`[链接文本](URL)`
+
+### 引用块（Blockquote）
+> 读书不是为了雄辩和驳斥，也不是为了轻信和盲从，而是为了思考和权衡。
+> 
+> —— 弗朗西斯·培根
+
+---
+
+## 2. 提示卡片（Callouts / Alerts）
+
+原生支持 GitHub 与 Obsidian 风格的语义化 Callouts 提示块，帮助读者快速抓住核心信息：
+
+> [!NOTE]
+> **提示说明（NOTE）**：用于补充上下文背景、技术原理或通用说明信息。
+
+> [!TIP]
+> **技巧建议（TIP）**：提供最佳实践建议，例如“推荐使用 WebP 格式以获得更快的加载速度”。
+
+> [!IMPORTANT]
+> **重要事项（IMPORTANT）**：需要读者特别注意的关键约束或必要前置条件。
+
+> [!WARNING]
+> **警告提示（WARNING）**：提醒可能存在的兼容性差异、潜在风险或破坏性修改。
+
+> [!CAUTION]
+> **危险告诫（CAUTION）**：涉及数据丢失、私钥泄露等高危操作的明确告诫。
+
+---
+
+## 3. 现代代码高亮系统（Shiki）
+
+采用 VS Code 同款的 **Shiki** 代码高亮引擎，支持文件名显示、行高亮、Diff 对比与一键复制代码：
+
+### 文件名与行聚焦高亮
+通过 `file="filename"` 标注文件名，通过 `{line}` 指定聚焦高亮行：
+
+```typescript file="auth.ts" {2,5}
+import { generateToken } from "@/utils/jwt";
+
+export async function authenticate(userId: string): Promise<string> {
+  const secretKey = process.env.JWT_SECRET;
+  return await generateToken({ id: userId }, secretKey);
+}
+```
+
+### 代码修改对比（Diff）
+在代码块语言后使用 `diff`，用 `+` 和 `-` 表示增删：
+
+```diff file="astro.config.ts"
+- const theme = "classic";
++ const theme = "astro-paper-minimal"; // 升级至极简现代主题
+```
+
+### 多语言高亮支持（Python, Rust, Shell, JSON）
+
+```python file="server.py"
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello from Helian's Server"}
+```
+
+```bash file="deploy.sh"
+# 构建静态站点并更新搜索索引
+pnpm build
+```
+
+---
+
+## 4. 矢量图标库（astro-icon + Iconify）
+
+无需引入字体包，构建时自动编译为内联 SVG，**0 运行时客户端 JS 开销**：
 
 <div class="flex flex-wrap items-center gap-6 my-6 p-5 rounded-2xl border border-border bg-foreground/5 not-prose">
   <div class="flex items-center gap-2">
     <Icon name="lucide:sparkles" class="size-5 text-accent" />
-    <span class="font-medium">Lucide Sparkles</span>
+    <span class="font-medium">Lucide</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="lucide:palette" class="size-5 text-accent" />
-    <span class="font-medium">Theme Palette</span>
+    <Icon name="lucide:layers" class="size-5 text-accent" />
+    <span class="font-medium">Layers</span>
   </div>
   <div class="flex items-center gap-2">
     <Icon name="tabler:brand-github" class="size-5 text-accent" />
@@ -67,19 +152,16 @@ import GitHubCard from "@/components/mdx/GitHubCard.astro";
     <span class="font-medium">知乎</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="lucide:music" class="size-5 text-accent" />
-    <span class="font-medium">Music</span>
-  </div>
-  <div class="flex items-center gap-2">
     <Icon name="lucide:terminal" class="size-5 text-accent" />
     <span class="font-medium">Terminal</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="lucide:bookmark" class="size-5 text-accent" />
-    <span class="font-medium">Bookmark</span>
+    <Icon name="lucide:book-open" class="size-5 text-accent" />
+    <span class="font-medium">Docs</span>
   </div>
 </div>
 
+#### 使用方法：
 ```mdx
 import { Icon } from "astro-icon/components";
 
@@ -90,73 +172,33 @@ import { Icon } from "astro-icon/components";
 
 ---
 
-## 2. 提示卡片（Callouts / Alerts）
+## 5. 图片优化与灯箱缩放（Medium Zoom）
 
-原生支持 GitHub 风格的语义化 Callouts 提示块：
-
-> [!NOTE]
-> **提示说明（NOTE）**：用于提供背景信息、补充说明或上下文上下文。
-
-> [!TIP]
-> **最佳实践建议（TIP）**：推荐将常用组件放在 `src/components/mdx/` 目录下方便快速复用。
-
-> [!IMPORTANT]
-> **重要提醒（IMPORTANT）**：生产打包时会自动生成离线 Pagefind 全文检索索引。
-
-> [!WARNING]
-> **警告提示（WARNING）**：如果修改了 `astro-paper.config.ts` 中的站点域名，请同步确认 `CNAME` 文件。
-
-> [!CAUTION]
-> **高危警示（CAUTION）**：敏感 Token 与密钥切勿直接提交到公开仓库中。
-
----
-
-## 3. 代码块与语法高亮（Shiki + Copy Button）
-
-支持 VS Code 同款的 Shiki 语法高亮引擎，自带一键复制代码按钮、行高亮与 Diff 对比：
-
-```typescript file="greet.ts" {3}
-// 这是一个 TypeScript 示例
-export function welcomeUser(name: string): string {
-  const greeting = `Hello, ${name}! Welcome to Helian's Blog.`; // [!code highlight]
-  console.log(greeting);
-  return greeting;
-}
-
-welcomeUser("Helian");
-```
-
-### 代码修改 Diff 演示
-
-```diff
-- const framework = "Hexo";
-+ const framework = "Astro + AstroPaper"; // 更快、更轻量、0 客户端 JS
-```
-
----
-
-## 4. 图片与灯箱缩放（Medium Zoom）
-
-点击下方图片即可全屏预览，支持平滑弹出放大、背景变暗聚焦、滚轮/捏合缩放以及按 `ESC` 键关闭：
+博文内的所有图片均支持 **点击全屏聚焦预览**：
+* 带有背景毛玻璃与暗色遮罩
+* 支持滚轮缩放、双击缩放、移动端双指捏合
+* 按 `ESC` 键或点击遮罩随时平滑退出
 
 ![极简自然风光摄影](https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80)
 
 ---
 
-## 5. 国内音视频组件（Bilibili & 网易云）
+## 6. 音频与音乐播放组件
 
-### 哔哩哔哩（Bilibili）高清响应式视频嵌入
-自适应 16:9 比例，手机和桌面端均完美适配：
-
-<Bilibili bvid="BV1xx411c7mD" />
-
-### 网易云音乐卡片播放器
-嵌入单曲或歌单，支持在博文中直接播放音乐：
+### 网易云音乐嵌入（`<NetEaseMusic />`）
+支持单曲与歌单卡片嵌入，无需离开博文即可在线试听：
 
 <NetEaseMusic id="186016" />
 
-### 自定义外链音频播放器
-适用于播客、背景音效或自建音频：
+```mdx
+import NetEaseMusic from "@/components/mdx/NetEaseMusic.astro";
+
+<!-- 传入网易云歌曲 ID（支持单曲与歌单） -->
+<NetEaseMusic id="186016" />
+```
+
+### 自定义极简音频播放器（`<AudioPlayer />`）
+适用于播客录音、背景白噪音或自建音效文件：
 
 <AudioPlayer
   src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
@@ -164,25 +206,63 @@ welcomeUser("Helian");
   artist="Helian's Selection"
 />
 
+```mdx
+import AudioPlayer from "@/components/mdx/AudioPlayer.astro";
+
+<AudioPlayer
+  src="https://example.com/audio.mp3"
+  title="音频标题"
+  artist="作者/演播者"
+/>
+```
+
 ---
 
-## 6. 国际社交与沙盒嵌入（CodePen & YouTube & X）
+## 7. 视频与多媒体嵌入
 
-### CodePen 在线可运行前端代码
-读者可以直接在页面中看动效，甚至在线修改 HTML / CSS / JS 实时调试：
+### 哔哩哔哩（Bilibili）高清响应式视频（`<Bilibili />`）
+自适应 16:9 比例，自动适配移动端与暗黑主题：
 
-<CodePen id="https://codepen.io/argyleink/pen/eYpRgpy" />
+<Bilibili bvid="BV1xx411c7mD" />
 
-### YouTube 极速懒加载视频
-采用 Facade 延迟加载技术，未点击播放前仅加载静态预览图，节省 1MB+ 网络流量：
+```mdx
+import Bilibili from "@/components/mdx/Bilibili.astro";
+
+<!-- 传入 B站视频 BV 号即可 -->
+<Bilibili bvid="BV1xx411c7mD" />
+```
+
+### YouTube 极速懒加载视频（`astro-embed`）
+采用 Facade 延迟加载技术，未点击前仅加载轻量海报，节省 1MB+ 流量：
 
 <YouTube id="dQw4w9WgXcQ" />
 
+```mdx
+import { YouTube } from "astro-embed";
+
+<YouTube id="dQw4w9WgXcQ" />
+```
+
 ---
 
-## 7. GitHub 开源项目动态卡片
+## 8. 国际社交与在线代码沙盒
 
-在博文中介绍你的项目或推荐开源库：
+### CodePen 在线可交互代码编辑器（`<CodePen />`）
+读者可直接在博文内查看前端动效，甚至实时修改 CSS/JS 进行调试：
+
+<CodePen id="https://codepen.io/argyleink/pen/eYpRgpy" />
+
+```mdx
+import CodePen from "@/components/mdx/CodePen.astro";
+
+<CodePen id="https://codepen.io/argyleink/pen/eYpRgpy" />
+```
+
+---
+
+## 9. GitHub 开源项目卡片
+
+在博文中推荐开源项目或展示自己的代码仓库，自动渲染徽章与项目信息：
 
 <GitHubCard
   repo="SXP-Simon/SXP-Simon.github.io"
@@ -190,13 +270,31 @@ welcomeUser("Helian");
   language="TypeScript"
 />
 
+```mdx
+import GitHubCard from "@/components/mdx/GitHubCard.astro";
+
+<GitHubCard
+  repo="SXP-Simon/SXP-Simon.github.io"
+  description="项目简要说明..."
+  language="TypeScript"
+/>
+```
+
 ---
 
-## 8. LaTeX 学术数学公式（KaTeX）
+## 10. LaTeX 数学公式排版（KaTeX）
 
-支持行内公式如质能方程 $E = mc^2$，以及复杂的块级多行公式与矩阵渲染：
+集成 `remark-math` 与 `rehype-katex`，支持严谨的学术与科学计算公式排版：
 
-### 高斯正态分布密度函数
+### 行内公式
+行内引用如质能方程 $E = mc^2$，以及欧拉恒等式 $e^{i\pi} + 1 = 0$。
+
+### 复杂多行公式与微积分
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+
+### 正态分布概率密度函数
 $$
 f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}
 $$
@@ -213,9 +311,11 @@ $$
 
 ---
 
-## 9. Mermaid 流程图与时序图
+## 11. Mermaid 矢量流程图与时序图
 
-在 Markdown 代码块中使用 `mermaid` 标记，即可自动渲染为清晰的矢量图表，且自适应深色/浅色模式：
+在 Markdown 代码块中使用 `mermaid` 语言，即可自动将文本转为矢量图表，且自适应深浅色模式：
+
+### 业务时序图（Sequence Diagram）
 
 ```mermaid
 sequenceDiagram
@@ -233,30 +333,44 @@ sequenceDiagram
     博客-->>读者: 丝滑的交互反馈
 ```
 
+### 系统流程图（Flowchart）
+
+```mermaid
+graph TD
+    A[构思博文主题] --> B{选择写作格式}
+    B -->|纯文字/笔记| C[Markdown (.md)]
+    B -->|富媒体/组件交互| D[MDX (.mdx)]
+    C --> E[本地运行 pnpm dev 实时预览]
+    D --> E
+    E --> F[Git Push 触发 GitHub Actions]
+    F --> G[自动发布至 heliannuits.me 🚀]
+```
+
 ---
 
-## 10. 任务清单、表格与折叠详情
+## 12. 任务清单、表格与折叠详情
 
 ### 任务待办清单（Task List）
-- [x] 克隆 GitHub 博客仓库
+- [x] 克隆 GitHub 博客仓库并配置 Git
 - [x] 搭建 Astro + AstroPaper 极简博客核心框架
-- [x] 配置作者名称为 **Helian** 并绑定 `heliannuits.me`
+- [x] 配置作者名称为 **Helian** 并绑定自定义域名 `heliannuits.me`
 - [x] 配置 GitHub Actions 自动构建部署流（`.github/workflows/deploy.yml`）
-- [x] 集成 `astro-icon` 与 20万+ 图标库
+- [x] 集成 `astro-icon` 与 20万+ 矢量图标库
 - [x] 集成图片灯箱缩放、LaTeX 数学公式与 Mermaid 流程图
-- [x] 编写组件全景展示 Demo Page
+- [x] 编写组件全景参考手册 Demo Page
 
-### 表格排版（Markdown Table）
+### 响应式表格（Table）
 
-| 组件分类 | 支持生态 | 渲染方式 | 客户端性能开销 |
+| 组件分类 | 支持生态 / 方案 | 渲染机制 | 客户端性能开销 |
 | :--- | :--- | :--- | :--- |
-| **图标库** | Lucide / Tabler / Simple Icons | 构建时内联 SVG | **0 KB JS** |
-| **公式** | KaTeX / LaTeX | 服务端预渲染 HTML | **0 KB JS** |
+| **矢量图标** | Lucide / Tabler / Simple Icons | 构建时内联 SVG | **0 KB JS** |
+| **数学公式** | KaTeX / LaTeX | 服务端预编译 HTML | **0 KB JS** |
 | **流程图** | Mermaid.js | 客户端按需异步加载 | 极轻量 |
 | **视频/音频** | Bilibili / YouTube / 网易云 | 响应式自适应 iframe / HTML5 | 懒加载 |
 | **代码高亮** | Shiki (VS Code 同款) | 服务端静态生成高亮标记 | **0 KB JS** |
+| **全文检索** | Pagefind WASM | 静态离线生成轻量索引 | 毫秒级秒开 |
 
-### 折叠详情卡片（Details）
+### 折叠详情卡片（Details / Accordion）
 
 <details>
 <summary>点击展开查看博文 Frontmatter 编写模版</summary>
@@ -274,11 +388,30 @@ tags:
 description: 一句话概述本文核心要点
 ---
 
-从这里开始撰写正文...
+从这里开始撰写正文内容...
 ```
 
 </details>
 
 ---
 
-欢迎在导航栏右上角切换 **浅色 / 深色主题** 或使用 **搜索功能** 体验本站的完整功能。
+## 13. Frontmatter 博文配置参数速查
+
+在每篇 `.md` 或 `.mdx` 文章顶部，可通过 Frontmatter 定义以下字段：
+
+| 字段名称 | 类型 | 必填 | 默认值 | 详细说明 |
+| :--- | :--- | :---: | :--- | :--- |
+| `title` | `string` | **是** | - | 文章主标题（显示在文章顶部与列表卡片中） |
+| `author` | `string` | 否 | `Helian` | 文章作者（未填时默认使用全局配置） |
+| `pubDatetime` | `Date` | **是** | - | 发布时间（格式推荐 `2026-08-20T16:00:00Z`） |
+| `modDatetime` | `Date` | 否 | `null` | 最近修改时间（若填写会额外显示“更新于”） |
+| `description` | `string` | **是** | - | 文章摘要（用于 SEO 描述、列表简介与社交卡片） |
+| `tags` | `string[]` | 否 | `["others"]` | 文章标签列表（自动生成标签聚合页与筛选） |
+| `featured` | `boolean` | 否 | `false` | 是否置顶在首页的“精选文章”区域 |
+| `draft` | `boolean` | 否 | `false` | 是否为草稿（设为 `true` 时生产构建自动隐藏） |
+| `ogImage` | `string` | 否 | 动态生成 | 自定义社交分享封面图（若未提供会自动生成） |
+| `hideEditPost` | `boolean` | 否 | `false` | 是否隐藏文章底部的“在 GitHub 编辑此页”链接 |
+
+---
+
+欢迎随时复制本手册中的代码片段开始撰写你的新文章！
