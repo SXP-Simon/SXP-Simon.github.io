@@ -14,68 +14,197 @@ type MusicType =
   | "radio";
 
 interface Props {
-  id: string | number;
+  id?: string | number;
+  url?: string;
   type?: MusicType;
   auto?: 0 | 1;
   title?: string;
   artist?: string;
 }
 
-const { id, type = 2, auto = 0, title, artist } = Astro.props;
+const {
+  id: propId,
+  url,
+  type: propType,
+  auto = 0,
+  title: propTitle,
+  artist: propArtist,
+} = Astro.props;
 
+// 1. Extract raw ID and auto-detect type from URL if passed as URL
+const rawInput = String(url || propId || "");
+let resolvedId = rawInput;
+let resolvedType: MusicType = propType ?? "song";
+
+if (rawInput.includes("163.com") || rawInput.includes("http")) {
+  try {
+    const parsedUrl = new URL(rawInput);
+    const searchParams = parsedUrl.searchParams;
+    if (searchParams.has("id")) {
+      resolvedId = searchParams.get("id") || "";
+    }
+    const path = parsedUrl.pathname + parsedUrl.hash;
+    if (path.includes("program") || path.includes("dj")) {
+      resolvedType = "program";
+    } else if (path.includes("playlist")) {
+      resolvedType = "playlist";
+    } else if (path.includes("album")) {
+      resolvedType = "album";
+    } else if (path.includes("song")) {
+      resolvedType = "song";
+    }
+  } catch {
+    // If not a valid URL, treat as raw ID
+  }
+}
+
+// 2. Resolve numeric type & fallback label
 let numType = 2;
 let typeLabel = "网易云单曲";
 let isTall = false;
-let directUrl = `https://music.163.com/#/song?id=${id}`;
+let directUrl = `https://music.163.com/#/song?id=${resolvedId}`;
 
-if (type === 0 || type === "playlist") {
+if (resolvedType === 0 || resolvedType === "playlist") {
   numType = 0;
   typeLabel = "网易云歌单";
   isTall = true;
-  directUrl = `https://music.163.com/#/playlist?id=${id}`;
-} else if (type === 1 || type === "album") {
+  directUrl = `https://music.163.com/#/playlist?id=${resolvedId}`;
+} else if (resolvedType === 1 || resolvedType === "album") {
   numType = 1;
   typeLabel = "网易云专辑";
   isTall = true;
-  directUrl = `https://music.163.com/#/album?id=${id}`;
-} else if (type === 3 || type === "program" || type === "dj" || type === "radio") {
+  directUrl = `https://music.163.com/#/album?id=${resolvedId}`;
+} else if (
+  resolvedType === 3 ||
+  resolvedType === "program" ||
+  resolvedType === "dj" ||
+  resolvedType === "radio"
+) {
   numType = 3;
   typeLabel = "网易云电台 / 声音";
   isTall = false;
-  directUrl = `https://music.163.com/#/program?id=${id}`;
+  directUrl = `https://music.163.com/#/program?id=${resolvedId}`;
 }
 
+// 3. Auto-fetch Song / Program / Playlist title & artist if not manually specified
+let displayTitle = propTitle;
+let displayArtist = propArtist;
+
+if (!displayTitle) {
+  try {
+    if (numType === 2) {
+      // Single song
+      const res = await fetch(
+        `https://music.163.com/api/song/detail/?id=${resolvedId}&ids=[${resolvedId}]`,
+        { headers: { "User-Agent": "Mozilla/5.0" } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.songs?.[0]) {
+          displayTitle = data.songs[0].name;
+          if (!displayArtist && data.songs[0].artists?.[0]) {
+            displayArtist = data.songs[0].artists
+              .map((a: { name: string }) => a.name)
+              .join(" / ");
+          }
+        }
+      }
+    } else if (numType === 3) {
+      // DJ Program
+      const res = await fetch(
+        `https://music.163.com/api/dj/program/detail?id=${resolvedId}`,
+        { headers: { "User-Agent": "Mozilla/5.0" } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.program) {
+          displayTitle = data.program.name;
+          if (!displayArtist && data.program.dj) {
+            displayArtist = data.program.dj.nickname;
+          }
+        }
+      }
+    } else if (numType === 0) {
+      // Playlist
+      const res = await fetch(
+        `https://music.163.com/api/playlist/detail?id=${resolvedId}`,
+        { headers: { "User-Agent": "Mozilla/5.0" } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.result?.name) {
+          displayTitle = data.result.name;
+          if (!displayArtist && data.result.creator?.nickname) {
+            displayArtist = `创建者: ${data.result.creator.nickname}`;
+          }
+        }
+      }
+    }
+  } catch {
+    // Fail silently on network errors
+  }
+}
+
+const finalTitle = displayTitle || typeLabel;
 const iframeHeight = isTall ? 450 : 86;
 const playerHeight = isTall ? 430 : 66;
 ---
 
 <figure class="my-6 not-prose max-w-xl">
-  <div class="overflow-hidden rounded-2xl border border-border bg-white dark:bg-[#18181b] shadow-sm transition-all hover:shadow-md">
+  <div
+    class="overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-all hover:shadow-md dark:bg-[#18181b]"
+  >
     <iframe
-      class="w-full border-0 block"
+      class="block w-full border-0"
       style={{ height: `${iframeHeight}px` }}
       loading="lazy"
       allow="autoplay; encrypted-media; fullscreen"
-      src={`https://music.163.com/outchain/player?type=${numType}&id=${id}&auto=${auto}&height=${playerHeight}`}
+      src={`https://music.163.com/outchain/player?type=${numType}&id=${resolvedId}&auto=${auto}&height=${playerHeight}`}
     ></iframe>
   </div>
-  <figcaption class="mt-2 flex items-center justify-between px-1 text-xs text-muted-foreground">
+  <figcaption
+    class="text-muted-foreground mt-2 flex items-center justify-between px-1 text-xs"
+  >
     <div class="flex items-center gap-1.5 truncate">
-      <IconNetEase class="size-4 shrink-0 text-[#E60026] inline-block" />
-      <span class="truncate font-medium text-foreground/80">
-        {title || typeLabel}
-        {artist && <span class="text-muted-foreground font-normal"> - {artist}</span>}
+      <IconNetEase class="inline-block size-4 shrink-0 text-[#E60026]" />
+      <span class="text-foreground/80 truncate font-medium">
+        {finalTitle}
+        {
+          displayArtist && (
+            <span class="text-muted-foreground font-normal">
+              {" "}
+              - {displayArtist}
+            </span>
+          )
+        }
       </span>
     </div>
     <a
       href={directUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex shrink-0 items-center gap-1 hover:text-accent transition-colors ml-2"
+      class="hover:text-accent ml-2 inline-flex shrink-0 items-center gap-1 transition-colors"
       title="在网易云音乐打开"
     >
       <span>在网易云打开</span>
-      <svg class="size-3 inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      <svg
+        class="inline-block size-3"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+        ></path><polyline points="15 3 21 3 21 9"></polyline><line
+          x1="10"
+          y1="14"
+          x2="21"
+          y2="3"></line></svg
+      >
     </a>
   </figcaption>
 </figure>
