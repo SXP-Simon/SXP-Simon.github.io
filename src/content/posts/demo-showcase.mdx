@@ -262,21 +262,23 @@ import CodePen from "@/components/mdx/CodePen.astro";
 
 ## 9. GitHub 开源项目卡片
 
-在博文中推荐开源项目或展示自己的代码仓库，自动渲染徽章与项目信息：
+在博文中推荐开源项目或展示自己的代码仓库，**支持自动调用 GitHub API 实时拉取 Star 数、Fork 数与仓库描述**：
 
-<GitHubCard
-  repo="SXP-Simon/SXP-Simon.github.io"
-  description="Helian 的极简个人博客，基于 Astro + AstroPaper 打造，支持全量富媒体组件与 GitHub Pages 自动部署。"
-  language="TypeScript"
-/>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-6">
+  <GitHubCard repo="SXP-Simon/SXP-Simon.github.io" description="Helian 的极简个人博客，基于 Astro + AstroPaper 打造，支持全量富媒体组件与 GitHub Pages 自动部署。" />
+  <GitHubCard repo="withastro/astro" />
+</div>
 
 ```mdx
 import GitHubCard from "@/components/mdx/GitHubCard.astro";
 
+<!-- 仅填仓库名即可自动拉取 Star、Fork、语言与描述 -->
+<GitHubCard repo="withastro/astro" />
+
+<!-- 也可以自定义描述与主要语言覆盖 -->
 <GitHubCard
   repo="SXP-Simon/SXP-Simon.github.io"
-  description="项目简要说明..."
-  language="TypeScript"
+  description="Helian 的极简个人博客..."
 />
 ```
 

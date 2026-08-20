@@ -2,51 +2,96 @@
 import { Icon } from "astro-icon/components";
 
 interface Props {
-  repo: string; // e.g. "SXP-Simon/SXP-Simon.github.io"
+  repo: string; // e.g. "SXP-Simon/SXP-Simon.github.io" or "withastro/astro"
   description?: string;
   language?: string;
   stars?: number | string;
+  forks?: number | string;
 }
 
-const { repo, description, language = "TypeScript", stars } = Astro.props;
+const {
+  repo,
+  description: customDesc,
+  language: customLang,
+  stars: customStars,
+  forks: customForks,
+} = Astro.props;
 const repoUrl = `https://github.com/${repo}`;
 const [owner, name] = repo.split("/");
+
+let repoData: {
+  description?: string;
+  language?: string;
+  stargazers_count?: number;
+  forks_count?: number;
+} = {};
+
+try {
+  const res = await fetch(`https://api.github.com/repos/${repo}`, {
+    headers: {
+      "User-Agent": "Astro-Blog-GitHubCard",
+      Accept: "application/vnd.github.v3+json",
+    },
+  });
+  if (res.ok) {
+    repoData = await res.json();
+  }
+} catch (e) {
+  // Silent fallback
+}
+
+const desc = customDesc || repoData.description || "GitHub 开源项目代码仓库";
+const lang = customLang || repoData.language || "TypeScript";
+const stars = customStars ?? repoData.stargazers_count ?? 0;
+const forks = customForks ?? repoData.forks_count ?? 0;
 ---
 
 <a
   href={repoUrl}
   target="_blank"
   rel="noopener noreferrer"
-  class="group not-prose my-6 flex flex-col justify-between rounded-xl border border-border bg-foreground/5 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent hover:shadow-md"
+  class="group not-prose my-6 block rounded-xl border border-border bg-foreground/5 p-4.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent hover:shadow-md"
 >
   <div class="flex items-start justify-between gap-4">
-    <div class="flex items-center gap-2">
-      <Icon name="tabler:brand-github" class="size-5 text-foreground/80 group-hover:text-accent" />
-      <span class="font-semibold text-foreground group-hover:text-accent text-base">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <Icon
+        name="tabler:brand-github"
+        class="size-5 text-foreground/80 group-hover:text-accent flex-shrink-0"
+      />
+      <span
+        class="font-semibold text-foreground group-hover:text-accent text-base truncate"
+      >
         {owner} / <span class="text-accent">{name || owner}</span>
       </span>
     </div>
-    <Icon name="lucide:external-link" class="size-4 text-foreground/40 group-hover:text-accent" />
+    <Icon
+      name="lucide:external-link"
+      class="size-4 text-foreground/40 group-hover:text-accent flex-shrink-0"
+    />
   </div>
 
-  {description && <p class="mt-2 text-sm text-foreground/75 leading-relaxed">{description}</p>}
+  <p class="mt-2.5 text-sm text-foreground/75 leading-relaxed line-clamp-2">
+    {desc}
+  </p>
 
-  <div class="mt-4 flex items-center gap-4 text-xs text-foreground/60">
-    {language && (
-      <span class="flex items-center gap-1.5">
-        <span class="size-2.5 rounded-full bg-accent inline-block"></span>
-        {language}
-      </span>
-    )}
-    {stars !== undefined && (
-      <span class="flex items-center gap-1">
-        <Icon name="lucide:star" class="size-3.5 text-yellow-500" />
-        {stars}
-      </span>
-    )}
-    <span class="flex items-center gap-1">
-      <Icon name="lucide:git-fork" class="size-3.5" />
-      GitHub Repo
+  <div
+    class="mt-4 flex flex-wrap items-center gap-4 text-xs text-foreground/70"
+  >
+    {
+      lang && (
+        <span class="flex items-center gap-1.5 font-medium">
+          <span class="size-2.5 rounded-full bg-accent inline-block" />
+          {lang}
+        </span>
+      )
+    }
+    <span class="flex items-center gap-1 font-medium">
+      <Icon name="lucide:star" class="size-3.5 text-yellow-500" />
+      {stars}
+    </span>
+    <span class="flex items-center gap-1 font-medium">
+      <Icon name="lucide:git-fork" class="size-3.5 text-foreground/60" />
+      {forks}
     </span>
   </div>
 </a>
