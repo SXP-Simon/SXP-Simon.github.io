@@ -1,17 +1,40 @@
 ---
 interface Props {
   id: string | number;
-  type?: 2 | 0;
+  type?: 2 | 0; // 2: song, 0: playlist
   auto?: 0 | 1;
+  title?: string;
 }
 
-const { id, type = 2, auto = 0 } = Astro.props;
+const { id, type = 2, auto = 0, title } = Astro.props;
+const iframeHeight = type === 0 ? 450 : 86;
+const playerHeight = type === 0 ? 430 : 66;
+const directUrl =
+  type === 0
+    ? `https://music.163.com/#/playlist?id=${id}`
+    : `https://music.163.com/#/song?id=${id}`;
 ---
 
-<div class="my-5 w-full max-w-lg overflow-hidden rounded-xl border border-border bg-white dark:bg-[#222] shadow-sm not-prose">
-  <iframe
-    class="w-full border-0 h-[86px] block"
-    loading="lazy"
-    src={`https://music.163.com/outchain/player?type=${type}&id=${id}&auto=${auto}&height=66`}
-  ></iframe>
+<div class="my-5 w-full max-w-lg not-prose">
+  <div class="overflow-hidden rounded-xl border border-border bg-white dark:bg-[#18181b] shadow-sm">
+    <iframe
+      class="w-full border-0 block"
+      style={{ height: `${iframeHeight}px` }}
+      loading="lazy"
+      allow="autoplay; encrypted-media; fullscreen"
+      src={`https://music.163.com/outchain/player?type=${type}&id=${id}&auto=${auto}&height=${playerHeight}`}
+    ></iframe>
+  </div>
+  <div class="mt-1.5 flex items-center justify-between px-1 text-[11px] text-muted-foreground">
+    <span>{title || (type === 0 ? "网易云歌单" : "网易云单曲")}</span>
+    <a
+      href={directUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hover:text-accent flex items-center gap-1 transition-colors"
+    >
+      <span>在网易云音乐打开</span>
+      <svg class="size-3 inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+    </a>
+  </div>
 </div>
