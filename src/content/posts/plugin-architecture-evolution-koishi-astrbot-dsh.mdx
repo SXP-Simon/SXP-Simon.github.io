@@ -198,7 +198,7 @@ export class MyDatabaseService extends Service {
 
 ## 3. 泥泞中的实用主义狂欢：AstrBot 的突破与架构暗礁
 
-[AstrBot](https://github.com/AstrBotDevs/AstrBot) 的崛起，是典型的**“实用主义与极简 DX 对学院派架构的降维打击”**。
+[AstrBot](https://github.com/AstrBotDevs/AstrBot) 的崛起，是典型的 **“实用主义与极简 DX 对学院派架构的降维打击”**。
 
 ```mermaid
 graph TD
@@ -547,7 +547,7 @@ export function runSandboxedPTC(code: string, timeoutMs = 30000) {
 
 ### 公理二：不要让开发者为“架构优雅”买单 —— 极简声明，编译器兜底
 Koishi 输在门槛，AstrBot 赢在体验。
-未来的框架必须学习 AstrBot 的表面设计——提供最符合直觉的装饰器与自动自省机制，但将严苛的 Effect 追踪与服务依赖下沉至底层编译器与运行时中静默完成。**“把极简留给开发者，把严谨留给编译器”。**
+未来的框架必须学习 AstrBot 的表面设计——提供最符合直觉的装饰器与自动自省机制，但将严苛的 Effect 追踪与服务依赖下沉至底层编译器与运行时中静默完成：**“把极简留给开发者，把严谨留给编译器”**。
 
 ### 公理三：环境与业务工具必须做 Seam 级彻底解耦
 工具代码不应直接与具体的操作系统 API 或沙箱容器绑定。必须将环境能力抽象为 Seam（接口 - 提供者 - 消费者），实现单机开发与云端多租户沙箱的无感漫游。
