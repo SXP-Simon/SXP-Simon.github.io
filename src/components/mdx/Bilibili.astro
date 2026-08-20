@@ -1,4 +1,6 @@
 ---
+import IconBilibili from "@/assets/icons/socials/bilibili.svg";
+
 interface Props {
   bvid?: string;
   aid?: string;
@@ -11,6 +13,10 @@ const { bvid, aid, page = 1, autoplay = false, title } = Astro.props;
 const src = bvid
   ? `https://player.bilibili.com/player.html?bvid=${bvid}&page=${page}&autoplay=${autoplay ? 1 : 0}&high_quality=1&as_wide=1`
   : `https://player.bilibili.com/player.html?aid=${aid}&page=${page}&autoplay=${autoplay ? 1 : 0}&high_quality=1&as_wide=1`;
+
+const directUrl = bvid
+  ? `https://www.bilibili.com/video/${bvid}?p=${page}`
+  : `https://www.bilibili.com/video/av${aid}?p=${page}`;
 ---
 
 <figure class="my-6 not-prose">
@@ -25,8 +31,17 @@ const src = bvid
   </div>
   {
     title && (
-      <figcaption class="mt-2 text-center text-xs text-muted-foreground">
-        📺 {title}
+      <figcaption class="mt-2.5 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+        <a
+          href={directUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 hover:text-accent transition-colors"
+          title="在哔哩哔哩打开原视频"
+        >
+          <IconBilibili class="size-4 shrink-0 text-[#00AEEC] inline-block" />
+          <span>{title}</span>
+        </a>
       </figcaption>
     )
   }
