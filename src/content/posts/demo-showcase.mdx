@@ -191,29 +191,29 @@ import { Icon } from "astro-icon/components";
 #### 示例 1：官方单曲（零配置，自动拉取曲名与歌手）
 <NetEaseMusic id="32098307" />
 
-#### 示例 2：社区声音 / 播客（直接贴网易云分享链接）
-<NetEaseMusic url="https://y.music.163.com/m/program?id=2488308450" />
+#### 示例 2：社区声音 / 播客（只需填声音 ID 或分享链接）
+<NetEaseMusic type="program" id="2488308450" />
 
 #### 示例 3：精选歌单（大卡片模式，带完整曲目列表与封面）
-<NetEaseMusic url="https://music.163.com/m/playlist?id=2432266321&creatorId=1607315848" />
+<NetEaseMusic type="playlist" id="2432266321" />
 
 #### 示例 4：原声专辑合集（増田俊郎《蟲師》原声大碟）
-<NetEaseMusic url="https://music.163.com/m/playlist?id=821552897" />
+<NetEaseMusic type="playlist" id="821552897" />
 
 ```mdx
 import NetEaseMusic from "@/components/mdx/NetEaseMusic.astro";
 
-<!-- 1. 单曲：直接传入 ID 或单曲链接 -->
+<!-- 1. 单曲：直接传入 ID（自动识别单曲） -->
 <NetEaseMusic id="32098307" />
 
-<!-- 2. 社区声音 / 播客：直接粘贴分享链接 -->
-<NetEaseMusic url="https://y.music.163.com/m/program?id=2488308450" />
+<!-- 2. 社区声音 / 播客：传入 type="program" 与声音 ID -->
+<NetEaseMusic type="program" id="2488308450" />
 
-<!-- 3. 精选歌单：直接粘贴歌单链接（自动呈现 450px 巨幅卡片） -->
-<NetEaseMusic url="https://music.163.com/m/playlist?id=2432266321&creatorId=1607315848" />
+<!-- 3. 精选歌单：传入 type="playlist" 与歌单 ID（450px 大卡片模式） -->
+<NetEaseMusic type="playlist" id="2432266321" />
 
-<!-- 4. 动画原声大碟 / 专辑集：直接粘贴对应原声歌单链接 -->
-<NetEaseMusic url="https://music.163.com/m/playlist?id=821552897" />
+<!-- 4. 动画原声大碟 / 专辑集：直接传入对应原声歌单 ID -->
+<NetEaseMusic type="playlist" id="821552897" />
 ```
 
 ### 自定义极简音频播放器（`<AudioPlayer />`）
