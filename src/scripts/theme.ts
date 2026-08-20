@@ -35,6 +35,7 @@ function reflect(): void {
 }
 
 function setup(): void {
+  themeValue = localStorage.getItem(THEME_KEY) ?? getPreferredTheme();
   reflect();
   document.querySelector("#theme-btn")?.addEventListener("click", () => {
     themeValue = themeValue === LIGHT ? DARK : LIGHT;
@@ -47,14 +48,22 @@ setup();
 // Re-run after View Transitions navigation.
 document.addEventListener("astro:after-swap", setup);
 
-// Carry the theme-color value across View Transitions to prevent the
-// Android navigation bar from flashing during page transitions.
+// Carry theme state & theme-color across View Transitions to prevent ANY flashing
 document.addEventListener("astro:before-swap", event => {
+  const currentTheme =
+    localStorage.getItem(THEME_KEY) ||
+    document.documentElement.getAttribute("data-theme") ||
+    (document.documentElement.classList.contains("dark") ? DARK : LIGHT);
+
+  const newDoc = (event as { newDocument: Document }).newDocument;
+  newDoc.documentElement.setAttribute("data-theme", currentTheme);
+  newDoc.documentElement.classList.toggle("dark", currentTheme === DARK);
+
   const color = document
     .querySelector("meta[name='theme-color']")
     ?.getAttribute("content");
   if (color) {
-    (event as { newDocument: Document }).newDocument
+    newDoc
       .querySelector("meta[name='theme-color']")
       ?.setAttribute("content", color);
   }
