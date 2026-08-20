@@ -247,53 +247,73 @@ import { YouTube } from "astro-embed";
 
 ## 8. 社交媒体与帖子引用嵌入（知乎 / 小红书 / Reddit / X）
 
-支持在博文中优雅地引用国内外主流社交媒体与社区的精彩动态、观点或热帖：
+本站支持两种社交媒体引用方式：
+1. **自动同步与嵌入（`astro-embed`）**：原生支持 X (Twitter)、YouTube、LinkPreview 等，输入链接即可**自动同步原帖内容与最新数据**；
+2. **多平台卡片引用（`<SocialEmbed />`）**：专为国内外的知乎、小红书、Reddit、即刻等设计的高颜值摘要卡片。
 
-### 知乎精选回答引用
+---
+
+### 1. 网页与博客文章动态自动同步（原生 `<LinkPreview />`）
+自动抓取目标网站的 `og:title`、`og:description` 与高清封面配图：
+
+<LinkPreview id="https://astro.build/blog/astro-4/" />
+
+```mdx
+import { LinkPreview } from "astro-embed";
+
+<!-- 仅填文章链接即可自动同步网页标题、摘要与封面图 -->
+<LinkPreview id="https://astro.build/blog/astro-4/" />
+```
+
+---
+
+### 3. 国内外社区精选卡片（`<SocialEmbed />`）
+
+#### 知乎精选问答
 <SocialEmbed
   platform="zhihu"
-  author="知乎答主"
-  handle="优秀科技创作者"
-  date="2026年"
-  title="如何评价 Astro 框架与现代化静态站点生成器？"
-  content="Astro 的 Island Architecture（孤岛架构）真正做到了在默认 0 客户端 JS 的前提下，允许在同一页面自由混用 React、Vue 或纯 Svelte 组件，兼顾极致的加载性能与开发灵活性..."
+  author="知乎前端话题"
+  handle="话题精选"
+  date="精选讨论"
+  title="如何评价前端框架 Astro？"
+  content="Astro 是一款专注于内容驱动型网站（如博客、文档、营销站点）的现代 Web 框架。它主打极速加载与孤岛架构（Islands Architecture），在服务端默认生成 0kb 客户端 JS，极大提升了首屏渲染与 SEO 表现..."
   url="https://www.zhihu.com/question/470986701"
-  likes="2.4k"
-  comments="386"
+  likes="1.8k"
+  comments="260"
 />
 
-### 小红书笔记引用
+#### 小红书生活与技术随笔
 <SocialEmbed
   platform="xiaohongshu"
   author="数字游民Helian"
   handle="@helian"
-  content="记录搭建极简博客的第一天！AstroPaper 主题真的太懂极简审美了，黑白灰配色配上代码高亮和 LaTeX 公式，写技术笔记和日常随笔非常舒服～"
-  url="https://www.xiaohongshu.com/explore/65e9b1d9000000000401b2f4"
+  content="搭建极简个人博客的日常记录！基于 AstroPaper 的黑白灰排版，集成了 LaTeX 数学公式、Mermaid 图表以及代码高亮，专注文字创作体验～"
   image="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80"
-  likes="1.2k"
-  comments="88"
+  url="https://www.xiaohongshu.com/explore"
+  likes="920"
+  comments="64"
 />
 
-### Reddit 社区热帖引用
+#### Reddit 技术社区讨论
 <SocialEmbed
   platform="reddit"
-  author="u/web_developer"
-  handle="r/webdev"
-  title="Why static-first architecture is taking over personal blogs in 2026"
-  content="Moving from heavy SPA frameworks to zero-JS static HTML with Pagefind search gave me 100/100 Lighthouse performance scores across the board."
-  url="https://www.reddit.com/r/webdev/comments/18j4w0t/why_astro_is_my_favorite_framework/"
-  likes="4.5k"
-  comments="521"
+  author="r/astrojs"
+  handle="Reddit Astro Community"
+  title="r/astrojs: The Official Astro Web Framework Community"
+  content="Discussions, showcases, integrations, and community support for developers building fast content-driven websites with Astro."
+  url="https://www.reddit.com/r/astrojs/"
+  likes="3.2k"
+  comments="418"
 />
 
-### X (Twitter) 动态嵌入
+#### X (Twitter) 社区动态
 <SocialEmbed
   platform="x"
   author="Astro"
   handle="@astrodotbuild"
-  date="Aug 20, 2026"
-  content="Just shipped Astro 7.0! Delivering next-generation content collections, faster build times, and zero-JS markdown rendering."
-  url="https://x.com/astrodotbuild/status/1731737877689946445"
+  date="官方动态"
+  content="Content-driven Web framework. Faster performance with zero JavaScript runtime overhead."
+  url="https://x.com/astrodotbuild"
   likes="8.9k"
   comments="640"
 />
@@ -301,31 +321,12 @@ import { YouTube } from "astro-embed";
 ```mdx
 import SocialEmbed from "@/components/mdx/SocialEmbed.astro";
 
-<!-- 引用知乎回答 / 文章 -->
 <SocialEmbed
   platform="zhihu"
-  author="答主名称"
-  title="问题或文章标题"
-  content="引用的精华摘要内容..."
-  url="https://www.zhihu.com/..."
-  likes="1.2k"
-/>
-
-<!-- 引用小红书笔记（支持带封面配图） -->
-<SocialEmbed
-  platform="xiaohongshu"
-  author="博主昵称"
-  content="笔记核心文字..."
-  image="https://..."
-  url="https://www.xiaohongshu.com/..."
-/>
-
-<!-- 引用 Reddit / 微信公众号 / X / 即刻 -->
-<SocialEmbed
-  platform="reddit"
-  author="u/author"
-  content="..."
-  url="https://reddit.com/..."
+  author="知乎前端话题"
+  title="如何评价前端框架 Astro？"
+  content="Astro 是一款专注于内容驱动型网站的现代 Web 框架..."
+  url="https://www.zhihu.com/question/470986701"
 />
 ```
 
