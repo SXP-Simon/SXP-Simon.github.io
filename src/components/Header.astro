@@ -7,6 +7,7 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
+import IconGithub from "@/assets/icons/socials/github.svg";
 import LinkButton from "./LinkButton.astro";
 import { stripBase, stripLocale } from "@/utils/withBase";
 import { useTranslations } from "@/i18n";
@@ -38,6 +39,8 @@ const isActive = (path: string) => {
   const pathArray = path.split("/").filter(p => p.trim());
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
+
+const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
 ---
 
 <a
@@ -55,65 +58,57 @@ const isActive = (path: string) => {
   ]}
 >
   <div
-    class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"
+    class="border-border bg-background relative flex w-full items-center justify-between border-b py-4 sm:py-6"
   >
+    {/* Site Title */}
     <a
       href={getRelativeLocaleUrl(locale, "")}
-      class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+      class="py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:text-2xl sm:leading-none hover:text-accent transition-colors"
     >
       {site.title}
     </a>
+
+    {/* Navigation & Controls Wrapper */}
     <nav
       id="nav-menu"
-      class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
+      class="flex items-center gap-1 sm:gap-4"
     >
-      <button
-        id="menu-btn"
-        class="focus-outline self-end p-2 sm:hidden"
-        aria-label={t.a11y.openMenu}
-        aria-expanded="false"
-        aria-controls="menu-items"
-        data-label-open={t.a11y.openMenu}
-        data-label-close={t.a11y.closeMenu}
-      >
-        <IconX id="close-icon" class="hidden" />
-        <IconMenuDeep id="menu-icon" />
-      </button>
+      {/* Desktop Navigation Links / Mobile Collapsible Drawer */}
       <ul
         id="menu-items"
-        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&>li]:h-8 [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-2 sm:[&>li>a]:py-1"
+        class="[&>li>a]:hover:text-accent hidden items-center gap-1 sm:flex sm:gap-x-5 [&>li]:h-8 [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-1 [&>li>a]:text-center [&>li>a]:font-medium max-sm:absolute max-sm:top-full max-sm:inset-x-0 max-sm:z-40 max-sm:flex-col max-sm:border-b max-sm:border-border max-sm:bg-background/95 max-sm:backdrop-blur-md max-sm:py-4 max-sm:shadow-xl"
       >
-        <li class="col-span-2">
+        <li class="w-full sm:w-auto">
           <a
             href={getRelativeLocaleUrl(locale, "posts")}
-            class:list={{ "active-nav": isActive("/posts") }}
+            class:list={["max-sm:py-2.5", { "active-nav": isActive("/posts") }]}
           >
             {t.nav.posts}
           </a>
         </li>
-        <li class="col-span-2">
+        <li class="w-full sm:w-auto">
           <a
             href={getRelativeLocaleUrl(locale, "tags")}
-            class:list={{ "active-nav": isActive("/tags") }}
+            class:list={["max-sm:py-2.5", { "active-nav": isActive("/tags") }]}
           >
             {t.nav.tags}
           </a>
         </li>
-        <li class="col-span-2">
+        <li class="w-full sm:w-auto">
           <a
             href={getRelativeLocaleUrl(locale, "about")}
-            class:list={{ "active-nav": isActive("/about") }}
+            class:list={["max-sm:py-2.5", { "active-nav": isActive("/about") }]}
           >
             {t.nav.about}
           </a>
         </li>
         {
           features.showArchives && (
-            <li class="col-span-2">
+            <li class="w-full sm:w-auto">
               <LinkButton
                 href={getRelativeLocaleUrl(locale, "archives")}
                 class:list={[
-                  "focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0",
+                  "focus-outline flex size-full justify-center p-2 max-sm:py-2.5 sm:relative sm:size-8 sm:p-0",
                   { "active-nav": isActive("/archives") },
                 ]}
                 title={t.nav.archives}
@@ -131,44 +126,66 @@ const isActive = (path: string) => {
             </li>
           )
         }
+      </ul>
+
+      {/* Action Controls Group: Always Visible in Header on Mobile & Desktop */}
+      <div class="flex items-center gap-1 sm:gap-2">
+        {/* Search Button */}
         {
           features.search !== false && (
-            <li class="col-span-1 flex items-center justify-center">
-              <LinkButton
-                href={getRelativeLocaleUrl(locale, "search")}
-                class:list={["focus-outline relative size-8"]}
-                title={t.nav.search}
-                aria-label={t.nav.search}
-              >
-                <IconSearch class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2" />
-                <span class="sr-only">{t.nav.search}</span>
-                {isActive("/search") && (
-                  <IconUnderline
-                    aria-hidden="true"
-                    class="absolute bottom-0 w-6 scale-125 max-sm:inset-s-2"
-                  />
-                )}
-              </LinkButton>
-            </li>
+            <LinkButton
+              href={getRelativeLocaleUrl(locale, "search")}
+              class:list={["focus-outline relative flex size-8 items-center justify-center p-1 hover:text-accent transition-colors"]}
+              title={t.nav.search}
+              aria-label={t.nav.search}
+            >
+              <IconSearch class="size-5" />
+              <span class="sr-only">{t.nav.search}</span>
+            </LinkButton>
           )
         }
+
+        {/* Theme Toggle Button */}
         {
           features.lightAndDarkMode && (
-            <li class="col-span-1 flex items-center justify-center">
-              <button
-                id="theme-btn"
-                class="focus-outline hover:[&>svg]:stroke-accent relative size-12 p-4 sm:size-8"
-                title={t.a11y.toggleTheme}
-                aria-label="auto"
-                aria-live="polite"
-              >
-                <IconMoon class="absolute top-[50%] left-[50%] translate-[-50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <IconSunHigh class="absolute top-[50%] left-[50%] translate-[-50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-              </button>
-            </li>
+            <button
+              id="theme-btn"
+              class="focus-outline hover:[&>svg]:stroke-accent relative flex size-8 items-center justify-center p-1 transition-colors"
+              title={t.a11y.toggleTheme}
+              aria-label="auto"
+              aria-live="polite"
+            >
+              <IconMoon class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90 size-5" />
+              <IconSunHigh class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 size-5" />
+            </button>
           )
         }
-      </ul>
+
+        {/* GitHub Repository Link Button */}
+        <LinkButton
+          href={repoUrl}
+          class="focus-outline relative flex size-8 items-center justify-center p-1 hover:text-accent transition-colors"
+          title="GitHub 博客仓库"
+          aria-label="GitHub 博客仓库"
+        >
+          <IconGithub class="size-5" />
+          <span class="sr-only">GitHub 博客仓库</span>
+        </LinkButton>
+
+        {/* Mobile Hamburger Menu Toggle Button */}
+        <button
+          id="menu-btn"
+          class="focus-outline flex size-8 items-center justify-center p-1 text-foreground hover:text-accent sm:hidden transition-colors"
+          aria-label={t.a11y.openMenu}
+          aria-expanded="false"
+          aria-controls="menu-items"
+          data-label-open={t.a11y.openMenu}
+          data-label-close={t.a11y.closeMenu}
+        >
+          <IconX id="close-icon" class="hidden size-5" />
+          <IconMenuDeep id="menu-icon" class="size-5" />
+        </button>
+      </div>
     </nav>
   </div>
 </header>
@@ -185,17 +202,17 @@ const isActive = (path: string) => {
     const openLabel = menuBtn.dataset.labelOpen ?? "Open menu";
     const closeLabel = menuBtn.dataset.labelClose ?? "Close menu";
 
-    menuBtn.addEventListener("click", () => {
+    menuBtn.onclick = () => {
       const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
 
       menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
       menuBtn.setAttribute("aria-label", openMenu ? openLabel : closeLabel);
 
       menuItems.classList.toggle("hidden");
-      menuItems.classList.toggle("grid");
+      menuItems.classList.toggle("flex");
       menuIcon.classList.toggle("hidden");
       closeIcon.classList.toggle("hidden");
-    });
+    };
   }
 
   function handleSkipToContent() {
