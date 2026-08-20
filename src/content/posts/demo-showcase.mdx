@@ -250,12 +250,12 @@ import { YouTube } from "astro-embed";
 ### CodePen 在线可交互代码编辑器（`<CodePen />`）
 读者可直接在博文内查看前端动效，甚至实时修改 CSS/JS 进行调试：
 
-<CodePen id="https://codepen.io/hexagoncircle/pen/eYxOKmz" />
+<CodePen id="https://codepen.io/gayane-gasparyan/pen/jOmaBQK" />
 
 ```mdx
 import CodePen from "@/components/mdx/CodePen.astro";
 
-<CodePen id="https://codepen.io/hexagoncircle/pen/eYxOKmz" />
+<CodePen id="https://codepen.io/gayane-gasparyan/pen/jOmaBQK" />
 ```
 
 ---
@@ -337,13 +337,13 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    A[构思博文主题] --> B{选择写作格式}
-    B -->|纯文字/笔记| C[Markdown (.md)]
-    B -->|富媒体/组件交互| D[MDX (.mdx)]
-    C --> E[本地运行 pnpm dev 实时预览]
+    A["构思博文主题"] --> B{"选择写作格式"}
+    B -->|纯文字/笔记| C["Markdown (.md)"]
+    B -->|富媒体/组件交互| D["MDX (.mdx)"]
+    C --> E["本地运行 pnpm dev 实时预览"]
     D --> E
-    E --> F[Git Push 触发 GitHub Actions]
-    F --> G[自动发布至 heliannuits.me 🚀]
+    E --> F["Git Push 触发 GitHub Actions"]
+    F --> G["自动发布至 heliannuits.me"]
 ```
 
 ---

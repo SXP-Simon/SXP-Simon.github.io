@@ -8,10 +8,10 @@ interface Props {
 const { id, type = 2, auto = 0 } = Astro.props;
 ---
 
-<div class="my-4 w-full max-w-md overflow-hidden rounded-lg border border-border shadow-sm">
+<div class="my-5 w-full max-w-lg overflow-hidden rounded-xl border border-border bg-white dark:bg-[#222] shadow-sm not-prose">
   <iframe
-    class="w-full border-0 h-[86px]"
+    class="w-full border-0 h-[86px] block"
     loading="lazy"
-    src={`//music.163.com/outchain/player?type=${type}&id=${id}&auto=${auto}&height=66`}
+    src={`https://music.163.com/outchain/player?type=${type}&id=${id}&auto=${auto}&height=66`}
   ></iframe>
 </div>
