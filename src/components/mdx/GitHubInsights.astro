@@ -15,38 +15,99 @@ const userGitHubUrl = `https://github.com/${username}`;
 
 <figure class="my-6 not-prose">
   <div
-    class="dynamic-image-wrapper relative min-h-[360px] sm:min-h-[480px] w-full overflow-hidden rounded-2xl border border-border bg-muted/20 p-2 shadow-xs transition-all"
+    class="dynamic-image-wrapper relative min-h-[380px] sm:min-h-[500px] w-full overflow-hidden rounded-2xl border border-border bg-muted/10 p-3 sm:p-4 shadow-xs transition-all"
   >
-    {/* Skeleton Loader with React-style Streaming Shimmer */}
+    {/* High-Fidelity Mock Dashboard Skeleton Loader */}
     <div
-      class="skeleton-loader absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-muted/40 backdrop-blur-xs transition-opacity duration-500 select-none dark:bg-[#18181b]/90"
+      class="skeleton-loader absolute inset-0 z-10 flex flex-col justify-between p-4 sm:p-6 bg-muted/30 backdrop-blur-xs transition-opacity duration-500 select-none dark:bg-[#12141a]/95"
     >
-      <div class="relative flex items-center justify-center">
-        <div
-          class="border-accent/20 border-t-accent size-12 animate-spin rounded-full border-2"
-        >
+      {/* 1. Mock Top Header */}
+      <div class="flex items-center justify-between border-b border-border/40 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="size-11 rounded-full bg-foreground/10 animate-pulse"></div>
+          <div class="space-y-1.5">
+            <div class="h-4 w-28 sm:w-36 rounded-md bg-foreground/15 animate-pulse"></div>
+            <div class="h-2.5 w-20 sm:w-24 rounded bg-foreground/10 animate-pulse"></div>
+          </div>
         </div>
-        <Icon
-          name="tabler:brand-github"
-          class="text-accent absolute inset-0 m-auto size-5 animate-pulse"
-        />
+        <div class="hidden sm:flex items-end gap-1 h-8 w-32 bg-foreground/5 rounded-lg p-1.5 border border-border/30">
+          <div class="h-3 w-full bg-foreground/10 rounded"></div>
+        </div>
       </div>
 
-      <div
-        class="text-foreground/80 flex items-center gap-2 text-xs font-medium"
-      >
-        <span class="inline-block size-2 animate-ping rounded-full bg-emerald-500"
-        ></span>
-        <span>正在实时生成 GitHub 洞察图表...</span>
+      {/* 2. Mock Middle Grid (Stats + Languages) */}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 my-2">
+        {/* Left: Stats Card Skeleton */}
+        <div class="rounded-xl border border-border/50 bg-foreground/5 p-3.5 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="h-3 w-24 rounded bg-foreground/15 animate-pulse"></div>
+            <div class="size-8 rounded-full border-2 border-dashed border-accent/30 bg-foreground/5"></div>
+          </div>
+          <div class="space-y-2 pt-1">
+            <div class="h-2 w-full rounded bg-foreground/10 animate-pulse"></div>
+            <div class="h-2 w-4/5 rounded bg-foreground/10 animate-pulse"></div>
+            <div class="h-2 w-3/4 rounded bg-foreground/10 animate-pulse"></div>
+          </div>
+        </div>
+
+        {/* Right: Languages Card Skeleton */}
+        <div class="rounded-xl border border-border/50 bg-foreground/5 p-3.5 space-y-2.5">
+          <div class="h-3 w-28 rounded bg-foreground/15 animate-pulse"></div>
+          <div class="h-3 w-full rounded-full bg-foreground/15 flex overflow-hidden gap-0.5 p-0.5">
+            <div class="h-full w-2/5 bg-accent/40 rounded-l"></div>
+            <div class="h-full w-1/4 bg-blue-500/30"></div>
+            <div class="h-full w-1/5 bg-amber-500/30"></div>
+            <div class="h-full w-1/6 bg-emerald-500/30 rounded-r"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <div class="h-2 w-16 rounded bg-foreground/10 animate-pulse"></div>
+            <div class="h-2 w-14 rounded bg-foreground/10 animate-pulse"></div>
+            <div class="h-2 w-16 rounded bg-foreground/10 animate-pulse"></div>
+            <div class="h-2 w-12 rounded bg-foreground/10 animate-pulse"></div>
+          </div>
+        </div>
       </div>
 
-      <p class="text-muted-foreground text-[11px]">
-        初次生成或冷启动约需 1~2 秒，请稍候
-      </p>
+      {/* 3. Mock Bottom Metric Cards */}
+      <div class="grid grid-cols-3 gap-2 sm:gap-3">
+        <div class="rounded-xl border border-border/40 bg-foreground/5 p-2.5 flex flex-col items-center gap-1.5">
+          <div class="size-4 rounded-full bg-accent/20"></div>
+          <div class="h-3.5 w-12 rounded bg-foreground/20 animate-pulse"></div>
+          <div class="h-2 w-16 rounded bg-foreground/10"></div>
+        </div>
+        <div class="rounded-xl border border-border/40 bg-foreground/5 p-2.5 flex flex-col items-center gap-1.5">
+          <div class="size-4 rounded-full bg-amber-500/20"></div>
+          <div class="h-3.5 w-8 rounded bg-foreground/20 animate-pulse"></div>
+          <div class="h-2 w-16 rounded bg-foreground/10"></div>
+        </div>
+        <div class="rounded-xl border border-border/40 bg-foreground/5 p-2.5 flex flex-col items-center gap-1.5">
+          <div class="size-4 rounded-full bg-emerald-500/20"></div>
+          <div class="h-3.5 w-8 rounded bg-foreground/20 animate-pulse"></div>
+          <div class="h-2 w-16 rounded bg-foreground/10"></div>
+        </div>
+      </div>
+
+      {/* 4. Center Floating Dynamic Loading Island */}
+      <div class="absolute inset-0 z-20 flex flex-col items-center justify-center p-4">
+        <div class="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-background/95 dark:bg-[#18181b]/95 border border-border/80 shadow-2xl backdrop-blur-md transform transition-transform">
+          <div class="relative flex items-center justify-center size-7">
+            <div class="absolute inset-0 rounded-full border-2 border-accent/20 border-t-accent animate-spin"></div>
+            <Icon name="tabler:brand-github" class="size-4 text-accent animate-pulse" />
+          </div>
+          <div class="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <span>正在加载 github insight 图</span>
+            <span class="inline-flex items-center gap-0.5 ml-0.5">
+              <span class="size-1 rounded-full bg-accent animate-bounce [animation-delay:-0.3s]"></span>
+              <span class="size-1 rounded-full bg-accent animate-bounce [animation-delay:-0.15s]"></span>
+              <span class="size-1 rounded-full bg-accent animate-bounce"></span>
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Streaming Shimmer Bar */}
       <div
-        class="shimmer-wave via-foreground/5 pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent to-transparent"
+        class="shimmer-wave via-foreground/10 pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent to-transparent"
       >
       </div>
     </div>
@@ -88,6 +149,6 @@ const userGitHubUrl = `https://github.com/${username}`;
     }
   }
   .shimmer-wave {
-    animation: shimmerAnimation 1.8s infinite linear;
+    animation: shimmerAnimation 1.6s infinite linear;
   }
 </style>
