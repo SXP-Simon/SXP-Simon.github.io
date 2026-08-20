@@ -186,15 +186,39 @@ import { Icon } from "astro-icon/components";
 ## 6. 音频与音乐播放组件
 
 ### 网易云音乐嵌入（`<NetEaseMusic />`）
-支持单曲与歌单卡片嵌入，无需离开博文即可在线试听（示例为川田まみ《Wings of Courage -空を超えて-》）：
+支持官方单曲、专辑、歌单以及**社区/播客声音（电台节目）**嵌入，无需离开博文即可在线试听：
 
-<NetEaseMusic id="32098307" />
+#### 示例 1：官方单曲（川田まみ《Wings of Courage -空を超えて-》）
+<NetEaseMusic 
+  id="32098307" 
+  title="Wings of Courage -空を超えて-" 
+  artist="川田まみ" 
+/>
+
+#### 示例 2：社区声音 / 电台播客（Vivy 插曲「E P」）
+<NetEaseMusic 
+  type="program" 
+  id="2488308450" 
+  title="Vivy -Fluorite Eyes Song- 第四话 插入歌「E P」" 
+  artist="Tokyo Guru Re" 
+/>
 
 ```mdx
 import NetEaseMusic from "@/components/mdx/NetEaseMusic.astro";
 
-<!-- 传入网易云歌曲 ID（支持单曲与歌单） -->
-<NetEaseMusic id="32098307" />
+<!-- 1. 官方单曲（默认 type="song" 或 2） -->
+<NetEaseMusic id="32098307" title="Wings of Courage" artist="川田まみ" />
+
+<!-- 2. 社区声音 / 电台节目（传入 type="program" 与声音 id） -->
+<NetEaseMusic 
+  type="program" 
+  id="2488308450" 
+  title="Vivy 插入歌「E P」" 
+  artist="Tokyo Guru Re" 
+/>
+
+<!-- 3. 完整歌单（传入 type="playlist"） -->
+<NetEaseMusic type="playlist" id="3778678" />
 ```
 
 ### 自定义极简音频播放器（`<AudioPlayer />`）
