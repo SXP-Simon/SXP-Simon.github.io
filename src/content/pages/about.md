@@ -24,4 +24,4 @@ description: "关于 Helian 和这个博客"
 - **GitHub**: [@SXP-Simon](https://github.com/SXP-Simon)
 - **Domain**: [heliannuits.me](https://heliannuits.me)
 
-很高兴与你在这里相遇！✨
+很高兴与你在这里相遇。

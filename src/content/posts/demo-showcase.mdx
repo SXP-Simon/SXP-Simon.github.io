@@ -1,7 +1,7 @@
 ---
 author: Helian
 pubDatetime: 2026-08-20T16:25:00Z
-title: 博客全组件综合展示 Demo Page ✨
+title: 博客全组件综合展示 Demo Page
 featured: true
 draft: false
 tags:
@@ -20,7 +20,7 @@ import NetEaseMusic from "@/components/mdx/NetEaseMusic.astro";
 import AudioPlayer from "@/components/mdx/AudioPlayer.astro";
 import GitHubCard from "@/components/mdx/GitHubCard.astro";
 
-欢迎访问 **Helian's Blog** 全组件展示页面！
+欢迎访问 **Helian's Blog** 全组件展示页面。
 
 本页面专为集中检验和体验当前博客系统所支持的全部排版能力、交互组件与富媒体生态而设计。
 
@@ -43,34 +43,50 @@ import GitHubCard from "@/components/mdx/GitHubCard.astro";
 
 ## 1. 矢量图标库（Iconify 20万+ 图标）
 
-无需引入笨重的静态字体包，构建时自动编译为轻量 SVG：
+无需引入笨重的静态字体包，构建时自动编译为轻量 SVG 矢量图标：
 
 <div class="flex flex-wrap items-center gap-6 my-6 p-5 rounded-2xl border border-border bg-foreground/5 not-prose">
   <div class="flex items-center gap-2">
-    <Icon name="lucide:sparkles" class="size-6 text-yellow-500" />
+    <Icon name="lucide:sparkles" class="size-5 text-accent" />
     <span class="font-medium">Lucide Sparkles</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="lucide:palette" class="size-6 text-blue-500" />
+    <Icon name="lucide:palette" class="size-5 text-accent" />
     <span class="font-medium">Theme Palette</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="tabler:brand-github" class="size-6 text-accent" />
+    <Icon name="tabler:brand-github" class="size-5 text-accent" />
     <span class="font-medium">GitHub</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="simple-icons:bilibili" class="size-6 text-[#00A1D6]" />
+    <Icon name="simple-icons:bilibili" class="size-5 text-[#00A1D6]" />
     <span class="font-medium">Bilibili</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="simple-icons:zhihu" class="size-6 text-[#0066FF]" />
+    <Icon name="simple-icons:zhihu" class="size-5 text-[#0066FF]" />
     <span class="font-medium">知乎</span>
   </div>
   <div class="flex items-center gap-2">
-    <Icon name="lucide:music" class="size-6 text-pink-500" />
+    <Icon name="lucide:music" class="size-5 text-accent" />
     <span class="font-medium">Music</span>
   </div>
+  <div class="flex items-center gap-2">
+    <Icon name="lucide:terminal" class="size-5 text-accent" />
+    <span class="font-medium">Terminal</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <Icon name="lucide:bookmark" class="size-5 text-accent" />
+    <span class="font-medium">Bookmark</span>
+  </div>
 </div>
+
+```mdx
+import { Icon } from "astro-icon/components";
+
+<Icon name="lucide:sparkles" class="size-5 text-accent" />
+<Icon name="tabler:brand-github" class="size-5" />
+<Icon name="simple-icons:bilibili" class="size-5 text-[#00A1D6]" />
+```
 
 ---
 
@@ -79,19 +95,19 @@ import GitHubCard from "@/components/mdx/GitHubCard.astro";
 原生支持 GitHub 风格的语义化 Callouts 提示块：
 
 > [!NOTE]
-> **这是一个提示说明（NOTE）**：用于提供背景信息、补充说明或上下文上下文。
+> **提示说明（NOTE）**：用于提供背景信息、补充说明或上下文上下文。
 
 > [!TIP]
-> **这是一个最佳实践建议（TIP）**：推荐将常用组件放在 `src/components/mdx/` 目录下方便快速复用。
+> **最佳实践建议（TIP）**：推荐将常用组件放在 `src/components/mdx/` 目录下方便快速复用。
 
 > [!IMPORTANT]
-> **这是一个重要提醒（IMPORTANT）**：生产打包时会自动生成离线 Pagefind 全文检索索引。
+> **重要提醒（IMPORTANT）**：生产打包时会自动生成离线 Pagefind 全文检索索引。
 
 > [!WARNING]
-> **这是一个警告提示（WARNING）**：如果修改了 `astro-paper.config.ts` 中的站点域名，请同步确认 `CNAME` 文件。
+> **警告提示（WARNING）**：如果修改了 `astro-paper.config.ts` 中的站点域名，请同步确认 `CNAME` 文件。
 
 > [!CAUTION]
-> **这是一个高危警示（CAUTION）**：敏感 Token 与密钥切勿直接提交到公开仓库中。
+> **高危警示（CAUTION）**：敏感 Token 与密钥切勿直接提交到公开仓库中。
 
 ---
 
@@ -121,7 +137,7 @@ welcomeUser("Helian");
 
 ## 4. 图片与灯箱缩放（Medium Zoom）
 
-点击下方图片试试看！支持平滑弹出放大、背景变暗聚焦、滚轮/捏合缩放以及按 `ESC` 键关闭：
+点击下方图片即可全屏预览，支持平滑弹出放大、背景变暗聚焦、滚轮/捏合缩放以及按 `ESC` 键关闭：
 
 ![极简自然风光摄影](https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80)
 
@@ -204,17 +220,17 @@ $$
 ```mermaid
 sequenceDiagram
     autonumber
-    actor 读者 as 👤 访客 / 读者
-    participant 浏览器 as 🌐 浏览器
-    participant 博客 as ⚡️ Helian's Blog
-    participant 部署 as 🚀 GitHub Pages
+    actor 读者 as 访客 / 读者
+    participant 浏览器 as 浏览器
+    participant 博客 as Helian's Blog
+    participant 部署 as GitHub Pages
 
     读者->>浏览器: 输入 heliannuits.me
     浏览器->>部署: 请求静态 HTML & 样式
     部署-->>浏览器: 毫秒级返回极速页面 (0kb 多余 JS)
     浏览器-->>读者: 极简优雅的阅读界面
     读者->>博客: 点击图片放大 / 播放音乐 / 搜索文章
-    博客-->>读者: 丝滑的交互反馈 ✨
+    博客-->>读者: 丝滑的交互反馈
 ```
 
 ---
@@ -243,7 +259,7 @@ sequenceDiagram
 ### 折叠详情卡片（Details）
 
 <details>
-<summary>👉 点击展开查看博文 Frontmatter 编写模版</summary>
+<summary>点击展开查看博文 Frontmatter 编写模版</summary>
 
 ```markdown
 ---
@@ -265,4 +281,4 @@ description: 一句话概述本文核心要点
 
 ---
 
-欢迎在右上角切换 **浅色 / 深色主题** 或使用 **搜索功能** 体验本站的完整功能！
+欢迎在导航栏右上角切换 **浅色 / 深色主题** 或使用 **搜索功能** 体验本站的完整功能。
