@@ -108,6 +108,14 @@
     pre {
       @apply focus-visible:outline-accent focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-dashed;
     }
+
+    /* KaTeX Math formulas contrast fix */
+    .katex,
+    .katex-display,
+    .katex-html,
+    .katex-html * {
+      color: var(--color-foreground) !important;
+    }
   }
 
   /* ===== Code Blocks & Syntax Highlighting ===== */

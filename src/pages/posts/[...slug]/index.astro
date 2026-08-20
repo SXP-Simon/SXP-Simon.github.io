@@ -522,10 +522,10 @@ const ogImage = ogImageUrl
   initLightbox();
 
   async function initMermaid() {
-    const mermaidCodes = document.querySelectorAll(
-      "pre > code.language-mermaid, pre.mermaid"
+    const mermaidPres = document.querySelectorAll(
+      "pre[data-language='mermaid'], pre.mermaid, pre:has(> code.language-mermaid)"
     );
-    if (mermaidCodes.length === 0) return;
+    if (mermaidPres.length === 0) return;
     const { default: mermaid } = await import("mermaid");
     const isDark = document.documentElement.classList.contains("dark");
     mermaid.initialize({
@@ -533,18 +533,26 @@ const ogImage = ogImageUrl
       theme: isDark ? "dark" : "default",
       fontFamily: "inherit",
     });
-    for (const codeEl of Array.from(mermaidCodes)) {
-      const preEl = codeEl.closest("pre");
-      if (!preEl) continue;
-      const code = codeEl.textContent || "";
+    for (const preEl of Array.from(mermaidPres)) {
+      const codeEl = preEl.querySelector("code");
+      const lines = codeEl ? Array.from(codeEl.querySelectorAll(".line")) : [];
+      const code = (
+        lines.length > 0
+          ? lines.map(l => l.textContent).join("\n")
+          : (codeEl ? codeEl.textContent : preEl.textContent) || ""
+      ).trim();
+      if (!code) continue;
       const id = "mermaid-" + Math.random().toString(36).substring(2, 9);
       const container = document.createElement("div");
       container.className =
-        "mermaid-diagram flex justify-center my-6 overflow-x-auto";
+        "mermaid-diagram flex justify-center my-6 overflow-x-auto p-4 rounded-xl border border-border bg-foreground/5 not-prose";
       try {
         const { svg } = await mermaid.render(id, code);
         container.innerHTML = svg;
-        preEl.replaceWith(container);
+        const wrapper = preEl.parentElement?.classList.contains("relative")
+          ? preEl.parentElement
+          : preEl;
+        wrapper.replaceWith(container);
       } catch (err) {
         console.error("Mermaid render error:", err);
       }
