@@ -104,7 +104,7 @@
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      @apply border-s-accent/80 wrap-break-word opacity-80 before:content-none after:content-none [&_p]:before:content-none [&_p]:after:content-none;
     }
 
     details:not(.callout) {
