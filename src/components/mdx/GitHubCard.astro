@@ -16,34 +16,71 @@ const {
   stars: customStars,
   forks: customForks,
 } = Astro.props;
+
 const repoUrl = `https://github.com/${repo}`;
 const [owner, name] = repo.split("/");
+
+// Global build-time cache to avoid duplicate API calls
+declare global {
+  var __githubRepoCache: Map<string, any> | undefined;
+}
+if (!globalThis.__githubRepoCache) {
+  globalThis.__githubRepoCache = new Map();
+}
 
 let repoData: {
   description?: string;
   language?: string;
   stargazers_count?: number;
   forks_count?: number;
-} = {};
+} | null = null;
 
-try {
-  const res = await fetch(`https://api.github.com/repos/${repo}`, {
-    headers: {
-      "User-Agent": "Astro-Blog-GitHubCard",
+if (globalThis.__githubRepoCache.has(repo)) {
+  repoData = globalThis.__githubRepoCache.get(repo);
+} else {
+  try {
+    const token =
+      process.env.GITHUB_TOKEN ||
+      process.env.GH_TOKEN ||
+      import.meta.env.GITHUB_TOKEN;
+
+    const headers: Record<string, string> = {
+      "User-Agent": "Astro-Paper-GitHubCard",
       Accept: "application/vnd.github.v3+json",
-    },
-  });
-  if (res.ok) {
-    repoData = await res.json();
+    };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const res = await fetch(`https://api.github.com/repos/${repo}`, {
+      headers,
+    });
+    if (res.ok) {
+      repoData = await res.json();
+      globalThis.__githubRepoCache.set(repo, repoData);
+    }
+  } catch (e) {
+    // Fail silently on network errors
   }
-} catch (e) {
-  // Silent fallback
 }
 
-const desc = customDesc || repoData.description || "GitHub 开源项目代码仓库";
-const lang = customLang || repoData.language || "TypeScript";
-const stars = customStars ?? repoData.stargazers_count ?? 0;
-const forks = customForks ?? repoData.forks_count ?? 0;
+// Format numbers like 39425 -> "39.4k"
+const formatNumber = (num?: number | string) => {
+  if (num === undefined || num === null) return undefined;
+  if (typeof num === "string") return num;
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+  }
+  return num.toString();
+};
+
+const desc = customDesc || repoData?.description || "GitHub 开源项目代码仓库";
+const lang = customLang || repoData?.language;
+const rawStars = customStars ?? repoData?.stargazers_count;
+const rawForks = customForks ?? repoData?.forks_count;
+const stars = formatNumber(rawStars);
+const forks = formatNumber(rawForks);
+const hasStats = stars !== undefined || forks !== undefined;
 ---
 
 <a
@@ -74,24 +111,28 @@ const forks = customForks ?? repoData.forks_count ?? 0;
     {desc}
   </p>
 
-  <div
-    class="mt-4 flex flex-wrap items-center gap-4 text-xs text-foreground/70"
-  >
-    {
-      lang && (
-        <span class="flex items-center gap-1.5 font-medium">
-          <span class="size-2.5 rounded-full bg-accent inline-block" />
-          {lang}
-        </span>
-      )
-    }
-    <span class="flex items-center gap-1 font-medium">
-      <Icon name="lucide:star" class="size-3.5 text-yellow-500" />
-      {stars}
-    </span>
-    <span class="flex items-center gap-1 font-medium">
-      <Icon name="lucide:git-fork" class="size-3.5 text-foreground/60" />
-      {forks}
-    </span>
-  </div>
+  {
+    (lang || hasStats) && (
+      <div class="mt-4 flex flex-wrap items-center gap-4 text-xs text-foreground/70">
+        {lang && (
+          <span class="flex items-center gap-1.5 font-medium">
+            <span class="size-2.5 rounded-full bg-accent inline-block" />
+            {lang}
+          </span>
+        )}
+        {stars !== undefined && (
+          <span class="flex items-center gap-1 font-medium">
+            <Icon name="lucide:star" class="size-3.5 text-yellow-500" />
+            {stars}
+          </span>
+        )}
+        {forks !== undefined && (
+          <span class="flex items-center gap-1 font-medium">
+            <Icon name="lucide:git-fork" class="size-3.5 text-foreground/60" />
+            {forks}
+          </span>
+        )}
+      </div>
+    )
+  }
 </a>
