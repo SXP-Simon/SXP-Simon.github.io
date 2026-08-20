@@ -4,19 +4,30 @@ interface Props {
   aid?: string;
   page?: number;
   autoplay?: boolean;
+  title?: string;
 }
 
-const { bvid, aid, page = 1, autoplay = false } = Astro.props;
+const { bvid, aid, page = 1, autoplay = false, title } = Astro.props;
 const src = bvid
-  ? `https://player.bilibili.com/player.html?bvid=${bvid}&page=${page}&autoplay=${autoplay ? 1 : 0}`
-  : `https://player.bilibili.com/player.html?aid=${aid}&page=${page}&autoplay=${autoplay ? 1 : 0}`;
+  ? `https://player.bilibili.com/player.html?bvid=${bvid}&page=${page}&autoplay=${autoplay ? 1 : 0}&high_quality=1&as_wide=1`
+  : `https://player.bilibili.com/player.html?aid=${aid}&page=${page}&autoplay=${autoplay ? 1 : 0}&high_quality=1&as_wide=1`;
 ---
 
-<div class="my-6 aspect-video w-full overflow-hidden rounded-xl border border-border shadow-sm">
-  <iframe
-    src={src}
-    allowfullscreen
-    loading="lazy"
-    class="size-full border-0"
-  ></iframe>
-</div>
+<figure class="my-6 not-prose">
+  <div class="aspect-video w-full overflow-hidden rounded-xl border border-border bg-foreground/5 shadow-sm">
+    <iframe
+      src={src}
+      allowfullscreen="true"
+      loading="lazy"
+      class="size-full border-0"
+      title={title || "Bilibili Video"}
+    ></iframe>
+  </div>
+  {
+    title && (
+      <figcaption class="mt-2 text-center text-xs text-muted-foreground">
+        📺 {title}
+      </figcaption>
+    )
+  }
+</figure>

@@ -221,15 +221,28 @@ import AudioPlayer from "@/components/mdx/AudioPlayer.astro";
 ## 7. 视频与多媒体嵌入
 
 ### 哔哩哔哩（Bilibili）高清响应式视频（`<Bilibili />`）
-自适应 16:9 比例，自动适配移动端与暗黑主题：
+自适应 16:9 比例，支持暗黑模式自适应与移动端全屏播放：
 
-<Bilibili bvid="BV1xx411c7mD" />
+#### 视频 1：ReinaManager 视觉小说管理器
+<Bilibili 
+  bvid="BV12dKf6hEnR" 
+  title="还在手动整理 gal？试试这款强大易用的视觉小说管理器——ReinaManager" 
+/>
+
+#### 视频 2：LunaBox Galgame 管理器
+<Bilibili 
+  bvid="BV1cm6dBFE96" 
+  title="LunaBox——什么，你说你写了一个gal管理器，能分类能统计还能ai锐评自己？" 
+/>
 
 ```mdx
 import Bilibili from "@/components/mdx/Bilibili.astro";
 
-<!-- 传入 B站视频 BV 号即可 -->
-<Bilibili bvid="BV1xx411c7mD" />
+<!-- 传入 B 站视频 BV 号与可选标题 -->
+<Bilibili 
+  bvid="BV12dKf6hEnR" 
+  title="还在手动整理 gal？试试这款强大易用的视觉小说管理器——ReinaManager" 
+/>
 ```
 
 ### YouTube 极速懒加载视频（`astro-embed`）
