@@ -153,8 +153,9 @@ if (!displayTitle) {
         const pl = data.playlist || data.result;
         if (pl?.name) {
           displayTitle = pl.name;
+          const countInfo = pl.trackCount ? ` · 共 ${pl.trackCount} 首` : "";
           if (!displayArtist && pl.creator?.nickname) {
-            displayArtist = `歌单创建者: ${pl.creator.nickname}`;
+            displayArtist = `创建者: ${pl.creator.nickname}${countInfo}`;
           }
         }
       }
@@ -168,10 +169,11 @@ if (!displayTitle) {
         const data = await res.json();
         if (data.album?.name) {
           displayTitle = data.album.name;
+          const countInfo = data.album.size ? ` · 共 ${data.album.size} 首` : "";
           if (!displayArtist && (data.album.artist?.name || data.album.artists?.[0]?.name)) {
             displayArtist =
-              data.album.artist?.name ||
-              data.album.artists.map((a: { name: string }) => a.name).join(" / ");
+              (data.album.artist?.name ||
+              data.album.artists.map((a: { name: string }) => a.name).join(" / ")) + countInfo;
           }
         }
       }
