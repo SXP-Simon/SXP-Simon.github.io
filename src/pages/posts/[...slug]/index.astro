@@ -600,26 +600,36 @@ const ogImage = ogImageUrl
             tertiaryBorderColor: "#334155",
             clusterBkg: "#0f172a",
             clusterBorder: "#334155",
+            edgeLabelBackground: "#1e293b",
+            fontSize: "14px",
           }
         : {
             darkMode: false,
             background: "transparent",
-            mainBkg: "#f8fafc",
+            mainBkg: "#ffffff",
             nodeBorder: "#0066FF",
             textColor: "#0f172a",
             lineColor: "#64748b",
-            primaryColor: "#f1f5f9",
+            primaryColor: "#f8fafc",
             primaryTextColor: "#0f172a",
             primaryBorderColor: "#0066FF",
             secondaryColor: "#ffffff",
             secondaryTextColor: "#0f172a",
             secondaryBorderColor: "#cbd5e1",
-            tertiaryColor: "#f8fafc",
+            tertiaryColor: "#f1f5f9",
             tertiaryTextColor: "#0f172a",
             tertiaryBorderColor: "#e2e8f0",
-            clusterBkg: "#f1f5f9",
+            clusterBkg: "#f8fafc",
             clusterBorder: "#cbd5e1",
+            edgeLabelBackground: "#ffffff",
+            fontSize: "14px",
           },
+      flowchart: {
+        htmlLabels: true,
+        padding: 16,
+        nodeSpacing: 50,
+        rankSpacing: 50,
+      },
       fontFamily: "inherit",
       securityLevel: "loose",
     });
@@ -649,7 +659,7 @@ const ogImage = ogImageUrl
       const id = "mermaid-" + Math.random().toString(36).substring(2, 9);
       const container = document.createElement("div");
       container.className =
-        "mermaid-diagram flex justify-center my-6 overflow-x-auto p-4 rounded-xl border border-border bg-foreground/5 not-prose cursor-zoom-in group relative select-none";
+        "mermaid-diagram flex justify-center my-6 overflow-x-auto p-5 rounded-2xl border border-border bg-muted/30 dark:bg-muted/20 not-prose cursor-zoom-in group relative select-none shadow-xs hover:border-accent/40 transition-all";
       container.setAttribute("data-mermaid-code", code);
       container.title = "点击全屏放大图表";
 

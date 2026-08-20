@@ -43,15 +43,19 @@ import { LinkPreview } from "astro-embed";
 ```mermaid
 graph TD
     subgraph Traditional ["传统 Chatbot 范式: Request-Response 确定性指令分发"]
+        direction LR
         A["IM 消息输入"] --> B["中间件过滤 / 正则命令解析"] --> C["业务 Handler"] --> D["返回响应消息"]
     end
 
     subgraph Modern ["现代 Agent Harness 范式: Autonomous Cognitive Loop 目标导向循环"]
+        direction LR
         E["目标 / 上下文"] --> F["Prompt 动态组装"]
         F --> G["LLM 推理与决策"]
         G --> H["PTC / Tool 沙箱执行"]
-        H -->|"Observation 观测结果"| F
+        H -.->|"Observation 观测回传"| F
     end
+
+    Traditional ~~~ Modern
 ```
 
 - **传统 Bot 的核心诉求**是 **“协议抹平与路由分发”**：如何把来自 QQ、Discord、Telegram、微信的异构消息格式转化为统一的 `Session`，并高效匹配给对应的指令处理函数（如 `/help`、`/ban`）；
@@ -202,22 +206,22 @@ export class MyDatabaseService extends Service {
 
 ```mermaid
 graph TD
-    subgraph S1 ["AstrBot 核心架构突破"]
+    subgraph S1 ["AstrBot 核心架构突破 (DX 优势)"]
+        direction LR
         A1["@filter.llm_tool 装饰器<br/>Type Hints + Docstring 自动提取 Schema"]
         A2["全链路认知介入钩子<br/>@filter.on_llm_request / on_llm_response"]
         A3["生成器式流式推流<br/>yield event.plain_result(...)"]
         A4["metadata.yaml 驱动 WebUI 动态表单"]
     end
 
-    subgraph S2 ["潜在生命周期暗礁"]
-        B1["terminate() 约定式清理 (缺乏框架强制追踪)"]
-        B2["全局扁平 Context (多 Agent / 租户状态踩踏)"]
-        B3["单步 JSON Tool Calling (高 Token/网络往返)"]
+    subgraph S2 ["潜在生命周期暗礁 (架构隐患)"]
+        direction LR
+        B1["terminate() 约定式清理<br/>(缺乏框架强制追踪)"]
+        B2["全局扁平 Context<br/>(多 Agent / 租户状态踩踏)"]
+        B3["单步 JSON Tool Calling<br/>(高 Token / 网络往返)"]
     end
 
-    A1 --> B1
-    A2 --> B2
-    A3 --> B3
+    S1 ==>|"在极度追求极简 DX 的同时，下沉隐藏了不可逆隐患"| S2
 ```
 
 ### 3.1 AstrBot 真正做对了什么？DX 降维打击的技术论证
@@ -380,8 +384,9 @@ DSH 将所有基础设施抽象为 **Capability Seam**，包含三个严格角�
 ```
 
 ```mermaid
-graph LR
+graph TD
     subgraph Consumer ["3. 业务工具消费者 (面向契约编程)"]
+        direction LR
         TB["dsh-tool-bash<br/>(只调用 ctx.shell.exec)"]
         TG["dsh-tool-git<br/>(只调用 ctx.shell.exec)"]
     end
@@ -391,14 +396,14 @@ graph LR
     end
 
     subgraph Providers ["2. Provider (环境实现方: 配置热切换)"]
+        direction LR
         PL["dsh-bash-local<br/>(node:child_process 本地进程)"]
         PS["dsh-bash-sandbox<br/>(Docker / Landlock 内核微沙箱)"]
     end
 
-    TB --> SEAM
-    TG --> SEAM
-    SEAM -.->|开发环境挂载| PL
-    SEAM -.->|生产环境热替换| PS
+    Consumer -->|"调用契约接口"| Seam
+    Seam -.->|"开发环境注入"| PL
+    Seam -.->|"生产沙箱注入"| PS
 ```
 
 ```typescript

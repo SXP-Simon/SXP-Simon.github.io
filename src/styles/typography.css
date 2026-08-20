@@ -156,7 +156,10 @@
 
   /* ===== Mermaid Diagrams Styling & Dark Mode Contrast ===== */
   .mermaid-diagram {
+    @apply my-6 p-5 rounded-2xl border border-border bg-muted/30 dark:bg-muted/20 cursor-zoom-in relative select-none transition-all hover:border-accent/40 shadow-xs overflow-x-auto;
+
     svg {
+      min-width: min(100%, 580px);
       max-width: 100%;
       height: auto;
       font-family: inherit;
