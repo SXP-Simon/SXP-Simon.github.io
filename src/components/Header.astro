@@ -27,6 +27,12 @@ const pathWithoutTrailingSlash =
 
 const currentPath = stripLocale(pathWithoutTrailingSlash, locale);
 
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
   const pathArray = path.split("/").filter(p => p.trim());
@@ -43,7 +49,10 @@ const isActive = (path: string) => {
 </a>
 
 <header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
+  class:list={[
+    "app-layout flex flex-col items-center justify-between sm:flex-row",
+    className,
+  ]}
 >
   <div
     class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"

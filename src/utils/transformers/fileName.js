@@ -37,10 +37,10 @@ export const transformerFileName = ({
 
     if (!file) return;
 
-    // Add additional margin to code block
+    // Add additional margin and relative positioning to code block
     this.addClassToHast(
       node,
-      `mt-8 ${style === "v1" ? "rounded-tl-none" : ""}`
+      `relative mt-8 ${style === "v1" ? "rounded-tl-none" : ""}`
     );
 
     // Add file name to code block

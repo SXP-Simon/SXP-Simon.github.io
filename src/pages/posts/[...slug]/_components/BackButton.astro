@@ -5,13 +5,18 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
 ---
 
 {
   config.features.showBackButton && (
-    <div class="app-layout flex items-center justify-start">
+    <div class:list={["app-layout flex items-center justify-start", className]}>
       <LinkButton
         id="back-button"
         href={getRelativeLocaleUrl(locale, "")}

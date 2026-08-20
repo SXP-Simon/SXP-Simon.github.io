@@ -108,9 +108,9 @@ const ogImage = ogImageUrl
   pubDatetime={pubDatetime}
   modDatetime={modDatetime}
 >
-  <Header />
+  <Header class="xl:max-w-6xl" />
 
-  <BackButton />
+  <BackButton class="xl:max-w-6xl" />
 
   <main
     id="main-content"
@@ -200,14 +200,15 @@ const ogImage = ogImageUrl
       <TableOfContents {headings} variant="sidebar" />
     </div>
   </main>
-  <Footer />
+  <Footer class="xl:max-w-6xl" />
 </PostLayout>
 
 <script is:inline data-astro-rerun>
-  function createProgressBar() {
-    const progressContainer = document.createElement("div");
-    progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+  (() => {
+    function createProgressBar() {
+      const progressContainer = document.createElement("div");
+      progressContainer.className =
+        "progress-container fixed top-0 z-10 h-1 w-full bg-background";
 
     const progressBar = document.createElement("div");
     progressBar.className = "progress-bar h-1 w-0 bg-accent";
@@ -694,4 +695,5 @@ const ogImage = ogImageUrl
   document.addEventListener("astro:after-swap", () =>
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })
   );
+  })();
 </script>
