@@ -30,7 +30,7 @@ export default defineAstroPaperConfig({
   },
   socials: [
     { name: "github", url: "https://github.com/SXP-Simon", linkTitle: "GitHub: @SXP-Simon" },
-    { name: "netease", url: "https://music.163.com/#/user/home?id=1607315848", linkTitle: "网易云音乐: Helian" },
+    { name: "netease", url: "https://music.163.com/#/user/home?id=1607315848", linkTitle: "网易云音乐: 所以我回归了天空" },
     { name: "wechat", url: "#", linkTitle: "微信: night-helianthus (点击复制)" },
   ],
   shareLinks: [
