@@ -1,0 +1,80 @@
+---
+author: Helian
+pubDatetime: 2026-09-26T12:15:00Z
+title: "记录一次 IP 波动触发 Google Antigravity 安全审查与手机扫码解封过程"
+featured: true
+draft: false
+tags:
+  - Antigravity
+  - Gemini
+  - Google
+  - 踩坑记录
+description: "记录在 IP 节点不稳定的情况下使用 Google Antigravity 触发 'Verify your info' 安全审查的排查过程。针对国内手机号无法接收 SMS 验证码的卡点，分享通过手机 Google App 扫码完成设备验证的解决办法。"
+---
+
+今天在使用 Google Antigravity 时遇到了一个风控安全审查的拦截问题。折腾了一圈发现走网页短信验证很容易卡死，最终通过手机端 App 顺利解决，在这里记录一下经过和解决方案。
+
+---
+
+## 遇到了什么问题？
+
+因为我当时挂的代理节点 IP 比较跳、不太稳定，在登录 Antigravity 准备发送 Prompt 让它写代码时，突然被弹窗阻断了，提示需要验证身份：
+
+```text
+Verify your info to continue
+Google needs to verify some info about your device or phone number before you can continue. This helps keep you and others safe online by preventing abuse from computer programs or bots. Learn about verification
+```
+
+比较诡异的是：
+- 我电脑上其他所有与 Code Agent 无关的 Google 网页服务（Google 搜索、YouTube、Gmail，甚至是 Gemini 官方网页版 Web Chat 对话）全都是**完全正常**的；
+- 唯独 Antigravity 只要一发消息就会被卡在这一步，不验证就无法继续使用。
+
+---
+
+## 踩坑：网页端的短信（SMS）死循环
+
+弹出的页面明确要求必须使用手机，并且在电脑屏幕上给出了一个二维码。
+
+我当时直接在电脑 Edge 浏览器里点开相关的验证流程，它会尝试引导向绑定的手机号发送一条 SMS 短信验证码。
+
+然而国内手机号（+86）在接收 Google 这种突发风控短信时**可达性非常差**：
+- 要么是短信发出来后运营商网关拦截，等半天都收不到；
+- 要么直接提示当前号码无法用于验证。
+
+这导致我一度卡在“必须收短信才能解风控，但根本收不到短信”的死循环里。
+
+---
+
+## 解决方案：用手机端 Google App 扫码
+
+尝试了多种手段后，最终发现了一个直接绕开短信验证的方法：
+
+1. 保持电脑屏幕上 Antigravity 弹出的验证二维码；
+2. 拿出手机，打开手机上**已经登录好该 Google 账号的官方 Google App**；
+3. 使用 Google App 里的扫码功能（搜索栏里的相机 / 智能镜头），直接扫描电脑屏幕上的二维码；
+4. 手机端检测到请求后，会自动进行设备信息的校验，**只要设备信息对得上，立刻就会判定验证成功**，全程完全不需要等待或接收任何短信验证码。
+
+---
+
+## 验证成功结果
+
+手机端扫码通过的瞬间，电脑上的浏览器立刻自动跳转到了官方的成功页面：
+
+> ### 身份验证成功，以下产品现已获授权访问您的账号：
+> - [Gemini Code Assist](https://docs.cloud.google.com/gemini/docs/codeassist/overview?hl=zh-cn)
+> - [Cloud Code with Gemini Code Assist](https://docs.cloud.google.com/code/docs/shell/write-code-gemini?hl=zh-cn)
+> - [Gemini CLI](https://geminicli.com/)
+> - [Antigravity](https://antigravity.google/docs/getting-started?hl=zh-cn)（仅适用于 免费版、Google One AI Pro、Google One AI Ultra 和 Google Workspace AI Ultra for Business）
+> 
+> 您可以关闭此窗口并返回到 IDE 或终端。
+
+🔗 **跳转成功页链接**：[身份验证成功 | Gemini Code Assist | Google for Developers](https://developers.google.com/gemini-code-assist/auth/auth_success_gemini?hl=zh-cn)
+
+看到这个页面后，关掉网页回到 Antigravity，再发消息就已经完全恢复正常了。
+
+---
+
+## 简单总结
+
+1. **为什么普通服务（甚至 Gemini Web Chat）没事但 Antigravity 会触发**：Google 对 Code Agent / 开发者高算力接口的防脚本与防滥用审查（Anti-Bot）要比普通的 Web 网页交互严格得多。一旦网络代理 IP 频繁变动或节点脏了，很容易单独对 Code Agent 这类服务触发二次风控。
+2. **避开短信陷阱**：国内手机号千万别硬走网页端的 SMS 短信验证。手机上常备一个已登录的官方 Google App，直接扫码走设备信任校验是最稳妥、最快过审的办法。
