@@ -53,7 +53,7 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
 
 <header
   id="site-header"
-  class="sticky top-0 z-40 w-full bg-background/85 backdrop-blur-md"
+  class="bg-background/85 sticky top-0 z-40 w-full backdrop-blur-md"
 >
   <div
     class:list={[
@@ -67,25 +67,25 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
       {/* Site Title */}
       <a
         href={getRelativeLocaleUrl(locale, "")}
-        class="py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:text-2xl sm:leading-none hover:text-accent transition-colors"
+        class="hover:text-accent py-1 text-xl leading-8 font-semibold whitespace-nowrap transition-colors sm:text-2xl sm:leading-none"
       >
         {site.title}
       </a>
 
       {/* Navigation & Controls Wrapper */}
-      <nav
-        id="nav-menu"
-        class="flex items-center gap-1 sm:gap-4"
-      >
+      <nav id="nav-menu" class="flex items-center gap-1 sm:gap-4">
         {/* Desktop Navigation Links / Mobile Collapsible Drawer */}
         <ul
           id="menu-items"
-          class="[&>li>a]:hover:text-accent hidden items-center gap-1 sm:flex sm:gap-x-5 [&>li]:h-8 [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-1 [&>li>a]:text-center [&>li>a]:font-medium max-sm:absolute max-sm:top-full max-sm:inset-x-0 max-sm:z-40 max-sm:flex-col max-sm:border-b max-sm:border-border max-sm:bg-background/95 max-sm:backdrop-blur-md max-sm:py-4 max-sm:shadow-xl"
+          class="[&>li>a]:hover:text-accent max-sm:border-border max-sm:bg-background/95 hidden items-center gap-1 max-sm:absolute max-sm:inset-x-0 max-sm:top-full max-sm:z-40 max-sm:flex-col max-sm:border-b max-sm:py-4 max-sm:shadow-xl max-sm:backdrop-blur-md sm:flex sm:gap-x-5 [&>li]:h-8 [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-1 [&>li>a]:text-center [&>li>a]:font-medium"
         >
           <li class="w-full sm:w-auto">
             <a
               href={getRelativeLocaleUrl(locale, "posts")}
-              class:list={["max-sm:py-2.5", { "active-nav": isActive("/posts") }]}
+              class:list={[
+                "max-sm:py-2.5",
+                { "active-nav": isActive("/posts") },
+              ]}
             >
               {t.nav.posts}
             </a>
@@ -93,7 +93,10 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
           <li class="w-full sm:w-auto">
             <a
               href={getRelativeLocaleUrl(locale, "tags")}
-              class:list={["max-sm:py-2.5", { "active-nav": isActive("/tags") }]}
+              class:list={[
+                "max-sm:py-2.5",
+                { "active-nav": isActive("/tags") },
+              ]}
             >
               {t.nav.tags}
             </a>
@@ -101,7 +104,10 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
           <li class="w-full sm:w-auto">
             <a
               href={getRelativeLocaleUrl(locale, "about")}
-              class:list={["max-sm:py-2.5", { "active-nav": isActive("/about") }]}
+              class:list={[
+                "max-sm:py-2.5",
+                { "active-nav": isActive("/about") },
+              ]}
             >
               {t.nav.about}
             </a>
@@ -132,14 +138,18 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
           }
         </ul>
 
-        {/* Action Controls Group: Always Visible in Header on Mobile & Desktop */}
+        {
+          /* Action Controls Group: Always Visible in Header on Mobile & Desktop */
+        }
         <div class="flex items-center gap-1 sm:gap-2">
           {/* Search Button */}
           {
             features.search !== false && (
               <LinkButton
                 href={getRelativeLocaleUrl(locale, "search")}
-                class:list={["focus-outline relative flex size-8 items-center justify-center p-1 hover:text-accent transition-colors"]}
+                class:list={[
+                  "focus-outline hover:text-accent relative flex size-8 items-center justify-center p-1 transition-colors",
+                ]}
                 title={t.nav.search}
                 aria-label={t.nav.search}
               >
@@ -159,8 +169,8 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
                 aria-label="auto"
                 aria-live="polite"
               >
-                <IconMoon class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90 size-5" />
-                <IconSunHigh class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 size-5" />
+                <IconMoon class="absolute top-1/2 left-1/2 size-5 -translate-x-1/2 -translate-y-1/2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+                <IconSunHigh class="absolute top-1/2 left-1/2 size-5 -translate-x-1/2 -translate-y-1/2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
               </button>
             )
           }
@@ -168,7 +178,7 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
           {/* GitHub Repository Link Button */}
           <LinkButton
             href={repoUrl}
-            class="focus-outline relative flex size-8 items-center justify-center p-1 hover:text-accent transition-colors"
+            class="focus-outline hover:text-accent relative flex size-8 items-center justify-center p-1 transition-colors"
             title="GitHub 博客仓库"
             aria-label="GitHub 博客仓库"
           >
@@ -179,7 +189,7 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
           {/* Mobile Hamburger Menu Toggle Button */}
           <button
             id="menu-btn"
-            class="focus-outline flex size-8 items-center justify-center p-1 text-foreground hover:text-accent sm:hidden transition-colors"
+            class="focus-outline text-foreground hover:text-accent flex size-8 items-center justify-center p-1 transition-colors sm:hidden"
             aria-label={t.a11y.openMenu}
             aria-expanded="false"
             aria-controls="menu-items"
@@ -196,15 +206,17 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
   {/* Reading Progress Indicator */}
   <div
     id="reading-progress"
-    class="bg-accent absolute bottom-0 left-0 h-[2px] w-0 transition-[width] duration-75 pointer-events-none"
+    class="bg-accent pointer-events-none absolute bottom-0 left-0 h-[2px] w-0 transition-[width] duration-75"
     aria-hidden="true"
-  ></div>
+  >
+  </div>
 </header>
 
 <script>
-  function toggleNav() {
+  import { onPageMount } from "@/scripts/page-lifecycle";
+  function toggleNav(signal: AbortSignal) {
     const menuBtn = document.querySelector<HTMLButtonElement>("#menu-btn");
-    const menuItems = document.querySelector("#menu-items");
+    const menuItems = document.querySelector<HTMLElement>("#menu-items");
     const menuIcon = document.querySelector("#menu-icon");
     const closeIcon = document.querySelector("#close-icon");
 
@@ -213,49 +225,78 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
     const openLabel = menuBtn.dataset.labelOpen ?? "Open menu";
     const closeLabel = menuBtn.dataset.labelClose ?? "Close menu";
 
-    menuBtn.onclick = () => {
-      const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
-
-      menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
-      menuBtn.setAttribute("aria-label", openMenu ? openLabel : closeLabel);
-
-      menuItems.classList.toggle("hidden");
-      menuItems.classList.toggle("flex");
-      menuIcon.classList.toggle("hidden");
-      closeIcon.classList.toggle("hidden");
-    };
+    let animation: Animation | undefined;
+    signal.addEventListener("abort", () => animation?.cancel(), { once: true });
+    menuBtn.addEventListener(
+      "click",
+      () => {
+        const opening = menuBtn.getAttribute("aria-expanded") !== "true";
+        animation?.cancel();
+        menuBtn.setAttribute("aria-expanded", String(opening));
+        menuBtn.setAttribute("aria-label", opening ? closeLabel : openLabel);
+        menuIcon.classList.toggle("hidden", opening);
+        closeIcon.classList.toggle("hidden", !opening);
+        menuItems.classList.remove("hidden");
+        menuItems.classList.add("flex");
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        animation = menuItems.animate(
+          opening
+            ? [
+                { opacity: 0, transform: "translateY(-6px)" },
+                { opacity: 1, transform: "translateY(0)" },
+              ]
+            : [{ opacity: 1 }, { opacity: 0, transform: "translateY(-4px)" }],
+          { duration: reduced ? 0 : opening ? 220 : 150, easing: "ease-out" }
+        );
+        animation.onfinish = () => {
+          if (!opening) {
+            menuItems.classList.add("hidden");
+            menuItems.classList.remove("flex");
+          }
+        };
+      },
+      { signal }
+    );
   }
 
-  function handleSkipToContent() {
+  function handleSkipToContent(signal: AbortSignal) {
     const skipLink = document.getElementById("skip-to-content");
     if (!skipLink) return;
-    skipLink.addEventListener("click", e => {
-      if (
-        e.defaultPrevented ||
-        e.metaKey ||
-        e.ctrlKey ||
-        e.shiftKey ||
-        e.button !== 0
-      )
-        return;
-      e.preventDefault();
-      const target = document.getElementById("main-content");
-      if (target) {
-        target.setAttribute("tabindex", "-1");
-        target.addEventListener(
-          "blur",
-          () => target.removeAttribute("tabindex"),
-          {
-            once: true,
-          }
-        );
-        target.focus();
-        target.scrollIntoView({ behavior: "smooth" });
-      }
-    });
+    skipLink.addEventListener(
+      "click",
+      e => {
+        if (
+          e.defaultPrevented ||
+          e.metaKey ||
+          e.ctrlKey ||
+          e.shiftKey ||
+          e.button !== 0
+        )
+          return;
+        e.preventDefault();
+        const target = document.getElementById("main-content");
+        if (target) {
+          target.setAttribute("tabindex", "-1");
+          target.addEventListener(
+            "blur",
+            () => target.removeAttribute("tabindex"),
+            {
+              once: true,
+            }
+          );
+          target.focus();
+          target.scrollIntoView({
+            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "instant"
+              : "smooth",
+          });
+        }
+      },
+      { signal }
+    );
   }
 
-  function handleReadingProgress() {
+  function handleReadingProgress(signal: AbortSignal) {
     const progressBar = document.getElementById("reading-progress");
     if (!progressBar) return;
 
@@ -273,16 +314,13 @@ const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
       progressBar.style.width = `${progress}%`;
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true, signal });
     onScroll();
   }
 
-  toggleNav();
-  document.addEventListener("astro:after-swap", toggleNav);
-
-  handleSkipToContent();
-  document.addEventListener("astro:after-swap", handleSkipToContent);
-
-  handleReadingProgress();
-  document.addEventListener("astro:after-swap", handleReadingProgress);
+  onPageMount(signal => {
+    toggleNav(signal);
+    handleSkipToContent(signal);
+    handleReadingProgress(signal);
+  });
 </script>

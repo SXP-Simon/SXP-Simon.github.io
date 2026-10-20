@@ -35,53 +35,53 @@ const t = useTranslations(Astro.currentLocale);
   </button>
 </div>
 
-<script is:inline data-astro-rerun>
-  function backToTop() {
-    const rootElement = document.documentElement;
-    const btnContainer = document.querySelector("#btt-btn-container");
-    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
-    const progressIndicator = document.querySelector("#progress-indicator");
-
-    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
-      return;
-
-    backToTopBtn.addEventListener("click", () => {
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    });
-
-    let lastVisible = null;
-    function handleScroll() {
-      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
-      const scrollTop = rootElement.scrollTop;
-      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
-
-      progressIndicator.style.setProperty(
-        "background-image",
-        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
-      );
-
-      const isVisible = scrollTop / scrollTotal > 0.3;
-
-      if (isVisible !== lastVisible) {
-        btnContainer.classList.toggle("opacity-100", isVisible);
-        btnContainer.classList.toggle("translate-y-0", isVisible);
-        btnContainer.classList.toggle("opacity-0", !isVisible);
-        btnContainer.classList.toggle("translate-y-14", !isVisible);
-        lastVisible = isVisible;
-      }
-    }
-
-    let ticking = false;
-    document.addEventListener("scroll", () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
-  }
-  backToTop();
+<script>
+  import { onPageMount } from "@/scripts/page-lifecycle";
+  onPageMount(signal => {
+    const container = document.querySelector<HTMLElement>("#btt-btn-container");
+    const button = document.querySelector<HTMLButtonElement>(
+      "[data-button='back-to-top']"
+    );
+    const indicator = document.querySelector<HTMLElement>(
+      "#progress-indicator"
+    );
+    if (!container || !button || !indicator) return;
+    button.addEventListener(
+      "click",
+      () =>
+        window.scrollTo({
+          top: 0,
+          behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "instant"
+            : "smooth",
+        }),
+      { signal }
+    );
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const root = document.documentElement;
+      const total = root.scrollHeight - root.clientHeight;
+      const ratio =
+        total > 0 ? Math.min(1, Math.max(0, root.scrollTop / total)) : 0;
+      const percent = Math.round(ratio * 100);
+      indicator.style.backgroundImage = `conic-gradient(var(--accent) ${percent}%, transparent ${percent}%)`;
+      const visible = ratio > 0.3;
+      container.classList.toggle("opacity-100", visible);
+      container.classList.toggle("translate-y-0", visible);
+      container.classList.toggle("opacity-0", !visible);
+      container.classList.toggle("translate-y-14", !visible);
+      container.style.pointerEvents = visible ? "auto" : "none";
+      button.tabIndex = visible ? 0 : -1;
+    };
+    document.addEventListener(
+      "scroll",
+      () => {
+        if (!frame) frame = requestAnimationFrame(update);
+      },
+      { passive: true, signal }
+    );
+    update();
+    return () => cancelAnimationFrame(frame);
+  });
 </script>

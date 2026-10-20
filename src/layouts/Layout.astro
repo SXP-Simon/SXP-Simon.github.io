@@ -5,13 +5,17 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
+import HomeAtmosphere from "@/components/HomeAtmosphere.astro";
 import "@/styles/global.css";
+import "@/styles/home.css";
+import "@/styles/transitions.css";
 
 type Props = {
   title?: string;
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  particleBackground?: boolean;
 };
 
 const { site } = config;
@@ -21,6 +25,7 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  particleBackground = false,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
@@ -39,7 +44,10 @@ const rssHref = getRelativeLocaleUrl(
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
     <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
     <link rel="icon" href={getAssetPath("favicon.ico")} />
     <link rel="canonical" href={canonicalURL} />
@@ -106,7 +114,12 @@ const rssHref = getRelativeLocaleUrl(
         const prefersDark = window.matchMedia(
           "(prefers-color-scheme: dark)"
         ).matches;
-        const theme = stored ?? (prefersDark ? "dark" : "light");
+        const theme =
+          stored === "dark" || stored === "light"
+            ? stored
+            : prefersDark
+              ? "dark"
+              : "light";
         const root = document.firstElementChild;
         root?.setAttribute("data-theme", theme);
         root?.classList.toggle("dark", theme === "dark");
@@ -118,13 +131,28 @@ const rssHref = getRelativeLocaleUrl(
     <ClientRouter />
   </head>
   <body
+    data-particle-site
+    data-particle-home={particleBackground || undefined}
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
+    <HomeAtmosphere />
     <slot />
     <script>
       import "@/scripts/theme";
     </script>
     <script is:inline>
+      if (!window.__toastCleanupBound) {
+        window.__toastCleanupBound = true;
+        document.addEventListener("astro:before-swap", event => {
+          const swap = event.swap;
+          event.swap = () => {
+            clearTimeout(window.__toastTimer);
+            cancelAnimationFrame(window.__toastFrame);
+            document.getElementById("global-toast")?.remove();
+            swap();
+          };
+        });
+      }
       window.showToast = function (message, iconHtml) {
         let toast = document.getElementById("global-toast");
         if (!toast) {
@@ -139,7 +167,8 @@ const rssHref = getRelativeLocaleUrl(
 
         toast.innerHTML = (iconHtml || defaultIcon) + `<span>${message}</span>`;
 
-        requestAnimationFrame(() => {
+        cancelAnimationFrame(window.__toastFrame);
+        window.__toastFrame = requestAnimationFrame(() => {
           toast.classList.remove("opacity-0", "translate-y-3", "scale-95");
           toast.classList.add("opacity-100", "translate-y-0", "scale-100");
         });

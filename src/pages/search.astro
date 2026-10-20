@@ -35,7 +35,6 @@ const t = useTranslations(locale);
   <Main pageTitle={t.pages.searchTitle} pageDesc={t.pages.searchDesc}>
     <div
       id="pagefind-search"
-      transition:persist
       data-backurl={backUrl}
       data-bundle-path={pagefindBundlePath}
     >
@@ -46,80 +45,55 @@ const t = useTranslations(locale);
 </Layout>
 
 <script>
-  function initSearch() {
-    const pageFindSearch: HTMLElement | null =
-      document.querySelector("#pagefind-search");
-
-    if (!pageFindSearch) return;
-
-    const bundlePath = pageFindSearch?.dataset?.bundlePath;
-    if (!bundlePath) return;
-
-    const params = new URLSearchParams(window.location.search);
-
-    const onIdle = window.requestIdleCallback || (cb => setTimeout(cb, 1));
-
-    onIdle(async () => {
-      // @ts-expect-error — Missing types for @pagefind/default-ui package.
-      const { PagefindUI } = await import("@pagefind/default-ui");
-
-      // Display warning inn dev mode
-      if (import.meta.env.DEV) {
-        pageFindSearch.innerHTML = `
-            <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
-              <p><strong>DEV mode Warning! </strong>You need to build the project at least once to see the search results during development.</p>
-              <code class="block bg-black text-white px-2 py-1 rounded">pnpm run build</code>
-            </div>
-          `;
-      }
-
-      // Init pagefind ui
-      const search = new PagefindUI({
-        element: "#pagefind-search",
-        bundlePath,
-        showImages: false,
-        showSubResults: true,
-        processTerm: function (term: string) {
-          params.set("q", term); // Update the `q` parameter in the URL
-          history.replaceState(history.state, "", "?" + params.toString()); // Push the new URL without reloading
-
-          const backUrl =
-            pageFindSearch?.dataset?.backurl ?? window.location.pathname;
-          sessionStorage.setItem("backUrl", `${backUrl}?${params.toString()}`);
-
-          return term;
-        },
-      });
-
-      // If search param exists (eg: search?q=astro), trigger search
-      const query = params.get("q");
-      if (query) {
-        search.triggerSearch(query);
-      }
-
-      // Reset search param if search input is cleared
-      const searchInput = document.querySelector(".pagefind-ui__search-input");
-      const clearButton = document.querySelector(".pagefind-ui__search-clear");
-      searchInput?.addEventListener("input", resetSearchParam);
-      clearButton?.addEventListener("click", resetSearchParam);
-
-      function resetSearchParam(e: Event) {
-        if ((e.target as HTMLInputElement)?.value.trim() === "") {
-          history.replaceState(history.state, "", window.location.pathname);
+  import { onPageMount } from "@/scripts/page-lifecycle";
+  onPageMount(signal => {
+    const host = document.querySelector<HTMLElement>("#pagefind-search");
+    const bundlePath = host?.dataset.bundlePath;
+    if (!host || !bundlePath) return;
+    let search:
+      { destroy(): void; triggerSearch(term: string): void } | undefined;
+    const params = new URLSearchParams(location.search);
+    const initialize = async () => {
+      try {
+        // @ts-expect-error — Missing declarations in @pagefind/default-ui.
+        const { PagefindUI } = await import("@pagefind/default-ui");
+        if (signal.aborted || !host.isConnected) return;
+        search = new PagefindUI({
+          element: host,
+          bundlePath,
+          showImages: false,
+          showSubResults: true,
+          processTerm(term: string) {
+            if (signal.aborted || !host.isConnected) return term;
+            if (term.trim()) params.set("q", term);
+            else params.delete("q");
+            const query = params.toString();
+            const url = location.pathname + (query ? `?${query}` : "");
+            history.replaceState(history.state, "", url);
+            sessionStorage.setItem("backUrl", url);
+            return term;
+          },
+        });
+        const query = params.get("q");
+        if (query) search?.triggerSearch(query);
+      } catch (error) {
+        if (!signal.aborted && host.isConnected) {
+          host.textContent = "搜索暂时不可用，请稍后重试。";
+          // eslint-disable-next-line no-console -- Report optional content load failures for diagnosis.
+          console.error("Search initialization failed:", error);
         }
       }
-    });
-  }
-
-  document.addEventListener("astro:after-swap", () => {
-    const pagefindSearch = document.querySelector("#pagefind-search");
-
-    // if pagefind search form already exists, don't initialize search component
-    if (pagefindSearch && pagefindSearch.querySelector("form")) return;
-
-    initSearch();
+    };
+    const supportsIdle = typeof requestIdleCallback === "function";
+    const pending = supportsIdle
+      ? requestIdleCallback(() => void initialize(), { timeout: 300 })
+      : window.setTimeout(() => void initialize(), 0);
+    return () => {
+      if (supportsIdle) cancelIdleCallback(pending);
+      else clearTimeout(pending);
+      search?.destroy();
+    };
   });
-  initSearch();
 </script>
 
 <style is:global>

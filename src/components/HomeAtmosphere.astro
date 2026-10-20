@@ -1,0 +1,55 @@
+---
+import { getAssetPath } from "@/utils/withBase";
+---
+
+<div
+  class="home-atmosphere"
+  aria-hidden="true"
+  transition:persist="blog-atmosphere"
+  transition:name="blog-atmosphere"
+  transition:animate="none"
+>
+  <canvas
+    id="home-particles"
+    data-portrait={getAssetPath("images/particle-portrait.png")}
+    data-content-portrait={getAssetPath("images/content-portrait.jpg?v=ink")}
+  ></canvas>
+  <div class="home-atmosphere-shade"></div>
+  <div class="home-atmosphere-grain"></div>
+</div>
+
+<script>
+  import { createHomeParticles } from "@/scripts/home-particles";
+
+  let renderer: ReturnType<typeof createHomeParticles> | undefined;
+  let activeCanvas: HTMLCanvasElement | undefined;
+
+  function setupParticles() {
+    const canvas = document.querySelector<HTMLCanvasElement>("#home-particles");
+    if (!canvas) {
+      renderer?.dispose();
+      renderer = undefined;
+      activeCanvas = undefined;
+      return;
+    }
+    if (canvas !== activeCanvas) {
+      renderer?.dispose();
+      renderer = createHomeParticles(canvas);
+      activeCanvas = canvas;
+    }
+    renderer?.setScene(
+      document.body.hasAttribute("data-particle-home") ? "home" : "content"
+    );
+  }
+
+  document.addEventListener("astro:page-load", setupParticles);
+  document.addEventListener("astro:after-swap", setupParticles);
+
+  if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+      renderer?.dispose();
+      document.removeEventListener("astro:page-load", setupParticles);
+      document.removeEventListener("astro:after-swap", setupParticles);
+    });
+  }
+</script>

@@ -4,7 +4,7 @@ const DARK = "dark";
 
 function getPreferredTheme(): string {
   const stored = localStorage.getItem(THEME_KEY);
-  if (stored) return stored;
+  if (stored === LIGHT || stored === DARK) return stored;
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? DARK
     : LIGHT;
@@ -24,7 +24,12 @@ function reflect(): void {
   const root = document.firstElementChild;
   root?.setAttribute("data-theme", themeValue);
   root?.classList.toggle("dark", themeValue === DARK);
-  document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
+  document
+    .querySelector("#theme-btn")
+    ?.setAttribute(
+      "aria-label",
+      themeValue === DARK ? "切换为浅色模式" : "切换为深色模式"
+    );
 
   // Fill <meta name="theme-color"> with the computed background colour so
   // Android's browser chrome matches the page background.
@@ -35,12 +40,14 @@ function reflect(): void {
 }
 
 function setup(): void {
-  themeValue = localStorage.getItem(THEME_KEY) ?? getPreferredTheme();
+  themeValue = getPreferredTheme();
   reflect();
-  document.querySelector("#theme-btn")?.addEventListener("click", () => {
-    themeValue = themeValue === LIGHT ? DARK : LIGHT;
-    persist();
-  });
+  const button = document.querySelector<HTMLButtonElement>("#theme-btn");
+  if (button)
+    button.onclick = () => {
+      themeValue = themeValue === LIGHT ? DARK : LIGHT;
+      persist();
+    };
 }
 
 setup();
@@ -73,6 +80,15 @@ document.addEventListener("astro:before-swap", event => {
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", ({ matches }) => {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === LIGHT || stored === DARK) return;
     themeValue = matches ? DARK : LIGHT;
-    persist();
+    reflect();
   });
+
+window.addEventListener("storage", event => {
+  if (event.key === THEME_KEY || event.key === null) {
+    themeValue = getPreferredTheme();
+    reflect();
+  }
+});

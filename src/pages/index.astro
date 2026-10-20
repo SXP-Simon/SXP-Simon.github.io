@@ -25,7 +25,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 const homePath = getRelativeLocaleUrl(locale, "");
 ---
 
-<Layout>
+<Layout particleBackground>
   <Header />
   <main
     id="main-content"
@@ -34,98 +34,102 @@ const homePath = getRelativeLocaleUrl(locale, "");
     class="app-layout my-1"
   >
     <section id="hero" class="border-border border-b pt-8 pb-6">
-      <div class="flex items-center gap-3">
-        <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-          你好，我是 Helian
-        </h1>
-        <a
-          target="_blank"
-          href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-          class="inline-block"
-          aria-label="RSS Feed"
-          title="RSS Feed"
-        >
-          <IconRss
-            width={20}
-            height={20}
-            class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-          />
-          <span class="sr-only">RSS Feed</span>
-        </a>
-      </div>
+      <div class="home-introduction">
+        <div class="flex items-center gap-3">
+          <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
+            你好，我是 Helian
+          </h1>
+          <a
+            target="_blank"
+            href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+            class="inline-block"
+            aria-label="RSS Feed"
+            title="RSS Feed"
+          >
+            <IconRss
+              width={20}
+              height={20}
+              class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
+            />
+            <span class="sr-only">RSS Feed</span>
+          </a>
+        </div>
 
-      <p class="text-base sm:text-lg leading-relaxed">
-        欢迎来到我的个人博客。这里是我记录日常技术探索、思考见解与生活点滴的极简空间。
-      </p>
-      <p class="mt-2 text-foreground/80">
-        探索
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href={getRelativeLocaleUrl(locale, "posts")}
-        >
-          最新文章
-        </LinkButton>
-        或了解更多
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href={getRelativeLocaleUrl(locale, "about")}
-        >
-          关于我
-        </LinkButton>。
-      </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
+        <p class="text-base leading-relaxed sm:text-lg">
+          欢迎来到我的个人博客。这里是我记录日常技术探索、思考见解与生活点滴的极简空间。
+        </p>
+        <p class="text-foreground/80 mt-2">
+          探索
+          <LinkButton
+            class="hover:text-accent underline decoration-dashed underline-offset-4"
+            href={getRelativeLocaleUrl(locale, "posts")}
+          >
+            最新文章
+          </LinkButton>
+          或了解更多
+          <LinkButton
+            class="hover:text-accent underline decoration-dashed underline-offset-4"
+            href={getRelativeLocaleUrl(locale, "about")}
+          >
+            关于我
+          </LinkButton>。
+        </p>
+        {
+          socials.length > 0 && (
+            <div class="mt-4 flex max-sm:flex-col sm:items-center">
+              <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
+                {t.home.socialLinks}:
+              </div>
+              <Socials />
             </div>
-            <Socials />
-          </div>
-        )
-      }
+          )
+        }
+      </div>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <div class="home-feed">
+      {
+        featuredPosts.length > 0 && (
+          <section
+            id="featured"
+            class:list={[
+              "pt-12 pb-6",
+              { "border-border border-b": recentPosts.length > 0 },
+            ]}
+          >
+            <h2 class="text-2xl font-semibold tracking-wide">
+              {t.home.featured}
+            </h2>
+            <ul>
+              {featuredPosts.map(data => (
+                <Card variant="h3" {...data} />
+              ))}
+            </ul>
+          </section>
+        )
+      }
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.recentPosts}
-          </h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+      {
+        recentPosts.length > 0 && (
+          <section id="recent-posts" class="pt-12 pb-6">
+            <h2 class="text-2xl font-semibold tracking-wide">
+              {t.home.recentPosts}
+            </h2>
+            <ul>
+              {recentPosts.slice(0, postsConfig.perIndex).map(data => (
+                <Card variant="h3" {...data} />
+              ))}
+            </ul>
+          </section>
+        )
+      }
 
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
+      <div class="my-8 text-center">
+        <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
+          {t.home.allPosts}
+          <IconArrowRight class="inline-block rtl:-rotate-180" />
+        </LinkButton>
+      </div>
     </div>
   </main>
   <Footer />

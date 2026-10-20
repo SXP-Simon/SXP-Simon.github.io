@@ -1,0 +1,104 @@
+/* Each page is one visual unit: headings and tags don't fly independently. */
+#main-content {
+  view-transition-name: page-content;
+}
+#site-header {
+  view-transition-name: site-header;
+}
+body > footer {
+  view-transition-name: page-footer;
+}
+nav[aria-label="breadcrumb"],
+.page-context {
+  view-transition-name: page-context;
+}
+
+@keyframes page-leave {
+  to {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes shell-leave {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes shell-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-group(*) {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-group(page-content),
+::view-transition-group(page-footer),
+::view-transition-group(page-context) {
+  animation: none;
+}
+::view-transition-old(page-content) {
+  animation: page-leave 180ms ease-out both;
+}
+::view-transition-new(page-content) {
+  animation: page-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both;
+}
+::view-transition-old(site-header),
+::view-transition-old(page-footer),
+::view-transition-old(page-context),
+::view-transition-old(root) {
+  animation: shell-leave 180ms ease-out both;
+}
+::view-transition-new(site-header),
+::view-transition-new(page-footer),
+::view-transition-new(page-context),
+::view-transition-new(root) {
+  animation: shell-enter 300ms ease-out both;
+}
+::view-transition-image-pair(*) {
+  isolation: auto;
+}
+::view-transition-old(*),
+::view-transition-new(*) {
+  mix-blend-mode: normal;
+}
+
+/* Astro waits for these animations when native view transitions are absent. */
+html[data-astro-transition-fallback="old"] #main-content {
+  animation: page-leave 180ms ease-out both;
+}
+html[data-astro-transition-fallback="new"] #main-content {
+  animation: page-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  html[data-astro-transition-fallback] #main-content {
+    animation: none;
+  }
+}

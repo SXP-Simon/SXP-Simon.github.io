@@ -1,0 +1,226 @@
+/* Both the document shell and canvas follow the same persisted theme. */
+body[data-particle-site] {
+  --background: #f6f3f0;
+  --foreground: #30282d;
+  --accent: #875061;
+  --accent-foreground: #fffaf7;
+  --muted: #e4dadf;
+  --muted-foreground: #6d5d68;
+  --border: #58445026;
+  --blog-panel: rgb(255 252 249 / 78%);
+  --blog-header: rgb(250 247 244 / 80%);
+  --blog-copy: #66525d;
+  --shade-rgb: 246 243 240;
+  --shade-opacity: 0.62;
+  --hero-shadow: rgb(255 255 255 / 30%);
+  position: relative;
+  isolation: isolate;
+  background: var(--background);
+  color-scheme: light;
+}
+
+[data-theme="dark"] body[data-particle-site] {
+  --background: #0c0b0f;
+  --foreground: #e9e2df;
+  --accent: #e1b2aa;
+  --accent-foreground: #171115;
+  --muted: #2f282f;
+  --muted-foreground: #a99ca3;
+  --border: #ffffff1c;
+  --blog-panel: rgb(0 0 0 / 70%);
+  --blog-header: rgb(0 0 0 / 58%);
+  --blog-copy: #c5b9be;
+  --shade-rgb: 0 0 0;
+  --shade-opacity: 1;
+  --hero-shadow: rgb(0 0 0 / 35%);
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  background: #f6f3f0;
+}
+
+html[data-theme="dark"] {
+  background: #0c0b0f;
+}
+
+body[data-particle-home] .app-layout {
+  max-width: 1120px;
+  padding-inline: 32px;
+}
+
+body[data-particle-site] #site-header {
+  background: var(--blog-header);
+}
+
+body[data-particle-site] #main-content,
+body[data-particle-site] > footer {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-particle-home] #hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: min(680px, 78svh);
+  padding-block: 72px 88px;
+  border: 0;
+}
+
+body[data-particle-home] .home-introduction {
+  width: 49%;
+  text-shadow: 0 2px 20px var(--hero-shadow);
+}
+
+body[data-particle-home] #hero h1 {
+  font-family: "Noto Serif SC", "Songti SC", SimSun, serif;
+  font-size: clamp(30px, 3.4vw, 47px);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.6;
+  margin-block: 24px;
+}
+
+body[data-particle-home] #hero p {
+  font-size: 14px;
+  line-height: 2;
+  color: var(--blog-copy);
+}
+
+.home-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--background);
+}
+
+.home-atmosphere canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.home-atmosphere-shade {
+  position: absolute;
+  inset: 0;
+  opacity: var(--shade-opacity);
+  background:
+    linear-gradient(90deg, rgb(var(--shade-rgb) / 42%), transparent 62%),
+    linear-gradient(
+      0deg,
+      rgb(var(--shade-rgb) / 58%),
+      transparent 38%,
+      rgb(var(--shade-rgb) / 10%)
+    );
+}
+
+.home-atmosphere-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+}
+
+body[data-particle-home] .home-feed {
+  background: var(--blog-panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0 36px 4px;
+  margin-bottom: 40px;
+  backdrop-filter: blur(16px);
+}
+
+body[data-particle-home] .home-feed section {
+  padding-block: 32px 18px;
+}
+
+body[data-particle-home] .home-feed h2 {
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+body[data-particle-home] .home-feed li {
+  padding: 4px 0 14px;
+}
+
+body[data-particle-home] .home-feed li p {
+  color: var(--blog-copy);
+  font-size: 14px;
+  line-height: 1.9;
+  margin-top: 7px;
+}
+
+@media (min-width: 1600px) {
+  body[data-particle-home] #hero {
+    min-height: 740px;
+  }
+}
+
+@media (max-width: 767px) {
+  body[data-particle-home] .app-layout {
+    padding-inline: 20px;
+  }
+
+  body[data-particle-home] #hero {
+    min-height: 650px;
+    align-items: flex-end;
+    padding-block: 330px 65px;
+  }
+
+  body[data-particle-home] .home-introduction {
+    width: 100%;
+  }
+
+  body[data-particle-home] #hero h1 {
+    font-size: 33px;
+    margin-block: 14px;
+  }
+
+  .home-atmosphere-shade {
+    background: linear-gradient(
+      0deg,
+      rgb(var(--shade-rgb) / 86%) 0%,
+      rgb(var(--shade-rgb) / 62%) 40%,
+      transparent 76%
+    );
+  }
+
+  body[data-particle-home] .home-feed {
+    padding-inline: 20px;
+  }
+}
+
+body[data-particle-site]:not([data-particle-home]) #main-content {
+  background: var(--blog-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 767px) {
+  body[data-particle-site]:not([data-particle-home]) #main-content {
+    width: calc(100% - 24px);
+    padding: 20px;
+  }
+}
+
+/* The live canvas owns its morph; don't cross-fade two frozen portraits. */
+::view-transition-old(blog-atmosphere) {
+  display: none;
+}
+
+::view-transition-new(blog-atmosphere),
+::view-transition-group(blog-atmosphere) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+  }
+}
