@@ -76,6 +76,8 @@ export function createHomeParticles(canvas: HTMLCanvasElement) {
   let progress = 1,
     disposed = false,
     revision = 0;
+  let assembling = false;
+  let reveal = 1;
   let requested: Scene | undefined;
   let activeScene: Scene = "home";
   let contentStyle = 0,
@@ -223,6 +225,9 @@ export function createHomeParticles(canvas: HTMLCanvasElement) {
 
   function retarget(snap: boolean) {
     if (!targetSamples) return;
+    // Resizing or navigating midway continues from the live cloud.
+    assembling = false;
+    if (snap) reveal = 1;
     fromContentStyle = contentStyle;
     fromPlacement = { ...livePlacement };
     if (snap) contentStyle = activeScene === "content" ? 1 : 0;
@@ -295,6 +300,24 @@ export function createHomeParticles(canvas: HTMLCanvasElement) {
       targetSamples = points;
       activeScene = scene;
       retarget(initial || paused);
+      if (initial && !paused) {
+        const placement = frameFor(scene);
+        fromPlacement = livePlacement = { ...placement };
+        fromContentStyle = contentStyle = scene === "content" ? 1 : 0;
+        for (const p of particles) {
+          const angle = random() * Math.PI * 2;
+          const radius = Math.sqrt(random());
+          // Distribute positions independently of source pixels: the opening
+          // reads as a cloud, not an enlarged or blurred copy of the portrait.
+          p.x = p.fromX =
+            placement.x + Math.cos(angle) * radius * placement.size * 0.62;
+          p.y = p.fromY =
+            placement.y + Math.sin(angle) * radius * placement.size * 0.62;
+        }
+        assembling = true;
+        progress = 0;
+        reveal = 0;
+      }
       draw(0);
       resume();
       void load(scene === "home" ? "content" : "home").catch(() => {});
@@ -342,7 +365,9 @@ export function createHomeParticles(canvas: HTMLCanvasElement) {
   function draw(dt: number) {
     if (disposed) return;
     const step = Math.min(dt * 60, 2.5);
-    progress = Math.min(1, progress + dt / duration);
+    progress = Math.min(1, progress + dt / (assembling ? 2.6 : duration));
+    reveal = paused ? 1 : Math.min(1, reveal + dt / 0.8);
+    const visibility = smooth(reveal);
     contentStyle = mix(
       fromContentStyle,
       activeScene === "content" ? 1 : 0,
@@ -382,11 +407,17 @@ export function createHomeParticles(canvas: HTMLCanvasElement) {
       (count === 15000 ? 1.28 : 1.08);
     for (const bucket of buckets) bucket.length = 0;
     for (const p of particles) {
+      // Slightly stagger the first assembly so the cloud doesn't collapse
+      // mechanically in one uniform step. Route morph timing stays unchanged.
+      const particleEase = assembling
+        ? smooth(Math.max(0, Math.min(1, (progress - p.depth * 0.16) / 0.84)))
+        : ease;
       const spread = wave * (16 + p.depth * 40);
       let tx =
-        mix(p.fromX, p.toX, ease) + Math.cos(p.phase + progress * 3) * spread;
+        mix(p.fromX, p.toX, particleEase) +
+        Math.cos(p.phase + progress * 3) * spread;
       let ty =
-        mix(p.fromY, p.toY, ease) +
+        mix(p.fromY, p.toY, particleEase) +
         Math.sin(p.phase + progress * 3) * spread * 0.7;
       if (!paused) {
         const drift = mix(0.9, 0.75, contentStyle);
@@ -458,10 +489,12 @@ export function createHomeParticles(canvas: HTMLCanvasElement) {
       }
       context.save();
       context.filter = "blur(9px)";
-      context.globalAlpha = mix(0.5, 0.27, theme) * (1 - wave * 0.45);
+      context.globalAlpha =
+        mix(0.5, 0.27, theme) * (1 - wave * 0.45) * visibility;
       context.drawImage(mistCanvas, 0, 0, width, height);
       context.restore();
     }
+    context.globalAlpha = visibility;
     for (let color = 0; color < buckets.length; color++) {
       context.fillStyle = palette[color];
       for (const p of buckets[color]) {
@@ -473,7 +506,7 @@ export function createHomeParticles(canvas: HTMLCanvasElement) {
       }
     }
     context.lineWidth = 0.4;
-    context.globalAlpha = 1 - contentStyle;
+    context.globalAlpha = (1 - contentStyle) * visibility;
     context.strokeStyle =
       theme > 0.5 ? "rgba(216,168,162,.12)" : "rgba(100,69,84,.12)";
     context.beginPath();
