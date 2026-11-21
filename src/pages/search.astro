@@ -3,7 +3,6 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import "@pagefind/default-ui/css/ui.css";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import { getAssetPath } from "@/utils/withBase";
@@ -30,9 +29,7 @@ const t = useTranslations(locale);
 <Layout title={`${t.pages.searchTitle} | ${config.site.title}`}>
   <Header />
 
-  <Breadcrumb />
-
-  <Main pageTitle={t.pages.searchTitle} pageDesc={t.pages.searchDesc}>
+  <Main pageTitle={t.pages.searchTitle}>
     <div
       id="pagefind-search"
       transition:persist
@@ -63,20 +60,22 @@ const t = useTranslations(locale);
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
-      // Display warning inn dev mode
-      if (import.meta.env.DEV) {
-        pageFindSearch.innerHTML = `
-            <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
-              <p><strong>DEV mode Warning! </strong>You need to build the project at least once to see the search results during development.</p>
-              <code class="block bg-black text-white px-2 py-1 rounded">pnpm run build</code>
-            </div>
-          `;
-      }
-
       // Init pagefind ui
       const search = new PagefindUI({
         element: "#pagefind-search",
         bundlePath,
+        translations: document.documentElement.lang.startsWith("zh") ? {
+          language: "zh-CN",
+          search_label: "站内搜索",
+          placeholder: "输入关键词",
+          clear_search: "清除",
+          searching: "正在查找「[SEARCH_TERM]」…",
+          zero_results: "没有找到与「[SEARCH_TERM]」相关的文章",
+          one_result: "找到 [COUNT] 篇与「[SEARCH_TERM]」相关的文章",
+          many_results: "找到 [COUNT] 篇与「[SEARCH_TERM]」相关的文章",
+          load_more: "更多结果",
+          filters_label: "筛选条件",
+        } : {},
         showImages: false,
         showSubResults: true,
         processTerm: function (term: string) {
@@ -104,7 +103,8 @@ const t = useTranslations(locale);
       clearButton?.addEventListener("click", resetSearchParam);
 
       function resetSearchParam(e: Event) {
-        if ((e.target as HTMLInputElement)?.value.trim() === "") {
+        if (e.type === "click" || (e.target as HTMLInputElement)?.value.trim() === "") {
+          params.delete("q");
           history.replaceState(history.state, "", window.location.pathname);
         }
       }
@@ -124,7 +124,7 @@ const t = useTranslations(locale);
 
 <style is:global>
   #pagefind-search {
-    --pagefind-ui-font: var(--font-app);
+    --pagefind-ui-font: var(--station-sans);
     --pagefind-ui-text: var(--foreground);
     --pagefind-ui-background: var(--background);
     --pagefind-ui-border: var(--border);

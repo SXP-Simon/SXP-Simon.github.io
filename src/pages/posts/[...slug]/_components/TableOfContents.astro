@@ -19,7 +19,7 @@ const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
       <details class="toc-inline my-6 rounded-xl border border-border bg-foreground/5 p-4 xl:hidden not-prose">
         <summary class="cursor-pointer font-medium text-foreground hover:text-accent flex items-center gap-2 select-none">
           <svg class="size-4 text-accent inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-          <span>目录导航 ({tocHeadings.length})</span>
+          <span>目录</span>
         </summary>
         <nav class="mt-3 max-h-72 overflow-y-auto ps-2 border-s border-border/50 text-sm">
           <ul class="flex flex-col gap-1.5 py-1">
@@ -42,7 +42,7 @@ const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
         <div class="border-s border-border/60 ps-4">
           <h2 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
             <svg class="size-4 text-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-            <span>本页目录</span>
+            <span>目录</span>
           </h2>
           <nav id="toc-nav">
             <ul class="flex flex-col gap-0.5 text-[13px] leading-relaxed">
