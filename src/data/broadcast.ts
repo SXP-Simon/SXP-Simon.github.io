@@ -171,11 +171,11 @@ const sceneDefinitions: Scene[] = [
         text: "文学不是为了胜利的学问……",
       },
       {
-        frame: "on-paper",
+        frame: "school-sky",
         speaker: "柘榴",
         text: "而是为了立于不败之地的学问……",
       },
-      { frame: "school-sky", speaker: "柘榴", text: "所以我才能继续战斗" },
+      { frame: "on-paper", speaker: "柘榴", text: "所以我才能继续战斗" },
     ],
   },
   {
