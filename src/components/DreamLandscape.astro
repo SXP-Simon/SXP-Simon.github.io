@@ -264,6 +264,30 @@ const art = frames[frame];
       width: min(100cqw, calc(58cqh * var(--art-ratio)));
     }
   }
+  @media (min-width: 701px) {
+    :global([data-reading])
+      .dream-plate[data-frame="two-windows"]
+      .dream-focus {
+      right: 7%;
+    }
+    :global([data-reading])
+      .dream-plate:is([data-frame="train-stars"], [data-frame="white-wings"])
+      .dream-focus {
+      inset-inline: 12% auto;
+    }
+  }
+  @media (min-width: 591px) and (max-width: 700px) {
+    :global([data-reading])
+      .dream-plate:is(
+        [data-frame="two-windows"],
+        [data-frame="train-stars"],
+        [data-frame="white-wings"]
+      )
+      .dream-focus {
+      width: min(94cqw, calc(57cqh * var(--art-ratio)));
+      top: 33%;
+    }
+  }
   :global([data-sunflower]) .dream-plate[data-frame] .dream-focus {
     inset: 0 var(--shot-right) auto auto;
     width: min(100cqw, var(--shot-width));

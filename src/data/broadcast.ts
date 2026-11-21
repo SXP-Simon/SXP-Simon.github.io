@@ -80,38 +80,35 @@ const sceneDefinitions: Scene[] = [
     ],
   },
   {
-    title: ["我们所眼见的都是过去，", "而一切，\n也都会过去。"],
+    title: ["银河铁道之夜", "我们一起走吧。"],
     location: "银河铁道之夜",
     cover: "two-windows",
     lines: [
-      { frame: "two-windows", text: "天之苍苍，其正色邪？其远而无所至极邪？" },
+      // Translated here from chapter IX of Miyazawa's novel, not game dialogue.
+      // https://www.aozora.gr.jp/cards/000081/files/456_15050.html
       {
         frame: "two-windows",
-        text: "你知道吗，我们见到的太阳，是八分钟前的太阳，见到的月亮，是一点三秒之前的月亮，见到一英里之外的建筑，是五微秒之前存在的，即使你在我一米之外，我见到的也是三纳秒以前的你。",
+        speaker: "乔万尼",
+        text: "「康帕内拉，又只剩我们两个了。\n不管走到多远，我们都一起去吧。」",
       },
       {
         frame: "train-stars",
-        text: "我们所眼见的都是过去，而一切，也都会过去。",
+        speaker: "乔万尼",
+        text: "「可是，真正的幸福究竟是什么呢？」",
+      },
+      {
+        frame: "train-stars",
+        speaker: "康帕内拉",
+        text: "「我不知道。」",
+      },
+      // The author's selection for the coda, outside the quoted conversation.
+      {
+        frame: "train-stars",
+        text: "即使你在我一米之外，\n我见到的也是三纳秒以前的你。",
       },
       {
         frame: "white-wings",
-        speaker: "维特根斯坦《逻辑哲学论》",
-        text: "主体不属于世界，然而它是世界的一个界限。",
-      },
-      {
-        frame: "white-wings",
-        speaker: "维特根斯坦《逻辑哲学论》",
-        text: "在世界上哪里可以找到一个形而上主体呢？",
-      },
-      {
-        frame: "train-stars",
-        speaker: "维特根斯坦《逻辑哲学论》",
-        text: "你会说这就正好像眼睛和视域的情形一样。但是事实上你看不见眼睛。",
-      },
-      {
-        frame: "train-stars",
-        speaker: "维特根斯坦《逻辑哲学论》",
-        text: "而且在视野里没有任何东西使得你能推论出那是被一只眼睛看到的。",
+        text: "我们所眼见的都是过去，\n而一切，也都会过去。",
       },
     ],
   },

@@ -528,6 +528,64 @@
     margin: 0 0 0.55rem;
   }
 }
+/* The railway CGs are portrait strips. Keep the speakers on the same shot
+   during their exchange, with space for the final unvoiced lines. */
+.voice-panel:is(
+    [data-frame="two-windows"],
+    [data-frame="train-stars"],
+    [data-frame="white-wings"]
+  )
+  .voice-speaker {
+  color: #dad9ea;
+  font-size: 0.85rem;
+}
+@media (min-width: 701px) {
+  .voice-panel:is(
+    [data-frame="two-windows"],
+    [data-frame="train-stars"],
+    [data-frame="white-wings"]
+  ) {
+    position: absolute;
+    width: 40%;
+  }
+  .voice-panel[data-frame="two-windows"] {
+    top: 39%;
+    left: 2%;
+  }
+  .airscape[data-reading]:has(
+      .voice-panel:is([data-frame="train-stars"], [data-frame="white-wings"])
+    )
+    .airshade {
+    background:
+      linear-gradient(
+        180deg,
+        #11121e99,
+        transparent 18%,
+        transparent 82%,
+        #11131db3
+      ),
+      linear-gradient(90deg, transparent 36%, #16152691 63%, #151524bf);
+  }
+  .voice-panel:is([data-frame="train-stars"], [data-frame="white-wings"]) {
+    right: 0;
+    top: 46%;
+  }
+  .voice-panel[data-frame="white-wings"] {
+    top: 62%;
+  }
+}
+@media (min-width: 591px) and (max-width: 700px) {
+  .voice-panel:is(
+    [data-frame="two-windows"],
+    [data-frame="train-stars"],
+    [data-frame="white-wings"]
+  ) {
+    position: absolute;
+    width: 100%;
+    bottom: 12%;
+    text-align: center;
+  }
+}
 /* Text placements within the sunflower scene. */
 .airscape[data-sunflower] {
   --verse-ink: #fff3e1;

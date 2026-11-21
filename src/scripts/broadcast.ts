@@ -253,6 +253,7 @@ class NightBroadcast extends HTMLElement {
     const story = this.element("story");
     this.element("stage").toggleAttribute("data-sunflower", !!verse);
     void this.presentFrame(turn && !hold ? turn.frame : passage.frame, () => {
+      story.dataset.frame = passage.frame;
       this.element("speaker").textContent = passage.speaker ?? "";
       this.element("speaker").hidden = !passage.speaker;
       const line = this.element("line");
