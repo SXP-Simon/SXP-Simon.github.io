@@ -1,14 +1,7 @@
 import type { AlbumFrame, AlbumName } from "./frames";
 
 type SunflowerPlacement =
-  | "memory"
-  | "question"
-  | "sunward"
-  | "starlight"
-  | "afterglow"
-  | "seasons"
-  | "prelude"
-  | "dedication";
+  "hillside" | "question" | "sunward" | "starlight" | "seasons" | "dedication";
 type SunflowerVerse = {
   placement: SunflowerPlacement;
   phrases: string[];
@@ -46,10 +39,14 @@ const sceneDefinitions: Scene[] = [
     location: "夜晚的向日葵",
     cover: "flower-bed",
     lines: [
-      sunflower("flower-bed", "memory", [
-        "白天躺在花丛里，有一瓣花一直挨着她的脸。",
-        "到了傍晚，她忽然很想知道，",
-        "那些花现在朝着哪里。",
+      // Opening exchange excerpted from the Chinese quotation of 向日葵の坂道.
+      // https://taf.fyi/acgn/subarashiki-hibi/#向日葵
+      sunflower("flower-bed", "hillside", [
+        "「不是说向日葵会一直朝太阳的方向盛开吗？」",
+      ]),
+      sunflower("flower-bed", "hillside", [
+        "「一旦开花了，",
+        "就再也不会追着太阳了。」",
       ]),
       sunflower("sunflower-roof", "question", [
         "——夜晚的向日葵，",
@@ -71,20 +68,10 @@ const sceneDefinitions: Scene[] = [
         ],
         { after: 3, frame: "embrace", pause: 3000 }
       ),
-      sunflower("embrace", "afterglow", [
-        "说完这句，身后的人又靠近了一点。",
-        "手指还攥着胸前的衣料。",
-        "天就这样慢慢暗下来。",
-      ]),
       sunflower("flower-bed", "seasons", [
         "——如初春雪，暮春樱，",
         "夏晚荷，秋寒叶，",
         "天降物哀，执拗、纯粹而绝美。",
-      ]),
-      sunflower("night-piano", "prelude", [
-        "她把手放到琴键上。起初只听见风。",
-        "后来，连两个人说话时的那一点停顿，",
-        "也进了曲子里。",
       ]),
       sunflower("night-piano", "dedication", [
         "——这曲，",

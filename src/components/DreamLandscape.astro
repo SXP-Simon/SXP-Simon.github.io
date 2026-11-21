@@ -256,6 +256,14 @@ const art = frames[frame];
       transform: translate(50%, -50%);
     }
   }
+  @media (max-width: 590px) {
+    :global(.airscape[data-reading]:not([data-sunflower]))
+      .dream-plate[data-frame]
+      .dream-focus {
+      top: 31%;
+      width: min(100cqw, calc(58cqh * var(--art-ratio)));
+    }
+  }
   :global([data-sunflower]) .dream-plate[data-frame] .dream-focus {
     inset: 0 var(--shot-right) auto auto;
     width: min(100cqw, var(--shot-width));

@@ -132,8 +132,9 @@
 }
 
 .airframe {
-  min-height: 590px;
-  height: clamp(590px, 75svh, 880px);
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   display: flex;
   align-items: center;
@@ -205,7 +206,7 @@
 
 .signal-footer {
   position: absolute;
-  inset: auto 0 0;
+  inset: auto 0 env(safe-area-inset-bottom);
   min-height: 78px;
   display: flex;
   align-items: center;
@@ -495,25 +496,21 @@
   .notes span {
     font-size: 1rem;
   }
-  .airscape {
-    --reading-picture: clamp(280px, 47svh, 420px);
-    background: var(--ink);
-  }
-  .airscape > dream-landscape,
   .airscape .airshade {
-    bottom: auto;
-    height: var(--reading-picture);
-  }
-  .airscape .airshade {
-    background:
-      linear-gradient(180deg, #141421ce, transparent 23%),
-      linear-gradient(0deg, var(--ink), transparent 18%);
+    background: linear-gradient(
+      180deg,
+      #141421c9,
+      transparent 22%,
+      transparent 42%,
+      #191820d9 78%,
+      #171620
+    );
   }
   .airscape .airframe {
-    display: block;
-    height: auto;
-    min-height: 0;
-    padding: var(--reading-picture) 0 66px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: max(74px, 36svh) 0 calc(76px + env(safe-area-inset-bottom));
   }
   .aircopy {
     padding: 14px 4px 8px;
@@ -531,7 +528,7 @@
     margin: 0 0 0.55rem;
   }
 }
-/* The first conversation is lettered into three illustrations. */
+/* Text placements within the sunflower scene. */
 .airscape[data-sunflower] {
   --verse-ink: #fff3e1;
 }
@@ -589,28 +586,10 @@
     opacity: 1;
   }
 }
-[data-sunflower] [data-placement="memory"] {
-  left: 1%;
-  bottom: 18%;
-}
-[data-sunflower] [data-placement="afterglow"] {
-  right: 1%;
-  bottom: 19%;
-}
-[data-sunflower] [data-placement="prelude"] {
-  right: 0;
-  top: 23%;
-}
-[data-sunflower]
-  :is(
-    [data-placement="memory"],
-    [data-placement="afterglow"],
-    [data-placement="prelude"]
-  )
-  .voice-line {
-  font-size: clamp(1.03rem, 1.42vw, 1.48rem);
-  line-height: 1.85;
-  letter-spacing: 0.045em;
+[data-sunflower] [data-placement="hillside"] {
+  left: 2%;
+  bottom: 20%;
+  max-width: min(22em, 45%);
 }
 [data-sunflower] [data-placement="question"] {
   left: 11%;
@@ -662,14 +641,7 @@
   white-space: nowrap;
 }
 @media (max-width: 700px) {
-  .airscape[data-sunflower] > dream-landscape,
-  .airscape[data-sunflower] .airshade {
-    height: 100%;
-  }
   .airscape[data-sunflower] .airframe {
-    display: block;
-    height: clamp(565px, 84svh, 720px);
-    min-height: 0;
     padding: 0;
   }
   .airscape[data-sunflower] .voice-line {
@@ -685,13 +657,10 @@
       #14121fed
     );
   }
-  [data-sunflower] [data-placement="memory"],
-  [data-sunflower] [data-placement="afterglow"],
-  [data-sunflower] [data-placement="prelude"] {
-    top: auto;
+  .airscape[data-sunflower] [data-placement="hillside"] {
     bottom: 14%;
     left: 4%;
-    right: 4%;
+    max-width: 90%;
   }
   [data-sunflower] [data-placement="question"] {
     left: 4%;
@@ -712,6 +681,33 @@
   }
   [data-sunflower] [data-placement="dedication"] {
     bottom: 13%;
+  }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  .masthead {
+    min-height: 52px;
+  }
+  .airframe {
+    padding-block: 56px;
+  }
+  .airtitle {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .air-actions {
+    margin-top: 0.7rem;
+  }
+  .signal-footer {
+    min-height: 48px;
+  }
+  .voice-panel {
+    width: 54%;
+  }
+  .voice-line {
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+  .airscape[data-sunflower] .voice-line {
+    font-size: 1rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {
