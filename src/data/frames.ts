@@ -183,7 +183,7 @@ export const albums = {
       32,
       "#50312e",
       false,
-      "橙红色的光中，两人的额头轻轻抵在一起。"
+      "两人在橙红色的光中面对面靠近，手臂交叠在一起。"
     ),
     sunflowers: frame(
       "0CC9B1F2AEE8B84525B8861A3E328DE2",
@@ -210,7 +210,7 @@ export const albums = {
       45,
       "#503446",
       true,
-      "粉白的羽翼围拢在少女身旁。"
+      "粉白的羽翼张开，浅发少女从背后环住另一人。"
     ),
     "star-score": frame(
       "2DC2520BB338D56813047E2C19B06189",

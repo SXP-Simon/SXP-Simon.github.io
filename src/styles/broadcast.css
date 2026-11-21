@@ -768,6 +768,100 @@
     );
   }
 }
+.airscape[data-finale] {
+  --closing-shade: linear-gradient(
+    180deg,
+    #181722bd,
+    transparent 18%,
+    transparent 55%,
+    #151522b8 87%,
+    #12131ad9
+  );
+}
+[data-finale] .airshade {
+  background: var(--closing-shade);
+}
+[data-finale] :is(.aircopy, .voice-panel) {
+  position: absolute;
+  bottom: max(72px, 16%);
+  left: 3%;
+  width: 69%;
+}
+[data-finale] .voice-line {
+  text-shadow:
+    0 1px 5px #1c1624,
+    0 2px 16px #151421af;
+}
+@media (min-width: 701px) {
+  [data-finale]
+    :is(
+      .aircopy,
+      .voice-panel[data-frame="firelight"],
+      .voice-panel[data-frame="paper-birds"]
+    ) {
+    right: 3%;
+    left: auto;
+    text-align: end;
+  }
+  [data-finale] .air-actions {
+    justify-content: flex-end;
+  }
+  [data-finale]
+    .voice-panel:is([data-frame="sunflowers"], [data-frame="paper-birds"]) {
+    bottom: 32%;
+    width: 44%;
+  }
+  [data-finale]:has(> [data-frame="sunflowers"]) .airshade {
+    background:
+      var(--closing-shade), linear-gradient(90deg, #352432ca, transparent 67%);
+  }
+  [data-finale]:has(> [data-frame="paper-birds"]) .airshade {
+    background:
+      var(--closing-shade),
+      linear-gradient(90deg, transparent 31%, #322331ba 77%);
+  }
+  [data-finale] .voice-panel[data-frame="classroom-floor"] {
+    left: 7%;
+  }
+}
+@media (max-width: 700px) {
+  .airscape[data-finale] :is(.aircopy, .voice-panel) {
+    left: 2%;
+    width: 96%;
+    padding: 0;
+  }
+  .airscape[data-finale] .airshade {
+    background: linear-gradient(
+      180deg,
+      #191520ba,
+      transparent 19%,
+      transparent 48%,
+      #201b27db 70%,
+      #171521 97%
+    );
+  }
+}
+@media (max-width: 700px) and (min-height: 650px) and (orientation: portrait) {
+  /* Set the first line just below each uncropped landscape CG. */
+  .airscape[data-finale]
+    .voice-panel:is(
+      [data-frame="firelight"],
+      [data-frame="classroom-floor"],
+      [data-frame="star-score"]
+    ) {
+    top: min(64%, calc(40% + var(--half-art-height) + 1.25rem));
+    bottom: auto;
+  }
+  [data-finale] .voice-panel[data-frame="firelight"] {
+    --half-art-height: 25vw;
+  }
+  [data-finale] .voice-panel[data-frame="classroom-floor"] {
+    --half-art-height: 30.9vw;
+  }
+  [data-finale] .voice-panel[data-frame="star-score"] {
+    --half-art-height: 28.125vw;
+  }
+}
 /* Text placements within the sunflower scene. */
 .airscape[data-sunflower] {
   --verse-ink: #fff3e1;

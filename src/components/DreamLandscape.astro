@@ -289,7 +289,7 @@ const art = frames[frame];
     }
   }
   @media (min-width: 701px) {
-    :global(.airscape:is([data-cyrano], [data-literature]))
+    :global(.airscape:is([data-cyrano], [data-literature], [data-finale]))
       .dream-plate[data-frame]
       .dream-focus {
       inset: 50% 50% auto auto;
@@ -309,16 +309,31 @@ const art = frames[frame];
       .dream-focus,
     :global(.airscape[data-literature])
       .dream-plate:is([data-frame="on-the-roof"], [data-frame="on-paper"])
+      .dream-focus,
+    :global(.airscape[data-finale])
+      .dream-plate[data-frame="sunflowers"]
       .dream-focus {
       right: 7%;
       transform: translateY(-50%);
     }
+    :global(.airscape[data-finale])
+      .dream-plate[data-frame="paper-birds"]
+      .dream-focus {
+      inset-inline: 9% auto;
+      transform: translateY(-50%);
+    }
   }
   @media (max-width: 700px) {
-    :global(.airscape:is([data-cyrano], [data-literature]))
+    :global(.airscape:is([data-cyrano], [data-literature], [data-finale]))
       .dream-plate[data-frame]
       .dream-focus,
-    :global(.airscape:is([data-cyrano], [data-literature])[data-reading])
+    :global(
+        .airscape:is(
+            [data-cyrano],
+            [data-literature],
+            [data-finale]
+          )[data-reading]
+      )
       .dream-plate[data-frame]
       .dream-focus {
       inset: 40% 50% auto auto;

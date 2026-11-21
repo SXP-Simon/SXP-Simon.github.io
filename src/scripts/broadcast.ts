@@ -187,6 +187,10 @@ class NightBroadcast extends HTMLElement {
       "data-literature",
       scene.cover === "reading-room"
     );
+    this.element("stage").toggleAttribute(
+      "data-finale",
+      scene.location === "我只想拥抱她"
+    );
     this.querySelectorAll<HTMLButtonElement>(
       "[data-tune], [data-chapter]"
     ).forEach(button =>
