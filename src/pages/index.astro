@@ -110,8 +110,8 @@ const first = scenes[0];
                     type="button"
                     data-chapter={i}
                     aria-pressed={i === 0}
-                    aria-label={`第${i + 1}幕，${scene.location}`}
-                    title={scene.location}
+                    aria-label={`第${i + 1}幕，${scene.label}`}
+                    title={scene.label}
                   >
                     {["一", "二", "三", "四", "五"][i]}
                   </button>
@@ -137,14 +137,14 @@ const first = scenes[0];
                 class="scene-card"
                 data-tune={i}
                 aria-pressed={i === 0}
-                aria-label={`切换至第 ${i + 1} 幕，${scene.location}`}
+                aria-label={`切换至第 ${i + 1} 幕，${scene.label}`}
               >
                 <span class="card-art">
                   <DreamLandscape frame={scene.cover} small />
                 </span>
                 <span class="card-legend">
                   <>
-                    <strong>{scene.location}</strong>
+                    <strong>{scene.label}</strong>
                     <i aria-hidden="true">
                       <Icon name="lucide:arrow-up-right" size={17} />
                     </i>

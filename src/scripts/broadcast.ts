@@ -190,7 +190,7 @@ class NightBroadcast extends HTMLElement {
       )
     );
     this.element("status").textContent =
-      `第 ${this.index + 1} 幕，${scene.location}。`;
+      `第 ${this.index + 1} 幕，${scene.label}。`;
     this.retune?.(this.index);
     if (this.reading) {
       this.renderLine();

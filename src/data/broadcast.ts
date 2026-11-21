@@ -27,6 +27,7 @@ function sunflower(
 type Scene = {
   [A in AlbumName]: {
     location: A;
+    label?: string;
     title: [string, string];
     cover: AlbumFrame<A>;
     lines: {
@@ -39,7 +40,7 @@ type Scene = {
 }[AlbumName];
 
 // The voices are kept separate where the supplied text identifies a speaker.
-export const scenes: Scene[] = [
+const sceneDefinitions: Scene[] = [
   {
     title: ["夜晚的向日葵，", "存在的理由\n又是什么呢？"],
     location: "夜晚的向日葵",
@@ -167,6 +168,7 @@ export const scenes: Scene[] = [
   {
     title: ["所以我才能", "继续战斗"],
     location: "文学少女与化学少女（文学不会输）",
+    label: "文学不会输",
     cover: "reading-room",
     lines: [
       {
@@ -225,3 +227,8 @@ export const scenes: Scene[] = [
     ],
   },
 ];
+
+export const scenes = sceneDefinitions.map(scene => ({
+  ...scene,
+  label: scene.label ?? scene.location,
+}));
