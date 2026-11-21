@@ -183,37 +183,24 @@ const sceneDefinitions: Scene[] = [
     location: "我只想拥抱她",
     cover: "firelight",
     lines: [
-      {
-        frame: "sunflowers",
-        text: "世界又如何。补偿又如何。高岛又如何。\n诅咒又如何。死亡又如何。",
-      },
+      { frame: "paper-birds", text: "世界又如何。补偿又如何。" },
+      { frame: "sunflowers", text: "高岛又如何。" },
+      { frame: "paper-birds", text: "诅咒又如何。死亡又如何。" },
       {
         frame: "firelight",
         text: "我想拥抱她。只想拥抱她。\n除此之外，都无所谓。",
       },
+      { frame: "paper-birds", text: "都死了又如何。世界亦然。" },
+      { frame: "classroom-floor", text: "我亦然。希实香亦然。" },
       {
         frame: "firelight",
-        text: "都死了又如何。世界亦然。我亦然。希实香亦然。\n什么都不剩又如何。一切都消失了又如何。",
+        text: "什么都不剩又如何。一切都消失了又如何。",
       },
-      { frame: "paper-birds", text: "我只是……我只是想……\n拥抱她。" },
-      { frame: "paper-birds", text: "临死前，即便那只是刹那的世界，" },
+      { frame: "star-score", text: "我只是……我只是想……拥抱她。" },
       {
-        frame: "classroom-floor",
-        text: "我仍感受到了她生的温暖。",
+        frame: "firelight",
+        text: "临死前，即便那只是刹那的世界，我仍感受到了她生的温暖。",
       },
-      {
-        frame: "classroom-floor",
-        text: "对于人生的意义，没有追问的必要，\n也没有必要为人生不可解明而困惑。",
-      },
-      {
-        frame: "star-score",
-        text: "这个世界，这个宇宙，这片天空，这条河，这条路……\n没有必要为这一切的无法解明而困惑。",
-      },
-      {
-        frame: "star-score",
-        text: "因为人活着这件事，就拥有着连其本身都能包含的深邃。\n那和上帝一样大，和上帝一样重。",
-      },
-      { frame: "star-score", text: "那就是美妙的旋律和美妙的话语。" },
     ],
   },
 ];
