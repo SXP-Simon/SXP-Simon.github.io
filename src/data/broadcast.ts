@@ -1,7 +1,14 @@
 import type { AlbumFrame, AlbumName } from "./frames";
 
 type SunflowerPlacement =
-  "question" | "sunward" | "starlight" | "seasons" | "dedication";
+  | "memory"
+  | "question"
+  | "sunward"
+  | "starlight"
+  | "afterglow"
+  | "seasons"
+  | "prelude"
+  | "dedication";
 type SunflowerVerse = {
   placement: SunflowerPlacement;
   phrases: string[];
@@ -38,7 +45,12 @@ export const scenes: Scene[] = [
     location: "夜晚的向日葵",
     cover: "flower-bed",
     lines: [
-      sunflower("flower-bed", "question", [
+      sunflower("flower-bed", "memory", [
+        "白天躺在花丛里，有一瓣花一直挨着她的脸。",
+        "到了傍晚，她忽然很想知道，",
+        "那些花现在朝着哪里。",
+      ]),
+      sunflower("sunflower-roof", "question", [
         "——夜晚的向日葵，",
         "存在的理由又是什么呢？",
       ]),
@@ -48,7 +60,7 @@ export const scenes: Scene[] = [
         "岂不是很辛苦？",
       ]),
       sunflower(
-        "at-sunset",
+        "last-warmth",
         "starlight",
         [
           "——哈哈，总能忍过去。",
@@ -56,12 +68,22 @@ export const scenes: Scene[] = [
           "有一点点星光，一点点希望，",
           "活着，就足够了吧。",
         ],
-        { after: 2, frame: "night-piano", pause: 2100 }
+        { after: 3, frame: "embrace", pause: 3000 }
       ),
-      sunflower("night-piano", "seasons", [
+      sunflower("embrace", "afterglow", [
+        "说完这句，身后的人又靠近了一点。",
+        "手指还攥着胸前的衣料。",
+        "天就这样慢慢暗下来。",
+      ]),
+      sunflower("flower-bed", "seasons", [
         "——如初春雪，暮春樱，",
         "夏晚荷，秋寒叶，",
         "天降物哀，执拗、纯粹而绝美。",
+      ]),
+      sunflower("night-piano", "prelude", [
+        "她把手放到琴键上。起初只听见风。",
+        "后来，连两个人说话时的那一点停顿，",
+        "也进了曲子里。",
       ]),
       sunflower("night-piano", "dedication", [
         "——这曲，",

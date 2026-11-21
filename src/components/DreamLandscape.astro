@@ -273,6 +273,15 @@ const art = frames[frame];
     --shot-right: 30%;
     --shot-width: 144cqh;
   }
+  :global([data-sunflower]) .dream-plate[data-frame="sunflower-roof"] {
+    --shot-right: 22%;
+    --shot-width: 71cqh;
+  }
+  :global([data-sunflower])
+    .dream-plate:is([data-frame="last-warmth"], [data-frame="embrace"]) {
+    --shot-right: 33%;
+    --shot-width: 134cqh;
+  }
   :global([data-sunflower]) .dream-plate[data-frame="night-piano"] {
     --shot-right: 28%;
     --shot-width: 84cqh;
@@ -286,7 +295,11 @@ const art = frames[frame];
       --end-alpha: 1;
     }
     :global([data-sunflower])
-      .dream-plate[data-frame="at-sunset"]
+      .dream-plate:is(
+        [data-frame="at-sunset"],
+        [data-frame="last-warmth"],
+        [data-frame="embrace"]
+      )
       .dream-focus {
       /* Keep both speakers in the same horizontal shot on a narrow screen. */
       top: 3%;
@@ -299,6 +312,12 @@ const art = frames[frame];
         black 74%,
         transparent
       );
+    }
+    :global([data-sunflower])
+      .dream-plate:is([data-frame="last-warmth"], [data-frame="embrace"])
+      .dream-focus {
+      height: min(82%, 103cqw);
+      top: 8%;
     }
   }
   @media (pointer: fine) and (prefers-reduced-motion: no-preference) {

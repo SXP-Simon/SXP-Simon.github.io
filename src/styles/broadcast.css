@@ -589,6 +589,29 @@
     opacity: 1;
   }
 }
+[data-sunflower] [data-placement="memory"] {
+  left: 1%;
+  bottom: 18%;
+}
+[data-sunflower] [data-placement="afterglow"] {
+  right: 1%;
+  bottom: 19%;
+}
+[data-sunflower] [data-placement="prelude"] {
+  right: 0;
+  top: 23%;
+}
+[data-sunflower]
+  :is(
+    [data-placement="memory"],
+    [data-placement="afterglow"],
+    [data-placement="prelude"]
+  )
+  .voice-line {
+  font-size: clamp(1.03rem, 1.42vw, 1.48rem);
+  line-height: 1.85;
+  letter-spacing: 0.045em;
+}
 [data-sunflower] [data-placement="question"] {
   left: 11%;
   bottom: 19%;
@@ -661,6 +684,14 @@
       #141220b8 82%,
       #14121fed
     );
+  }
+  [data-sunflower] [data-placement="memory"],
+  [data-sunflower] [data-placement="afterglow"],
+  [data-sunflower] [data-placement="prelude"] {
+    top: auto;
+    bottom: 14%;
+    left: 4%;
+    right: 4%;
   }
   [data-sunflower] [data-placement="question"] {
     left: 4%;
