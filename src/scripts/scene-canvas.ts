@@ -1,3 +1,6 @@
+import type { FrameKey } from "../data/frames";
+import { paintAmbientSignal } from "./ambient-signal";
+
 type Crop = { x: number; y: number; width: number; height: number };
 
 // Source rectangle for CSS object-fit: cover, including the authored focal point.
@@ -39,7 +42,8 @@ function drawCrop(
 }
 
 export function composeFrame(
-  plate: HTMLElement
+  plate: HTMLElement,
+  ambient?: HTMLCanvasElement
 ): HTMLCanvasElement | undefined {
   const box = plate.getBoundingClientRect();
   const picture = plate.querySelector("picture")!;
@@ -83,7 +87,8 @@ export function composeFrame(
   const [x, y] = getComputedStyle(image)
     .objectPosition.split(" ")
     .map(value => parseFloat(value) / 100);
-  drawCrop(ctx, image, cover(native, art.width, art.height, x, y), dest);
+  const crop = cover(native, art.width, art.height, x, y);
+  drawCrop(ctx, image, crop, dest);
 
   // Mask just the illustration, before laying the ambient colour behind it.
   const style = getComputedStyle(picture);
@@ -139,5 +144,15 @@ export function composeFrame(
   shade.addColorStop(0.72, "transparent");
   ctx.fillStyle = shade;
   ctx.fillRect(0, 0, box.width, box.height);
+  if (ambient) {
+    paintAmbientSignal(
+      ambient,
+      plate.dataset.frame as FrameKey,
+      box,
+      dest,
+      crop,
+      image
+    );
+  }
   return result;
 }

@@ -5,6 +5,8 @@ import { createGrainDissolve } from "./grain-dissolve";
 class DreamLandscape extends HTMLElement {
   private controller?: AbortController;
   private observer?: ResizeObserver;
+  private visibilityObserver?: IntersectionObserver;
+  private ambient?: HTMLCanvasElement;
   private active?: HTMLElement;
   private pending?: HTMLElement;
   private context: CanvasRenderingContext2D | null = null;
@@ -21,6 +23,8 @@ class DreamLandscape extends HTMLElement {
     this.active = this.querySelector<HTMLElement>(".dream-plate") ?? undefined;
     const canvas = this.querySelector<HTMLCanvasElement>(".dream-canvas");
     if (!this.active || !canvas) return;
+    this.ambient =
+      this.querySelector<HTMLCanvasElement>(".dream-signal") ?? undefined;
     this.desired = this.active.dataset.frame as FrameKey;
     this.context = canvas.getContext("2d", { alpha: false });
     this.controller = new AbortController();
@@ -48,6 +52,10 @@ class DreamLandscape extends HTMLElement {
     );
     this.observer = new ResizeObserver(() => this.scheduleLayout());
     this.observer.observe(this);
+    this.visibilityObserver = new IntersectionObserver(([entry]) => {
+      this.toggleAttribute("data-in-view", entry.isIntersecting);
+    });
+    this.visibilityObserver.observe(this);
     window.addEventListener("resize", () => this.scheduleLayout(), { signal });
     this.reduced.addEventListener(
       "change",
@@ -115,6 +123,8 @@ class DreamLandscape extends HTMLElement {
   disconnectedCallback() {
     this.controller?.abort();
     this.observer?.disconnect();
+    this.visibilityObserver?.disconnect();
+    if (this.ambient) this.ambient.width = this.ambient.height = 0;
     this.generation++;
     this.pending?.remove();
     this.pending = undefined;
@@ -161,7 +171,7 @@ class DreamLandscape extends HTMLElement {
       matchMedia("(max-width: 700px)").matches,
     ].join("|");
     if (key === this.renderedLayout) return;
-    const next = composeFrame(plate);
+    const next = composeFrame(plate, this.ambient);
     if (!next) return;
     this.renderedLayout = key;
     const screen = ctx.canvas;
