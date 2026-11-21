@@ -85,7 +85,6 @@ class NightBroadcast extends HTMLElement {
   private line = 0;
   private reading = false;
   private listener?: AbortController;
-  private timeline?: gsap.core.Timeline;
   private reveal?: gsap.core.Tween;
   private ambience?: AudioContext;
   private retune?: (index: number) => void;
@@ -141,7 +140,6 @@ class NightBroadcast extends HTMLElement {
   }
 
   private resetMotion() {
-    this.timeline?.revert();
     this.reveal?.revert();
   }
 
@@ -216,26 +214,6 @@ class NightBroadcast extends HTMLElement {
     else this.showFrame(scene.cover);
     if (this.reduced) return;
 
-    const reflection = this.element("glint");
-    this.timeline = gsap.timeline();
-    this.timeline
-      .fromTo(
-        reflection,
-        { xPercent: -45, opacity: 0 },
-        { xPercent: -10, opacity: 0.8, duration: 0.16, ease: "sine.out" },
-        0
-      )
-      .to(
-        reflection,
-        {
-          xPercent: 48,
-          opacity: 0,
-          duration: 0.4,
-          ease: "sine.inOut",
-          clearProps: "opacity,transform",
-        },
-        0.16
-      );
     if (!this.reading) this.revealTitle();
   }
 

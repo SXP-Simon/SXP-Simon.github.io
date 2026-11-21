@@ -112,8 +112,7 @@
   background: #64526c;
   overflow: hidden;
 }
-.airshade,
-.window-glint {
+.airshade {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -130,19 +129,6 @@
       transparent 64%
     ),
     linear-gradient(0deg, #11131de6, transparent 24%);
-}
-
-.window-glint {
-  z-index: 1;
-  opacity: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    #fad2aa20 46%,
-    #ffeccb63 49%,
-    #fae9d30f 50%,
-    transparent 60%
-  );
 }
 
 .airframe {

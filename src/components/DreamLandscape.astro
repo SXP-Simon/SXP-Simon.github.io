@@ -51,6 +51,11 @@ const art = frames[frame];
       </div>
     )
   }
+  {
+    !small && (
+      <canvas class="dream-canvas" width="0" height="0" aria-hidden="true" />
+    )
+  }
 </dream-landscape>
 
 <script>
@@ -67,6 +72,19 @@ const art = frames[frame];
     pointer-events: none;
     container-type: size;
     background: #302c38;
+  }
+  .dream-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+  dream-landscape[data-painted] .dream-canvas {
+    opacity: 1;
+  }
+  dream-landscape[data-painted] .dream-plate {
+    opacity: 0;
   }
   .dream-thumb,
   .dream-focus img {
@@ -108,7 +126,16 @@ const art = frames[frame];
     inset-block: 0;
     right: 0;
     width: min(83%, 196cqh);
-    mask-image: linear-gradient(90deg, transparent, #000 18%, #000 100%);
+    --fade-in: 18%;
+    --fade-out: 100%;
+    --end-alpha: 1;
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 var(--fade-in),
+      #000 var(--fade-out),
+      rgb(0 0 0 / var(--end-alpha))
+    );
   }
   .dream-focus img {
     object-position: var(--art-x) var(--art-y);
@@ -116,13 +143,9 @@ const art = frames[frame];
   .dream-plate[data-portrait] .dream-focus {
     right: 2.5%;
     width: min(68%, 127cqh);
-    mask-image: linear-gradient(
-      90deg,
-      transparent,
-      #000 19%,
-      #000 90%,
-      transparent
-    );
+    --fade-in: 19%;
+    --fade-out: 90%;
+    --end-alpha: 0;
   }
   .dream-plate[data-frame="two-windows"] .dream-focus {
     width: min(67%, 92cqh);
@@ -141,7 +164,9 @@ const art = frames[frame];
     .dream-plate[data-frame="two-windows"] .dream-focus {
       right: -4%;
       width: 105%;
-      mask-image: linear-gradient(90deg, transparent, #000 13%, #000 100%);
+      --fade-in: 13%;
+      --fade-out: 100%;
+      --end-alpha: 1;
     }
     .dream-plate::after {
       background: linear-gradient(
@@ -164,16 +189,8 @@ const art = frames[frame];
     }
   }
   @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .dream-plate::before {
-      transform: translate(var(--art-dx, 0px), var(--art-dy, 0px));
-      transition: transform 460ms ease-out;
-    }
-    .dream-focus img {
-      transform: scale(1.018)
-        translate(
-          calc(var(--art-dx, 0px) * 2.5),
-          calc(var(--art-dy, 0px) * 2.5)
-        );
+    .dream-canvas {
+      transform: scale(1.006) translate(var(--art-dx, 0px), var(--art-dy, 0px));
       transition: transform 460ms ease-out;
     }
   }
