@@ -3,12 +3,11 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import config from "@/config";
 
 type Props = {
-  pageTitle: string | [string, string];
-  pageDesc?: string;
+  pageTitle: string;
   class?: string;
 };
 
-const { pageTitle, pageDesc, class: className } = Astro.props;
+const { pageTitle, class: className } = Astro.props;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const backUrl = config.features.showBackButton
@@ -16,15 +15,48 @@ const backUrl = config.features.showBackButton
   : getRelativeLocaleUrl(locale, "");
 ---
 
-<main
-  data-backUrl={backUrl}
-  id="main-content"
-  class:list={["app-layout pb-4", className]}
->
-  <h1 class="text-2xl font-semibold sm:text-3xl">{pageTitle}</h1>
-  <p class="mt-2 mb-6 italic">{pageDesc}</p>
-  <slot />
+<main data-backUrl={backUrl} id="main-content" class="app-layout station-main">
+  <header class="section-heading">
+    <h1>{pageTitle}</h1>
+  </header>
+  <div class={className}><slot /></div>
 </main>
+
+<style>
+  .station-main {
+    max-width: 74rem;
+    padding-inline: clamp(1rem, 4vw, 3rem);
+    padding-bottom: clamp(3.5rem, 8vw, 6rem);
+  }
+  .section-heading,
+  .station-main > div {
+    max-width: min(60%, 42rem);
+  }
+  .section-heading {
+    padding-block: clamp(3.4rem, 8vh, 7rem) clamp(1.5rem, 4vh, 3rem);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.3rem;
+  }
+  h1 {
+    font: 400 clamp(2.9rem, 5.4vw, 4.8rem)/1.2 var(--station-display);
+    letter-spacing: 0.09em;
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 55rem) {
+    .section-heading,
+    .station-main > div {
+      max-width: none;
+    }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      min-height: clamp(10rem, 26vw, 14rem);
+    }
+    h1 {
+      max-width: 78%;
+    }
+  }
+</style>
 
 <script>
   document.addEventListener("astro:page-load", () => {

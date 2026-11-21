@@ -1,24 +1,58 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Socials from "./Socials.astro";
+import config from "@/config";
 
 type Props = {
   noMarginTop?: boolean;
 } & HTMLAttributes<"footer">;
 
 const { noMarginTop = false, class: className, ...attrs } = Astro.props;
+const locale = Astro.currentLocale ?? config.site.lang;
 ---
 
 <footer
-  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
+  class:list={["station-footer", { "mt-auto": !noMarginTop }, className]}
   {...attrs}
 >
-  <div
-    class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"
-  >
+  <div class="footer-row">
     <Socials />
-    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row text-sm text-muted-foreground italic">
-      <span>“成一事者，矢志不渝之愚者。”</span>
-    </div>
+    <a href={getRelativeLocaleUrl(locale, "rss.xml")} class="rss">RSS</a>
   </div>
 </footer>
+
+<style>
+  .station-footer {
+    max-width: none;
+    width: 100%;
+    color: var(--muted-foreground);
+  }
+  .footer-row {
+    position: relative;
+    max-width: 74rem;
+    margin: auto;
+    padding: 1.65rem clamp(1rem, 4vw, 3rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .footer-row::before {
+    content: "";
+    position: absolute;
+    inset: 0 clamp(1rem, 4vw, 3rem) auto;
+    border-top: 1px solid var(--border);
+  }
+  .rss {
+    font: 0.67rem/1.5 var(--station-mono);
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--border);
+  }
+  .footer-row a:hover {
+    color: var(--foreground);
+  }
+</style>

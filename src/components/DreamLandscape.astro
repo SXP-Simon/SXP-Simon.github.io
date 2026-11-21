@@ -1,0 +1,421 @@
+---
+import { frames, type FrameKey } from "../data/frames";
+
+interface Props {
+  frame: FrameKey;
+  small?: boolean;
+}
+
+const { frame, small = false } = Astro.props;
+const art = frames[frame];
+---
+
+<dream-landscape
+  data-frame={frame}
+  data-small={small ? "" : undefined}
+  aria-hidden={small ? "true" : undefined}
+>
+  {
+    small ? (
+      <img
+        class="dream-thumb"
+        src={art.thumb}
+        width="480"
+        height="300"
+        loading="lazy"
+        decoding="async"
+        alt=""
+      />
+    ) : (
+      <div
+        class="dream-plate"
+        data-frame={frame}
+        data-portrait={art.portrait ? "" : undefined}
+        style={{
+          "--art-tone": art.tone,
+          "--art-ratio": art.ratio,
+          "--art-x": art.x + "%",
+          "--art-y": art.y + "%",
+          "--art-wash": "url(" + JSON.stringify(art.thumb) + ")",
+        }}
+      >
+        <picture class="dream-focus">
+          <source media="(max-width: 700px)" srcset={art.mobile} />
+          <img
+            crossorigin="anonymous"
+            src={art.full}
+            alt={art.alt}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+      </div>
+    )
+  }
+  {
+    !small && (
+      <>
+        <canvas class="dream-canvas" width="0" height="0" aria-hidden="true" />
+        <canvas class="dream-signal" width="0" height="0" aria-hidden="true" />
+      </>
+    )
+  }
+</dream-landscape>
+
+<script>
+  import "../scripts/dream-landscape";
+</script>
+
+<style>
+  dream-landscape {
+    position: absolute;
+    inset: 0;
+    display: block;
+    isolation: isolate;
+    overflow: hidden;
+    pointer-events: none;
+    container-type: size;
+    background: #302c38;
+  }
+  .dream-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+  dream-landscape[data-painted] .dream-canvas {
+    opacity: 1;
+  }
+  dream-landscape[data-painted] .dream-plate {
+    opacity: 0;
+  }
+  .dream-signal {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    dream-landscape[data-painted][data-in-view]:not([data-dissolving])
+      .dream-signal {
+      visibility: visible;
+      animation: idle-reception 5.8s ease-in-out infinite alternate;
+    }
+    @keyframes idle-reception {
+      0% {
+        opacity: 0.16;
+        transform: translateY(-1px);
+      }
+      54% {
+        opacity: 0.53;
+        transform: translateY(0.45px);
+      }
+      100% {
+        opacity: 0.28;
+        transform: translateY(1.6px);
+      }
+    }
+  }
+  .dream-thumb,
+  .dream-focus img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .dream-plate {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--art-tone);
+  }
+  /* The wash uses the same illustration as the sharp field, including the
+     local colour behind its feathered edges. */
+  .dream-plate::before {
+    content: "";
+    position: absolute;
+    inset: -9%;
+    background: var(--art-tone) var(--art-wash) center / cover no-repeat;
+    filter: blur(clamp(16px, 2.2vw, 34px)) saturate(0.79) brightness(0.76);
+  }
+  .dream-plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      #18162780 0%,
+      #211a3029 31%,
+      transparent 61%
+    );
+  }
+  .dream-focus {
+    display: block;
+    position: absolute;
+    inset-block: 0;
+    right: 0;
+    width: min(83%, 196cqh);
+    --fade-in: 18%;
+    --fade-out: 100%;
+    --end-alpha: 1;
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 var(--fade-in),
+      #000 var(--fade-out),
+      rgb(0 0 0 / var(--end-alpha))
+    );
+  }
+  .dream-focus img {
+    object-position: var(--art-x) var(--art-y);
+  }
+  .dream-plate[data-portrait] .dream-focus {
+    right: 2.5%;
+    width: min(68%, 127cqh);
+    --fade-in: 19%;
+    --fade-out: 90%;
+    --end-alpha: 0;
+  }
+  .dream-plate[data-frame="two-windows"] {
+    --panel-width: 74cqh;
+  }
+  .dream-plate[data-frame="train-stars"] {
+    --panel-width: 59.5cqh;
+  }
+  .dream-plate:is([data-frame="two-windows"], [data-frame="train-stars"])
+    .dream-focus {
+    width: min(100%, var(--panel-width));
+    right: 12%;
+    --fade-in: 4%;
+    --fade-out: 96%;
+    --end-alpha: 0;
+  }
+  .dream-plate[data-frame="blue-sky"] img,
+  .dream-plate[data-frame="at-sunset"] img {
+    object-position: var(--art-x) 12%;
+  }
+  @media (max-width: 700px) {
+    .dream-plate::before {
+      filter: blur(15px) saturate(0.86) brightness(0.81);
+    }
+    .dream-plate .dream-focus,
+    .dream-plate[data-portrait] .dream-focus {
+      right: -4%;
+      width: 105%;
+      --fade-in: 13%;
+      --fade-out: 100%;
+      --end-alpha: 1;
+    }
+    .dream-plate:is([data-frame="two-windows"], [data-frame="train-stars"])
+      .dream-focus {
+      width: min(100%, var(--panel-width));
+      right: 50%;
+      transform: translateX(50%);
+      --fade-in: 4%;
+      --fade-out: 96%;
+      --end-alpha: 0;
+    }
+    .dream-plate::after {
+      background: linear-gradient(
+        90deg,
+        #1e142757,
+        #211a3014 55%,
+        transparent 85%
+      );
+    }
+    .dream-plate[data-frame="blue-sky"] img,
+    .dream-plate[data-frame="at-sunset"] img {
+      object-position: var(--art-x) var(--art-y);
+    }
+    .dream-plate[data-frame="sunflowers"] .dream-focus {
+      right: -28%;
+      width: 123%;
+    }
+    .dream-plate[data-frame="sunflowers"] img {
+      object-position: var(--art-x) 100%;
+    }
+  }
+  /* Keep the whole illustration beside the passage, including tall panels. */
+  :global([data-reading]) .dream-plate[data-frame] .dream-focus {
+    inset: 50% 2.5% auto auto;
+    width: min(52cqw, calc(100cqh * var(--art-ratio)));
+    height: auto;
+    aspect-ratio: var(--art-ratio);
+    transform: translateY(-50%);
+    --fade-in: 5%;
+    --fade-out: 97%;
+    --end-alpha: 0;
+  }
+  @media (max-width: 700px) {
+    :global([data-reading]) .dream-plate[data-frame] .dream-focus {
+      right: 50%;
+      width: min(100cqw, calc(100cqh * var(--art-ratio)));
+      transform: translate(50%, -50%);
+    }
+  }
+  @media (max-width: 590px) {
+    :global(.airscape[data-reading]:not([data-sunflower]))
+      .dream-plate[data-frame]
+      .dream-focus {
+      top: 31%;
+      width: min(100cqw, calc(58cqh * var(--art-ratio)));
+    }
+  }
+  @media (min-width: 701px) {
+    :global([data-reading])
+      .dream-plate[data-frame="two-windows"]
+      .dream-focus {
+      right: 7%;
+    }
+    :global([data-reading])
+      .dream-plate:is([data-frame="train-stars"], [data-frame="white-wings"])
+      .dream-focus {
+      inset-inline: 12% auto;
+    }
+  }
+  @media (min-width: 591px) and (max-width: 700px) {
+    :global([data-reading])
+      .dream-plate:is(
+        [data-frame="two-windows"],
+        [data-frame="train-stars"],
+        [data-frame="white-wings"]
+      )
+      .dream-focus {
+      width: min(94cqw, calc(57cqh * var(--art-ratio)));
+      top: 33%;
+    }
+  }
+  @media (min-width: 701px) {
+    :global(.airscape:is([data-cyrano], [data-literature], [data-finale]))
+      .dream-plate[data-frame]
+      .dream-focus {
+      inset: 50% 50% auto auto;
+      width: min(100cqw, calc(100cqh * var(--art-ratio)));
+      height: auto;
+      aspect-ratio: var(--art-ratio);
+      transform: translate(50%, -50%);
+      --fade-in: 3%;
+      --fade-out: 98%;
+      --end-alpha: 0;
+    }
+    :global(.airscape[data-cyrano])
+      .dream-plate[data-frame="edge-of-sight"]
+      .dream-focus,
+    :global(.airscape[data-cyrano])
+      .dream-plate[data-frame="cyrano-piano"]
+      .dream-focus,
+    :global(.airscape[data-literature])
+      .dream-plate:is([data-frame="on-the-roof"], [data-frame="on-paper"])
+      .dream-focus,
+    :global(.airscape[data-finale])
+      .dream-plate[data-frame="sunflowers"]
+      .dream-focus {
+      right: 7%;
+      transform: translateY(-50%);
+    }
+    :global(.airscape[data-finale])
+      .dream-plate[data-frame="paper-birds"]
+      .dream-focus {
+      inset-inline: 9% auto;
+      transform: translateY(-50%);
+    }
+  }
+  @media (max-width: 700px) {
+    :global(.airscape:is([data-cyrano], [data-literature], [data-finale]))
+      .dream-plate[data-frame]
+      .dream-focus,
+    :global(
+        .airscape:is(
+            [data-cyrano],
+            [data-literature],
+            [data-finale]
+          )[data-reading]
+      )
+      .dream-plate[data-frame]
+      .dream-focus {
+      inset: 40% 50% auto auto;
+      width: min(100cqw, calc(62cqh * var(--art-ratio)));
+      height: auto;
+      aspect-ratio: var(--art-ratio);
+      transform: translate(50%, -50%);
+      --fade-in: 1%;
+      --fade-out: 99%;
+      --end-alpha: 0;
+      --fade-block: 0.08;
+    }
+  }
+  :global([data-sunflower]) .dream-plate[data-frame] .dream-focus {
+    inset: 0 var(--shot-right) auto auto;
+    width: min(100cqw, var(--shot-width));
+    height: 100%;
+    transform: none;
+    --fade-in: 16%;
+    --fade-out: 85%;
+    --end-alpha: 0;
+  }
+  :global([data-sunflower]) .dream-plate[data-frame="flower-bed"] {
+    --shot-right: 6%;
+    --shot-width: 166cqh;
+  }
+  :global([data-sunflower]) .dream-plate[data-frame="at-sunset"] {
+    --shot-right: 30%;
+    --shot-width: 144cqh;
+  }
+  :global([data-sunflower]) .dream-plate[data-frame="sunflower-roof"] {
+    --shot-right: 22%;
+    --shot-width: 71cqh;
+  }
+  :global([data-sunflower])
+    .dream-plate:is([data-frame="last-warmth"], [data-frame="embrace"]) {
+    --shot-right: 33%;
+    --shot-width: 134cqh;
+  }
+  :global([data-sunflower]) .dream-plate[data-frame="night-piano"] {
+    --shot-right: 28%;
+    --shot-width: 84cqh;
+  }
+  @media (max-width: 700px) {
+    :global([data-sunflower]) .dream-plate[data-frame] .dream-focus {
+      width: 100%;
+      right: 0;
+      --fade-in: 0%;
+      --fade-out: 100%;
+      --end-alpha: 1;
+    }
+    :global([data-sunflower])
+      .dream-plate:is(
+        [data-frame="at-sunset"],
+        [data-frame="last-warmth"],
+        [data-frame="embrace"]
+      )
+      .dream-focus {
+      /* Keep both speakers in the same horizontal shot on a narrow screen. */
+      top: 3%;
+      height: min(88%, 128cqw);
+      --fade-block: 0.2;
+      mask-image: linear-gradient(
+        180deg,
+        transparent,
+        black 20%,
+        black 74%,
+        transparent
+      );
+    }
+    :global([data-sunflower])
+      .dream-plate:is([data-frame="last-warmth"], [data-frame="embrace"])
+      .dream-focus {
+      height: min(82%, 103cqw);
+      top: 8%;
+    }
+  }
+  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .dream-canvas {
+      transform: scale(1.006) translate(var(--art-dx, 0px), var(--art-dy, 0px));
+      transition: transform 460ms ease-out;
+    }
+  }
+</style>

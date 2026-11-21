@@ -19,9 +19,7 @@ const t = useTranslations(locale);
     class="app-layout my-1 flex flex-1 items-center justify-center"
   >
     <div class="mb-14 flex flex-col items-center justify-center">
-      <h1 class="text-accent text-9xl font-bold">404</h1>
-      <span aria-hidden="true"> ¯\_(ツ)_/¯ </span>
-      <p class="mt-4 text-2xl sm:text-3xl">{t.notFound.message}</p>
+      <h1>{t.notFound.message}</h1>
       <LinkButton
         href={getRelativeLocaleUrl(locale, "")}
         class="my-6 text-lg underline decoration-dashed underline-offset-8"
@@ -33,3 +31,11 @@ const t = useTranslations(locale);
 
   <Footer />
 </Layout>
+
+<style>
+  h1 {
+    font: 400 clamp(2.9rem, 8vw, 6rem)/1.25
+      var(--station-display, var(--station-serif));
+    color: var(--accent);
+  }
+</style>

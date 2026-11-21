@@ -1,326 +1,276 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconUnderline from "@/assets/icons/IconUnderline.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
-import IconArchive from "@/assets/icons/IconArchive.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
 import IconGithub from "@/assets/icons/socials/github.svg";
-import LinkButton from "./LinkButton.astro";
+import AuthorBrand from "./AuthorBrand.astro";
 import { stripBase, stripLocale } from "@/utils/withBase";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
 const { site, features } = config;
-
-const locale = Astro.currentLocale ?? config.site.lang;
+const locale = Astro.currentLocale ?? site.lang;
 const t = useTranslations(locale);
-
-// Strip the base prefix so isActive comparisons work regardless of deploy subdirectory.
-// e.g. with base "/blog": "/blog/posts/slug" → "/posts/slug"
-const relativePath = stripBase(Astro.url.pathname);
-const pathWithoutTrailingSlash =
-  relativePath.endsWith("/") && relativePath !== "/"
-    ? relativePath.slice(0, -1)
-    : relativePath;
-
-const currentPath = stripLocale(pathWithoutTrailingSlash, locale);
-
-interface Props {
-  class?: string;
-}
-
-const { class: className } = Astro.props;
-
-const isActive = (path: string) => {
-  const currentPathArray = currentPath.split("/").filter(p => p.trim());
-  const pathArray = path.split("/").filter(p => p.trim());
-  return currentPath === path || currentPathArray[0] === pathArray[0];
-};
-
-const repoUrl = "https://github.com/SXP-Simon/SXP-Simon.github.io";
+const section = stripLocale(stripBase(Astro.url.pathname), locale)
+  .split("/")
+  .filter(Boolean)[0];
+const pages = [
+  ["posts", t.nav.posts],
+  ...(features.showArchives ? [["archives", t.nav.archives]] : []),
+  ["tags", t.nav.tags],
+  ["about", t.nav.about],
+];
 ---
 
 <a
   id="skip-to-content"
   href="#main-content"
-  class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4"
+  class="focus:bg-background sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:p-3"
 >
   {t.a11y.skipToContent}
 </a>
 
-<header
-  id="site-header"
-  class="bg-background/85 sticky top-0 z-40 w-full backdrop-blur-md"
->
-  <div
-    class:list={[
-      "app-layout flex flex-col items-center justify-between sm:flex-row",
-      className,
-    ]}
-  >
-    <div
-      class="border-border relative flex w-full items-center justify-between border-b py-3 sm:py-4.5"
+<header id="site-header">
+  <div class="header-row">
+    <AuthorBrand />
+    <nav
+      id="nav-menu"
+      aria-label={locale.startsWith("zh") ? "主导航" : "Main navigation"}
     >
-      {/* Site Title */}
-      <a
-        href={getRelativeLocaleUrl(locale, "")}
-        class="hover:text-accent py-1 text-xl leading-8 font-semibold whitespace-nowrap transition-colors sm:text-2xl sm:leading-none"
-      >
-        {site.title}
-      </a>
-
-      {/* Navigation & Controls Wrapper */}
-      <nav id="nav-menu" class="flex items-center gap-1 sm:gap-4">
-        {/* Desktop Navigation Links / Mobile Collapsible Drawer */}
-        <ul
-          id="menu-items"
-          class="[&>li>a]:hover:text-accent max-sm:border-border max-sm:bg-background/95 hidden items-center gap-1 max-sm:absolute max-sm:inset-x-0 max-sm:top-full max-sm:z-40 max-sm:flex-col max-sm:border-b max-sm:py-4 max-sm:shadow-xl max-sm:backdrop-blur-md sm:flex sm:gap-x-5 [&>li]:h-8 [&>li>a]:block [&>li>a]:px-2 [&>li>a]:py-1 [&>li>a]:text-center [&>li>a]:font-medium"
-        >
-          <li class="w-full sm:w-auto">
-            <a
-              href={getRelativeLocaleUrl(locale, "posts")}
-              class:list={[
-                "max-sm:py-2.5",
-                { "active-nav": isActive("/posts") },
-              ]}
-            >
-              {t.nav.posts}
-            </a>
-          </li>
-          <li class="w-full sm:w-auto">
-            <a
-              href={getRelativeLocaleUrl(locale, "tags")}
-              class:list={[
-                "max-sm:py-2.5",
-                { "active-nav": isActive("/tags") },
-              ]}
-            >
-              {t.nav.tags}
-            </a>
-          </li>
-          <li class="w-full sm:w-auto">
-            <a
-              href={getRelativeLocaleUrl(locale, "about")}
-              class:list={[
-                "max-sm:py-2.5",
-                { "active-nav": isActive("/about") },
-              ]}
-            >
-              {t.nav.about}
-            </a>
-          </li>
-          {
-            features.showArchives && (
-              <li class="w-full sm:w-auto">
-                <LinkButton
-                  href={getRelativeLocaleUrl(locale, "archives")}
-                  class:list={[
-                    "focus-outline flex size-full justify-center p-2 max-sm:py-2.5 sm:relative sm:size-8 sm:p-0",
-                    { "active-nav": isActive("/archives") },
-                  ]}
-                  title={t.nav.archives}
-                  aria-label={t.nav.archives}
-                >
-                  <IconArchive class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" />
-                  <span class="sm:sr-only">{t.nav.archives}</span>
-                  {isActive("/archives") && (
-                    <IconUnderline
-                      aria-hidden="true"
-                      class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6"
-                    />
-                  )}
-                </LinkButton>
-              </li>
-            )
-          }
-        </ul>
-
+      <ul id="menu-items">
         {
-          /* Action Controls Group: Always Visible in Header on Mobile & Desktop */
+          pages.map(([path, name]) => (
+            <li>
+              <a
+                href={getRelativeLocaleUrl(locale, path)}
+                aria-current={section === path ? "page" : undefined}
+              >
+                {name}
+              </a>
+            </li>
+          ))
         }
-        <div class="flex items-center gap-1 sm:gap-2">
-          {/* Search Button */}
-          {
-            features.search !== false && (
-              <LinkButton
-                href={getRelativeLocaleUrl(locale, "search")}
-                class:list={[
-                  "focus-outline hover:text-accent relative flex size-8 items-center justify-center p-1 transition-colors",
-                ]}
-                title={t.nav.search}
-                aria-label={t.nav.search}
-              >
-                <IconSearch class="size-5" />
-                <span class="sr-only">{t.nav.search}</span>
-              </LinkButton>
-            )
-          }
-
-          {/* Theme Toggle Button */}
-          {
-            features.lightAndDarkMode && (
-              <button
-                id="theme-btn"
-                class="focus-outline hover:[&>svg]:stroke-accent relative flex size-8 items-center justify-center p-1 transition-colors"
-                title={t.a11y.toggleTheme}
-                aria-label="auto"
-                aria-live="polite"
-              >
-                <IconMoon class="absolute top-1/2 left-1/2 size-5 -translate-x-1/2 -translate-y-1/2 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <IconSunHigh class="absolute top-1/2 left-1/2 size-5 -translate-x-1/2 -translate-y-1/2 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-              </button>
-            )
-          }
-
-          {/* GitHub Repository Link Button */}
-          <LinkButton
-            href={repoUrl}
-            class="focus-outline hover:text-accent relative flex size-8 items-center justify-center p-1 transition-colors"
-            title="GitHub 博客仓库"
-            aria-label="GitHub 博客仓库"
-          >
-            <IconGithub class="size-5" />
-            <span class="sr-only">GitHub 博客仓库</span>
-          </LinkButton>
-
-          {/* Mobile Hamburger Menu Toggle Button */}
-          <button
-            id="menu-btn"
-            class="focus-outline text-foreground hover:text-accent flex size-8 items-center justify-center p-1 transition-colors sm:hidden"
-            aria-label={t.a11y.openMenu}
-            aria-expanded="false"
-            aria-controls="menu-items"
-            data-label-open={t.a11y.openMenu}
-            data-label-close={t.a11y.closeMenu}
-          >
-            <IconX id="close-icon" class="hidden size-5" />
-            <IconMenuDeep id="menu-icon" class="size-5" />
-          </button>
-        </div>
-      </nav>
-    </div>
+      </ul>
+      <div class="tools">
+        {
+          features.search !== false && (
+            <a
+              href={getRelativeLocaleUrl(locale, "search")}
+              title={t.nav.search}
+              aria-label={t.nav.search}
+              aria-current={section === "search" ? "page" : undefined}
+            >
+              <IconSearch />
+            </a>
+          )
+        }
+        {
+          features.lightAndDarkMode && (
+            <button
+              type="button"
+              id="theme-btn"
+              title={t.a11y.toggleTheme}
+              aria-label={t.a11y.toggleTheme}
+              aria-pressed="false"
+            >
+              <>
+                <IconMoon class="dark:hidden" />
+                <IconSunHigh class="hidden dark:block" />
+              </>
+            </button>
+          )
+        }
+        <a
+          href="https://github.com/SXP-Simon/SXP-Simon.github.io"
+          title="GitHub 博客仓库"
+          aria-label="GitHub 博客仓库"
+        >
+          <IconGithub />
+        </a>
+        <button
+          type="button"
+          id="menu-btn"
+          aria-label={t.a11y.openMenu}
+          aria-expanded="false"
+          aria-controls="menu-items"
+          data-label-open={t.a11y.openMenu}
+          data-label-close={t.a11y.closeMenu}
+        >
+          <IconMenuDeep class="open-icon" /><IconX class="close-icon" />
+        </button>
+      </div>
+    </nav>
   </div>
-  {/* Reading Progress Indicator */}
-  <div
-    id="reading-progress"
-    class="bg-accent pointer-events-none absolute bottom-0 left-0 h-[2px] w-0 transition-[width] duration-75"
-    aria-hidden="true"
-  >
-  </div>
+  <div id="reading-progress" aria-hidden="true"></div>
 </header>
 
-<script>
-  import { onPageMount } from "@/scripts/page-lifecycle";
-  function toggleNav(signal: AbortSignal) {
-    const menuBtn = document.querySelector<HTMLButtonElement>("#menu-btn");
-    const menuItems = document.querySelector<HTMLElement>("#menu-items");
-    const menuIcon = document.querySelector("#menu-icon");
-    const closeIcon = document.querySelector("#close-icon");
-
-    if (!menuBtn || !menuItems || !menuIcon || !closeIcon) return;
-
-    const openLabel = menuBtn.dataset.labelOpen ?? "Open menu";
-    const closeLabel = menuBtn.dataset.labelClose ?? "Close menu";
-
-    let animation: Animation | undefined;
-    signal.addEventListener("abort", () => animation?.cancel(), { once: true });
-    menuBtn.addEventListener(
-      "click",
-      () => {
-        const opening = menuBtn.getAttribute("aria-expanded") !== "true";
-        animation?.cancel();
-        menuBtn.setAttribute("aria-expanded", String(opening));
-        menuBtn.setAttribute("aria-label", opening ? closeLabel : openLabel);
-        menuIcon.classList.toggle("hidden", opening);
-        closeIcon.classList.toggle("hidden", !opening);
-        menuItems.classList.remove("hidden");
-        menuItems.classList.add("flex");
-        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        animation = menuItems.animate(
-          opening
-            ? [
-                { opacity: 0, transform: "translateY(-6px)" },
-                { opacity: 1, transform: "translateY(0)" },
-              ]
-            : [{ opacity: 1 }, { opacity: 0, transform: "translateY(-4px)" }],
-          { duration: reduced ? 0 : opening ? 220 : 150, easing: "ease-out" }
-        );
-        animation.onfinish = () => {
-          if (!opening) {
-            menuItems.classList.add("hidden");
-            menuItems.classList.remove("flex");
-          }
-        };
-      },
-      { signal }
-    );
+<style>
+  #site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--background) 83%, transparent);
+    backdrop-filter: blur(12px);
   }
+  .header-row {
+    max-width: 74rem;
+    min-height: 4.9rem;
+    margin: auto;
+    padding: 0 clamp(1rem, 4vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  #nav-menu,
+  .tools,
+  #menu-items {
+    display: flex;
+    align-items: center;
+  }
+  #menu-items a:hover,
+  .tools :is(a, button):hover {
+    color: var(--accent);
+  }
+  #nav-menu {
+    gap: 1.5rem;
+  }
+  #menu-items {
+    gap: 1.6rem;
+  }
+  #menu-items a {
+    display: block;
+    padding: 0.6rem 0.1rem;
+    font-size: 0.85rem;
+    font-family: var(--station-serif);
+    letter-spacing: 0.09em;
+  }
+  #menu-items a[aria-current="page"] {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.5rem;
+  }
+  .tools {
+    border-left: 1px solid var(--border);
+    padding-left: 0.9rem;
+    gap: 0.1rem;
+  }
+  .tools :is(a, button) {
+    display: grid;
+    place-items: center;
+    height: 2.4rem;
+    width: 2.4rem;
+  }
+  .tools :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .tools [aria-current="page"] {
+    color: var(--accent);
+  }
+  #menu-btn,
+  .close-icon {
+    display: none;
+  }
+  #reading-progress {
+    position: absolute;
+    inset: auto 0 -1px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  @media (max-width: 42rem) {
+    .header-row {
+      min-height: 4rem;
+      gap: 0.3rem;
+    }
+    .tools {
+      padding: 0;
+      border: 0;
+      gap: 0;
+    }
+    .tools :is(a, button) {
+      width: 2.2rem;
+    }
+    #menu-btn {
+      display: grid;
+    }
+    #menu-btn[aria-expanded="true"] .open-icon {
+      display: none;
+    }
+    #menu-btn[aria-expanded="true"] .close-icon {
+      display: block;
+    }
+    #menu-items {
+      display: none;
+      position: absolute;
+      inset: 100% 0 auto;
+      min-height: 3.2rem;
+      justify-content: space-evenly;
+      gap: 0.4rem;
+      padding: 0.5rem 0.8rem;
+      background: var(--background);
+      border-block: 1px solid var(--border);
+    }
+    #menu-items.is-open {
+      display: flex;
+    }
+  }
+</style>
 
-  function handleSkipToContent(signal: AbortSignal) {
-    const skipLink = document.getElementById("skip-to-content");
-    if (!skipLink) return;
-    skipLink.addEventListener(
-      "click",
-      e => {
+<script>
+  function setupHeader() {
+    const menuBtn = document.querySelector<HTMLButtonElement>("#menu-btn");
+    const menu = document.querySelector("#menu-items");
+    if (!menuBtn || !menu) return;
+    const setMenu = (open: boolean) => {
+      menuBtn.setAttribute("aria-expanded", String(open));
+      menuBtn.setAttribute(
+        "aria-label",
+        (open ? menuBtn.dataset.labelClose : menuBtn.dataset.labelOpen) ?? ""
+      );
+      menu.classList.toggle("is-open", open);
+    };
+    const controller = new AbortController();
+    menuBtn.onclick = () =>
+      setMenu(menuBtn.getAttribute("aria-expanded") !== "true");
+    document.addEventListener(
+      "keydown",
+      event => {
         if (
-          e.defaultPrevented ||
-          e.metaKey ||
-          e.ctrlKey ||
-          e.shiftKey ||
-          e.button !== 0
-        )
-          return;
-        e.preventDefault();
-        const target = document.getElementById("main-content");
-        if (target) {
-          target.setAttribute("tabindex", "-1");
-          target.addEventListener(
-            "blur",
-            () => target.removeAttribute("tabindex"),
-            {
-              once: true,
-            }
-          );
-          target.focus();
-          target.scrollIntoView({
-            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-              ? "instant"
-              : "smooth",
-          });
+          event.key === "Escape" &&
+          menuBtn.getAttribute("aria-expanded") === "true"
+        ) {
+          setMenu(false);
+          menuBtn.focus();
         }
       },
-      { signal }
+      { signal: controller.signal }
     );
+
+    const progress = document.querySelector<HTMLElement>("#reading-progress");
+    const article = document.querySelector("#article");
+    if (progress && article) {
+      const update = () => {
+        const height = document.documentElement.scrollHeight - innerHeight;
+        const fraction =
+          height > 0 ? Math.min(1, Math.max(0, scrollY / height)) : 0;
+        progress.style.transform = `scaleX(${fraction})`;
+      };
+      window.addEventListener("scroll", update, {
+        passive: true,
+        signal: controller.signal,
+      });
+      update();
+    }
+    document.addEventListener("astro:before-swap", () => controller.abort(), {
+      once: true,
+    });
   }
-
-  function handleReadingProgress(signal: AbortSignal) {
-    const progressBar = document.getElementById("reading-progress");
-    if (!progressBar) return;
-
-    const onScroll = () => {
-      const totalScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll <= 0) {
-        progressBar.style.width = "0%";
-        return;
-      }
-      const progress = Math.min(
-        100,
-        Math.max(0, (window.scrollY / totalScroll) * 100)
-      );
-      progressBar.style.width = `${progress}%`;
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true, signal });
-    onScroll();
-  }
-
-  onPageMount(signal => {
-    toggleNav(signal);
-    handleSkipToContent(signal);
-    handleReadingProgress(signal);
-  });
+  document.addEventListener("astro:page-load", setupHeader);
 </script>

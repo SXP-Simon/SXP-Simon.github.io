@@ -44,6 +44,7 @@ jobs:
         run: pnpm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLIC_SCENE_CDN_BASE: https://cdn.jsdelivr.net/gh/${{ github.repository }}@${{ github.sha }}/public/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

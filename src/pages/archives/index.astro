@@ -3,7 +3,6 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
@@ -30,9 +29,7 @@ const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
 <Layout title={`${t.pages.archivesTitle} | ${config.site.title}`}>
   <Header />
 
-  <Breadcrumb />
-
-  <Main pageTitle={t.pages.archivesTitle} pageDesc={t.pages.archivesDesc}>
+  <Main pageTitle={t.pages.archivesTitle}>
     {
       Object.entries(
         getPostsByGroupCondition(filteredPosts, post =>
@@ -41,8 +38,7 @@ const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
       )
         .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
         .map(([year, yearGroup]) => (
-          <div>
-            <span class="text-2xl font-bold">{year}</span>
+          <div class="year-group"><span class="year">{year}</span>
             <sup class="text-muted-foreground text-sm">{yearGroup.length}</sup>
             {Object.entries(
               getPostsByGroupCondition(
@@ -53,7 +49,7 @@ const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
               .sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
               .map(([month, monthGroup]) => (
                 <div class="flex flex-col sm:flex-row">
-                  <div class="mt-6 min-w-36 text-lg sm:my-6">
+                  <div class="mt-6 min-w-20 text-sm text-muted-foreground sm:my-6">
                     <span class="font-bold">
                       {monthFormatter.format(
                         new Date(2000, Number(month) - 1, 1)
@@ -63,7 +59,7 @@ const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
                       {monthGroup.length}
                     </sup>
                   </div>
-                  <ul>
+                  <ul class="min-w-0 flex-1">
                     {monthGroup
                       .sort(
                         (a, b) =>
@@ -87,3 +83,9 @@ const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
 
   <Footer />
 </Layout>
+
+<style>
+  .year-group + .year-group { margin-top: 2.7rem; }
+  .year { font: 500 2.15rem/1.2 var(--station-serif); color: var(--accent); }
+  sup { margin-left: .4rem; font-family: var(--station-mono); }
+</style>

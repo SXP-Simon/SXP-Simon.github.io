@@ -1,4 +1,4 @@
-﻿---
+---
 interface Props {
   src: string;
   darkSrc?: string;
@@ -31,9 +31,7 @@ const {
         class="border-accent/20 border-t-accent size-9 animate-spin rounded-full border-2"
       >
       </div>
-      <span class="text-foreground/75 animate-pulse text-xs font-medium"
-        >正在加载动态图表...</span
-      >
+      <span class="sr-only" role="status">正在加载图表</span>
       <div
         class="shimmer-wave via-foreground/5 pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent to-transparent"
       >
@@ -49,8 +47,8 @@ const {
         { "dark:hidden": !!darkSrc },
       ]}
       loading="lazy"
-      onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
-      onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+      onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.setAttribute('hidden', '');"
+      onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.setAttribute('hidden', '');"
     />
 
     {/* Optional Dark Mode Image */}
@@ -61,8 +59,8 @@ const {
           alt={alt}
           class="dynamic-img hidden w-full rounded-xl object-contain opacity-0 transition-opacity duration-500 dark:block"
           loading="lazy"
-          onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
-          onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.classList.add('opacity-0', 'pointer-events-none');"
+          onload="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.setAttribute('hidden', '');"
+          onerror="this.classList.remove('opacity-0'); this.closest('.dynamic-image-wrapper')?.querySelector('.skeleton-loader')?.setAttribute('hidden', '');"
         />
       )
     }

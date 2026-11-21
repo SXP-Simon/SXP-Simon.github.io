@@ -1,0 +1,1056 @@
+@font-face {
+  font-family: "Passage Mincho";
+  src: url("../assets/fonts/passage-serif.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.broadcast {
+  position: relative;
+  --ink: #191820;
+  --paper: #f5efec;
+  --peach: #ffb29f;
+  --rule: #3d3743;
+  --serif:
+    "Noto Serif SC", "Songti SC", "Source Han Serif SC", "STSong", "SimSun",
+    serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  display: block;
+  min-height: 100svh;
+  background: transparent;
+  color: var(--paper);
+  font:
+    400 1rem/1.6 "Segoe UI",
+    "PingFang SC",
+    "Microsoft YaHei",
+    system-ui,
+    sans-serif;
+  color-scheme: dark;
+}
+.broadcast [hidden] {
+  display: none !important;
+}
+.broadcast a,
+.broadcast button {
+  color: inherit;
+  text-decoration: none;
+}
+.broadcast :focus-visible {
+  outline: 2px solid var(--peach);
+  outline-offset: 4px;
+}
+.station-shell {
+  width: min(88%, 1430px);
+  margin-inline: auto;
+}
+.skip-broadcast {
+  position: fixed;
+  top: -6rem;
+  left: 1rem;
+  z-index: 10;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+}
+.skip-broadcast:focus {
+  top: 0.5rem;
+}
+
+.station-header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+}
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 34px);
+  min-height: clamp(68px, 6vw, 98px);
+}
+.masthead > .author-brand {
+  margin-inline-end: auto;
+}
+.station-nav,
+.station-tools {
+  display: flex;
+  align-items: center;
+}
+.station-nav {
+  gap: clamp(18px, 2.1vw, 36px);
+}
+.station-nav a {
+  font: 400 0.93rem/1.5 var(--serif);
+  letter-spacing: 0.09em;
+  padding-block: 0.65rem;
+}
+.station-nav a:hover,
+.station-tools :is(a, button):hover {
+  color: #ffccb1;
+}
+.station-tools {
+  border-left: 1px solid #f1dbcd58;
+  padding-left: clamp(8px, 1.25vw, 24px);
+}
+.station-tools :is(a, button) {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 42px;
+}
+.audio-toggle .audio-on,
+.audio-toggle[aria-pressed="true"] .audio-off {
+  display: none;
+}
+.audio-toggle[aria-pressed="true"] .audio-on {
+  display: block;
+  color: #ffd3b4;
+}
+
+.airscape {
+  position: relative;
+  isolation: isolate;
+  background: #64526c;
+  overflow: hidden;
+}
+.airshade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.airshade {
+  background:
+    linear-gradient(180deg, #11121ed1, transparent 24%),
+    linear-gradient(
+      90deg,
+      #171724d4 0%,
+      #24213590 25%,
+      #30283d2e 45%,
+      transparent 64%
+    ),
+    linear-gradient(0deg, #11131de6, transparent 24%);
+}
+
+.airframe {
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(86px, 8vw, 130px) 86px;
+}
+
+.aircopy {
+  position: relative;
+  z-index: 1;
+}
+.signoff > span {
+  font-family: var(--mono);
+}
+.airtitle {
+  font: 400 clamp(3.4rem, 4.9vw, 5.3rem)/1.17 var(--station-display);
+  letter-spacing: 0.025em;
+  margin: 0 0 0 -0.055em;
+  text-shadow: 0 2px 18px #28192a44;
+}
+.airtitle > * {
+  display: block;
+}
+.airtitle > span {
+  font-size: 0.48em;
+  line-height: 1.48;
+  letter-spacing: 0.16em;
+}
+.airtitle em {
+  font-style: normal;
+  color: #ffcab4;
+  padding-left: 0;
+  margin-top: 0.18em;
+  white-space: pre-line;
+}
+.air-actions {
+  margin-top: 2.1rem;
+  display: flex;
+  gap: 1.65rem;
+  align-items: center;
+}
+.listen-button,
+.journal-index {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.79rem;
+  letter-spacing: 0.08em;
+}
+
+.broadcast .listen-button {
+  color: #fff6ea;
+  border-bottom: 1px solid #ddccc08c;
+  padding: 0.65rem 0.05rem;
+  letter-spacing: 0.16em;
+}
+.listen-button svg {
+  color: #ffc3a7;
+  fill: currentColor;
+  width: 10px;
+}
+.broadcast .listen-button:hover {
+  color: #ffccb1;
+  border-color: currentColor;
+}
+
+.journal-index:hover {
+  color: var(--peach);
+}
+
+.signal-footer {
+  position: absolute;
+  inset: auto 0 env(safe-area-inset-bottom);
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 2;
+}
+.scene-register {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+.scene-register button {
+  position: relative;
+  width: clamp(34px, 3.1vw, 50px);
+  height: 44px;
+  color: #ecdfd3;
+  font: 400 1rem var(--serif);
+}
+.scene-register button::after {
+  position: absolute;
+  content: "";
+  left: calc(50% - 2px);
+  bottom: 3px;
+  height: 4px;
+  width: 4px;
+  transform: rotate(45deg) scale(0);
+  background: #ffc2a2;
+  transition: transform 0.25s;
+}
+.scene-register button[aria-pressed="true"] {
+  color: #ffe0c9;
+}
+.scene-register button[aria-pressed="true"]::after,
+.scene-register button:hover::after {
+  transform: rotate(45deg) scale(1);
+}
+.voice-panel {
+  position: relative;
+  width: min(39vw, 590px);
+  z-index: 1;
+  color: #fff7e9;
+}
+.voice-speaker {
+  display: block;
+  color: #ffcfb6;
+  font: 400 1rem/1.5 var(--serif);
+  letter-spacing: 0.17em;
+  margin: 0 0 1rem;
+}
+.voice-line {
+  white-space: pre-line;
+  text-wrap: pretty;
+  margin: 0;
+  font:
+    400 clamp(1.16rem, 1.65vw, 1.75rem)/1.95 "Passage Mincho",
+    var(--serif);
+  letter-spacing: 0.065em;
+  text-shadow: 0 2px 14px #1d17265c;
+}
+.voice-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.voice-controls button {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  min-height: 44px;
+  font: 400 0.86rem var(--serif);
+  letter-spacing: 0.08em;
+}
+.voice-controls button:hover {
+  color: #ffceb4;
+}
+.voice-controls button:disabled {
+  color: #d8ccc391;
+  cursor: default;
+}
+.voice-controls .close-reading {
+  color: #dfd3cb;
+  padding-right: 18px;
+  position: relative;
+}
+.close-reading::after {
+  content: "";
+  width: 1px;
+  height: 15px;
+  background: #dacdc35c;
+  position: absolute;
+  right: 0;
+}
+
+.scene-shelf,
+.journal {
+  padding-block: clamp(36px, 3.4vw, 58px) 0;
+}
+.shelf-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.3rem;
+  margin-bottom: 1.35rem;
+}
+.shelf-heading h2 {
+  font: 400 clamp(1.85rem, 2.6vw, 2.7rem)/1.25 var(--station-display);
+  letter-spacing: 0.045em;
+}
+.scene-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(14px, 1.7vw, 29px);
+}
+.scene-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: start;
+  min-width: 0;
+}
+.card-art {
+  display: block;
+  position: relative;
+  aspect-ratio: 1.6;
+  overflow: hidden;
+  background: #3e3b50;
+  border: 1px solid #6c5c6d;
+}
+.card-art > dream-landscape {
+  transition: transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.scene-card:hover .card-art > dream-landscape {
+  transform: scale(1.035);
+}
+.card-legend {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1px 0.85rem;
+  border-bottom: 1px solid var(--rule);
+}
+.card-legend strong {
+  display: block;
+  text-wrap: balance;
+  font: 400 clamp(1.2rem, 1.65vw, 1.65rem)/1.5 var(--station-display);
+  letter-spacing: 0.05em;
+  margin-top: 0.15rem;
+}
+.card-legend i {
+  color: #b9acb8;
+  transition: transform 0.2s;
+}
+.scene-card:hover .card-legend i {
+  transform: translate(2px, -2px);
+  color: var(--peach);
+}
+.scene-card[aria-pressed="true"] .card-legend {
+  border-color: #b98680;
+}
+.journal {
+  padding-bottom: 3.7rem;
+}
+.notes {
+  border-top: 1px solid var(--rule);
+}
+.notes a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.4rem;
+  padding: 1.1rem 0.1rem;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+.notes svg {
+  color: #c6b3c1;
+}
+.notes a:hover span {
+  color: var(--peach);
+}
+.notes span {
+  font: 500 1.07rem/1.55 var(--serif);
+}
+.signoff {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 72px;
+  border-top: 1px solid var(--rule);
+  color: #c0b1bf;
+  font-size: 0.7rem;
+}
+.signoff a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.signoff a:last-child {
+  margin-left: auto;
+}
+.signoff > span {
+  font-size: 0.61rem;
+  letter-spacing: 0.08em;
+}
+
+@media (min-width: 591px) and (max-width: 1000px) {
+  .scene-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 850px) {
+  .station-shell {
+    width: 91%;
+  }
+  .voice-panel {
+    width: min(67%, 520px);
+  }
+  .scene-cards {
+    gap: 12px;
+  }
+}
+@media (max-width: 590px) {
+  .station-shell {
+    width: calc(100% - 32px);
+  }
+  .masthead {
+    min-height: 62px;
+    gap: 9px;
+  }
+  .station-nav {
+    gap: clamp(8px, 3vw, 16px);
+  }
+  .station-nav a {
+    font-size: 0.82rem;
+    letter-spacing: 0;
+  }
+  .station-tools {
+    padding-left: 3px;
+  }
+  .station-tools :is(a, button) {
+    width: 31px;
+  }
+  .airtitle {
+    font-size: clamp(2.4rem, 9.8vw, 3.6rem);
+  }
+  .air-actions {
+    margin-top: 1.4rem;
+  }
+  .signal-footer {
+    min-height: 58px;
+    gap: 5px;
+  }
+  .scene-register button {
+    width: 29px;
+  }
+  .voice-controls {
+    gap: 1px;
+  }
+  .voice-controls .close-reading {
+    padding-right: 7px;
+  }
+  .voice-controls .close-reading span {
+    display: none;
+  }
+  .voice-controls button {
+    min-width: 30px;
+    gap: 4px;
+    font-size: 0.8rem;
+  }
+  .scene-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.3rem;
+  }
+  .card-art {
+    aspect-ratio: 1.38;
+  }
+  .card-legend {
+    padding: 0.6rem 0;
+  }
+  .notes a {
+    gap: 0.35rem;
+  }
+  .notes span {
+    font-size: 1rem;
+  }
+  .airscape .airshade {
+    background: linear-gradient(
+      180deg,
+      #141421c9,
+      transparent 22%,
+      transparent 42%,
+      #191820d9 78%,
+      #171620
+    );
+  }
+  .airscape .airframe {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: max(74px, 36svh) 0 calc(76px + env(safe-area-inset-bottom));
+  }
+  .aircopy {
+    padding: 14px 4px 8px;
+  }
+  .airscape[data-reading] .voice-panel {
+    width: 100%;
+    padding: 16px 4px 12px;
+  }
+  .airscape[data-reading] .voice-line {
+    font-size: 1.09rem;
+    line-height: 1.88;
+  }
+  .airscape[data-reading] .voice-speaker {
+    font-size: 0.83rem;
+    margin: 0 0 0.55rem;
+  }
+}
+/* The railway CGs are portrait strips. Keep the speakers on the same shot
+   during their exchange, with space for the final unvoiced lines. */
+.voice-panel:is(
+    [data-frame="two-windows"],
+    [data-frame="train-stars"],
+    [data-frame="white-wings"]
+  )
+  .voice-speaker {
+  color: #dad9ea;
+  font-size: 0.85rem;
+}
+@media (min-width: 701px) {
+  .voice-panel:is(
+    [data-frame="two-windows"],
+    [data-frame="train-stars"],
+    [data-frame="white-wings"]
+  ) {
+    position: absolute;
+    width: 40%;
+  }
+  .voice-panel[data-frame="two-windows"] {
+    top: 39%;
+    left: 2%;
+  }
+  .airscape[data-reading]:has(
+      .voice-panel:is([data-frame="train-stars"], [data-frame="white-wings"])
+    )
+    .airshade {
+    background:
+      linear-gradient(
+        180deg,
+        #11121e99,
+        transparent 18%,
+        transparent 82%,
+        #11131db3
+      ),
+      linear-gradient(90deg, transparent 36%, #16152691 63%, #151524bf);
+  }
+  .voice-panel:is([data-frame="train-stars"], [data-frame="white-wings"]) {
+    right: 0;
+    top: 46%;
+  }
+  .voice-panel[data-frame="white-wings"] {
+    top: 62%;
+  }
+}
+@media (min-width: 591px) and (max-width: 700px) {
+  .voice-panel:is(
+    [data-frame="two-windows"],
+    [data-frame="train-stars"],
+    [data-frame="white-wings"]
+  ) {
+    position: absolute;
+    width: 100%;
+    bottom: 12%;
+    text-align: center;
+  }
+}
+.airscape[data-cyrano] {
+  --cyrano-edges: linear-gradient(
+    180deg,
+    #151525ac,
+    transparent 19%,
+    transparent 78%,
+    #141323df
+  );
+}
+.airscape[data-cyrano] .airshade {
+  background:
+    var(--cyrano-edges),
+    linear-gradient(90deg, transparent 40%, #211a3475 74%, #1e152d8c);
+}
+.airscape[data-cyrano]:has(> [data-frame="blue-sky"]) .airshade {
+  background:
+    var(--cyrano-edges), linear-gradient(90deg, #122439a3, transparent 56%);
+}
+.airscape[data-cyrano]:has(> [data-frame="edge-of-sight"]) .airshade {
+  background:
+    var(--cyrano-edges),
+    linear-gradient(90deg, #e7eef0 7%, #e7eef0ec 30%, transparent 64%);
+}
+.voice-panel[data-frame="edge-of-sight"] .voice-line {
+  color: #253944;
+  text-shadow: none;
+}
+.airscape[data-cyrano]:has(> [data-frame="cyrano-piano"]) .airshade {
+  background:
+    var(--cyrano-edges), linear-gradient(90deg, #141729bd, transparent 70%);
+}
+@media (min-width: 701px) {
+  .airscape[data-cyrano] :is(.aircopy, .voice-panel) {
+    position: absolute;
+    bottom: 22%;
+    left: 3%;
+    width: 45%;
+  }
+  .airscape[data-cyrano] :is(.aircopy, .voice-panel[data-frame="dusk-roof"]) {
+    left: auto;
+    right: 2%;
+    text-align: end;
+  }
+  .airscape[data-cyrano] .air-actions {
+    justify-content: flex-end;
+  }
+  .airscape[data-cyrano] .voice-panel[data-frame="blue-sky"] {
+    top: 23%;
+    bottom: auto;
+    width: 39%;
+  }
+  .airscape[data-cyrano] .voice-panel[data-frame="cyrano-piano"] {
+    left: 8%;
+    bottom: 28%;
+  }
+}
+@media (max-width: 700px) {
+  .airscape[data-cyrano] :is(.voice-panel, .aircopy) {
+    position: absolute;
+    bottom: max(70px, 17%);
+    left: 2%;
+    width: 96%;
+    padding: 0;
+  }
+  .airscape[data-cyrano] .airshade {
+    background:
+      var(--cyrano-edges),
+      linear-gradient(0deg, #161526 7%, #181827bf 28%, transparent 52%);
+  }
+  .airscape[data-cyrano]:has(> [data-frame="edge-of-sight"]) .airshade {
+    background:
+      var(--cyrano-edges),
+      linear-gradient(0deg, #e7eef0 8%, #e7eef0ef 32%, transparent 62%);
+  }
+  .airscape[data-cyrano]:has(
+      > :is([data-frame="blue-sky"], [data-frame="cyrano-piano"])
+    )
+    .airshade {
+    background:
+      var(--cyrano-edges),
+      linear-gradient(0deg, #121c30 9%, #142236d9 32%, transparent 57%);
+  }
+}
+.airscape[data-literature] {
+  --room-light: linear-gradient(
+    180deg,
+    #111b1bd9,
+    transparent 18%,
+    transparent 52%,
+    #10191bd9 86%,
+    #12191d
+  );
+}
+[data-literature] .airshade {
+  background: var(--room-light);
+}
+[data-literature] :is(.voice-panel, .aircopy) {
+  position: absolute;
+  left: 3%;
+  bottom: max(76px, 15%);
+  width: min(47%, 37rem);
+}
+[data-literature] .voice-speaker {
+  margin-bottom: 0.35em;
+  color: #eed8a6;
+  font-size: 0.86rem;
+}
+[data-literature] .voice-panel[data-frame="reading-room"][data-voice="柘榴"] {
+  left: auto;
+  right: 3%;
+  text-align: end;
+}
+[data-literature]:has(> [data-frame="on-the-roof"]) .airshade {
+  background:
+    var(--room-light), linear-gradient(90deg, #223a37e8, transparent 70%);
+}
+[data-literature]:has(> [data-frame="on-paper"]) .airshade {
+  background:
+    linear-gradient(
+      180deg,
+      #21201cbf,
+      transparent 17%,
+      transparent 84%,
+      #252320df
+    ),
+    linear-gradient(90deg, #eee4d2 16%, #f0e6d5e8 39%, transparent 70%);
+}
+[data-literature]
+  .voice-panel:is([data-frame="on-the-roof"], [data-frame="on-paper"]) {
+  bottom: 34%;
+}
+[data-literature]
+  .voice-panel[data-frame="on-paper"]
+  :is(.voice-line, .voice-speaker) {
+  color: #493b33;
+  text-shadow: none;
+}
+[data-literature] .voice-panel[data-frame="school-sky"] {
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+@media (min-width: 701px) and (min-height: 620px) {
+  [data-literature] .voice-panel[data-frame="on-paper"] {
+    left: 27%;
+    top: 24%;
+    bottom: auto;
+    width: auto;
+    writing-mode: vertical-rl;
+  }
+  [data-literature] .voice-panel[data-frame="on-paper"] .voice-line {
+    font-size: clamp(1.05rem, 2.45vh, 1.8rem);
+    white-space: nowrap;
+  }
+  [data-literature] .voice-panel[data-frame="on-paper"] .voice-speaker {
+    margin: 0 0 0 0.75em;
+  }
+}
+@media (max-width: 700px) {
+  .airscape[data-literature] :is(.voice-panel, .aircopy) {
+    left: 2%;
+    bottom: max(70px, 15%);
+    width: 96%;
+    padding: 0;
+  }
+  .airscape[data-literature]
+    .voice-panel[data-frame="reading-room"][data-voice="柘榴"] {
+    right: 2%;
+    left: auto;
+  }
+  [data-literature]:has(> [data-frame="on-paper"]) .airshade {
+    background: linear-gradient(
+      180deg,
+      #1e1b19c9,
+      transparent 18%,
+      transparent 52%,
+      #eee4d2 73%,
+      #eee4d2 86%,
+      #23211e
+    );
+  }
+}
+.airscape[data-finale] {
+  --closing-shade: linear-gradient(
+    180deg,
+    #181722bd,
+    transparent 18%,
+    transparent 55%,
+    #151522b8 87%,
+    #12131ad9
+  );
+}
+[data-finale] .airshade {
+  background: var(--closing-shade);
+}
+[data-finale] :is(.aircopy, .voice-panel) {
+  position: absolute;
+  bottom: max(72px, 16%);
+  left: 3%;
+  width: 69%;
+}
+[data-finale] .voice-line {
+  text-shadow:
+    0 1px 5px #1c1624,
+    0 2px 16px #151421af;
+}
+@media (min-width: 701px) {
+  [data-finale]
+    :is(
+      .aircopy,
+      .voice-panel[data-frame="firelight"],
+      .voice-panel[data-frame="paper-birds"]
+    ) {
+    right: 3%;
+    left: auto;
+    text-align: end;
+  }
+  [data-finale] .air-actions {
+    justify-content: flex-end;
+  }
+  [data-finale]
+    .voice-panel:is([data-frame="sunflowers"], [data-frame="paper-birds"]) {
+    bottom: 32%;
+    width: 44%;
+  }
+  [data-finale]:has(> [data-frame="sunflowers"]) .airshade {
+    background:
+      var(--closing-shade), linear-gradient(90deg, #352432ca, transparent 67%);
+  }
+  [data-finale]:has(> [data-frame="paper-birds"]) .airshade {
+    background:
+      var(--closing-shade),
+      linear-gradient(90deg, transparent 31%, #322331ba 77%);
+  }
+  [data-finale] .voice-panel[data-frame="classroom-floor"] {
+    left: 7%;
+  }
+}
+@media (max-width: 700px) {
+  .airscape[data-finale] :is(.aircopy, .voice-panel) {
+    left: 2%;
+    width: 96%;
+    padding: 0;
+  }
+  .airscape[data-finale] .airshade {
+    background: linear-gradient(
+      180deg,
+      #191520ba,
+      transparent 19%,
+      transparent 48%,
+      #201b27db 70%,
+      #171521 97%
+    );
+  }
+}
+@media (max-width: 700px) and (min-height: 650px) and (orientation: portrait) {
+  /* Set the first line just below each uncropped landscape CG. */
+  .airscape[data-finale]
+    .voice-panel:is(
+      [data-frame="firelight"],
+      [data-frame="classroom-floor"],
+      [data-frame="star-score"]
+    ) {
+    top: min(64%, calc(40% + var(--half-art-height) + 1.25rem));
+    bottom: auto;
+  }
+  [data-finale] .voice-panel[data-frame="firelight"] {
+    --half-art-height: 25vw;
+  }
+  [data-finale] .voice-panel[data-frame="classroom-floor"] {
+    --half-art-height: 30.9vw;
+  }
+  [data-finale] .voice-panel[data-frame="star-score"] {
+    --half-art-height: 28.125vw;
+  }
+}
+/* Text placements within the sunflower scene. */
+.airscape[data-sunflower] {
+  --verse-ink: #fff3e1;
+}
+.airscape[data-sunflower] .airshade {
+  background:
+    linear-gradient(
+      180deg,
+      #171521a6,
+      transparent 23%,
+      transparent 63%,
+      #161522bd
+    ),
+    linear-gradient(
+      90deg,
+      #18142044,
+      transparent 34%,
+      transparent 65%,
+      #18142150
+    );
+}
+.airscape[data-sunflower] .voice-panel {
+  position: absolute;
+  width: auto;
+  max-width: 90%;
+  padding: 0;
+  color: var(--verse-ink);
+}
+.airscape[data-sunflower] .voice-line {
+  font-size: clamp(1.15rem, 1.84vw, 1.85rem);
+  line-height: 1.78;
+  letter-spacing: 0.075em;
+  text-shadow:
+    0 1px 5px #191322,
+    0 2px 16px #171021b3;
+}
+[data-sunflower] .voice-line span {
+  display: block;
+  animation: sunflower-letter 540ms ease-out backwards;
+}
+[data-sunflower] .voice-line span[data-awaiting] {
+  visibility: hidden;
+  animation: none;
+}
+[data-sunflower] .voice-line span:nth-child(2) {
+  animation-delay: 100ms;
+}
+[data-sunflower] .voice-line span:last-child {
+  color: #ffe4c6;
+}
+@keyframes sunflower-letter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+[data-sunflower] [data-placement="hillside"] {
+  left: 2%;
+  bottom: 20%;
+  max-width: min(22em, 45%);
+}
+[data-sunflower] [data-placement="question"] {
+  left: 11%;
+  bottom: 19%;
+  writing-mode: vertical-rl;
+}
+[data-placement="question"] .voice-line span + span {
+  padding-inline-start: 1.5em;
+}
+[data-sunflower] [data-placement="sunward"] {
+  right: 2%;
+  top: 26%;
+  text-align: end;
+}
+[data-placement="sunward"] .voice-line span:last-child {
+  margin-block-start: 0.45em;
+  font-size: 1.17em;
+}
+[data-sunflower] [data-placement="starlight"] {
+  right: 2%;
+  bottom: 17%;
+}
+[data-placement="starlight"] .voice-line span:nth-child(3) {
+  margin-top: 0.4em;
+}
+[data-sunflower] [data-placement="seasons"] {
+  left: 2%;
+  top: 23%;
+}
+[data-placement="seasons"] .voice-line span:nth-child(2) {
+  padding-left: 2em;
+}
+[data-placement="seasons"] .voice-line span:last-child {
+  margin-top: 0.7em;
+  font-size: 0.89em;
+}
+[data-sunflower] [data-placement="dedication"] {
+  left: 50%;
+  bottom: 16%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+[data-placement="dedication"] .voice-line span:first-child {
+  font-size: 0.78em;
+  margin-bottom: 0.48em;
+}
+[data-placement="dedication"] .voice-line span:last-child {
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .airscape[data-sunflower] .airframe {
+    padding: 0;
+  }
+  .airscape[data-sunflower] .voice-line {
+    font-size: clamp(1rem, 4.35vw, 1.35rem);
+  }
+  .airscape[data-sunflower] .airshade {
+    background: linear-gradient(
+      180deg,
+      #171421ad,
+      transparent 23%,
+      transparent 48%,
+      #141220b8 82%,
+      #14121fed
+    );
+  }
+  .airscape[data-sunflower] [data-placement="hillside"] {
+    bottom: 14%;
+    left: 4%;
+    max-width: 90%;
+  }
+  [data-sunflower] [data-placement="question"] {
+    left: 4%;
+    bottom: 14%;
+  }
+  [data-sunflower] [data-placement="sunward"] {
+    right: 4%;
+    top: auto;
+    bottom: 14%;
+  }
+  [data-sunflower] [data-placement="starlight"] {
+    right: 4%;
+    bottom: 13%;
+  }
+  [data-sunflower] [data-placement="seasons"] {
+    top: 16%;
+    left: 4%;
+  }
+  [data-sunflower] [data-placement="dedication"] {
+    bottom: 13%;
+  }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  .masthead {
+    min-height: 52px;
+  }
+  .airframe {
+    padding-block: 56px;
+  }
+  .airtitle {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .air-actions {
+    margin-top: 0.7rem;
+  }
+  .signal-footer {
+    min-height: 48px;
+  }
+  .voice-panel {
+    width: 54%;
+  }
+  .voice-line {
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+  .airscape[data-sunflower] .voice-line {
+    font-size: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:has(.broadcast) {
+    scroll-behavior: auto;
+  }
+  .broadcast *,
+  .broadcast *::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+}

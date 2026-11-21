@@ -1,13 +1,10 @@
 ---
-import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
-import HomeAtmosphere from "@/components/HomeAtmosphere.astro";
 import "@/styles/global.css";
-import "@/styles/home.css";
 import "@/styles/transitions.css";
 
 type Props = {
@@ -15,7 +12,6 @@ type Props = {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
-  particleBackground?: boolean;
 };
 
 const { site } = config;
@@ -25,7 +21,6 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
-  particleBackground = false,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
@@ -49,15 +44,8 @@ const rssHref = getRelativeLocaleUrl(
       content="upgrade-insecure-requests"
     />
     <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
-    <link rel="icon" href={getAssetPath("favicon.ico")} />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
-
-    <!-- Font -->
-    <Font
-      cssVariable="--font-google-sans-code"
-      preload={[{ subset: "latin", weight: 400, style: "normal" }]}
-    />
 
     <!-- Primary meta -->
     <title>{title}</title>
@@ -131,11 +119,8 @@ const rssHref = getRelativeLocaleUrl(
     <ClientRouter />
   </head>
   <body
-    data-particle-site
-    data-particle-home={particleBackground || undefined}
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
-    <HomeAtmosphere />
     <slot />
     <script>
       import "@/scripts/theme";

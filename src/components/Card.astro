@@ -1,30 +1,98 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getPostUrl } from "@/utils/getPostPaths";
-import Datetime from "./Datetime.astro";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import config from "@/config";
 
 type Props = {
   variant?: "h2" | "h3";
 } & CollectionEntry<"posts">;
 
 const { variant: Heading = "h2", id, data, filePath } = Astro.props;
-
-const { title, description, ...props } = data;
+const { title, pubDatetime, modDatetime, timezone } = data;
+const date =
+  modDatetime && modDatetime > pubDatetime ? modDatetime : pubDatetime;
+const displayDate = new Intl.DateTimeFormat("sv-SE", {
+  timeZone: timezone ?? config.site.timezone,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+}).format(date);
+const [year, month, day] = displayDate.split("-");
+const locale = Astro.currentLocale ?? config.site.lang;
+const dateLabel = locale.startsWith("zh")
+  ? date === pubDatetime
+    ? "发布于"
+    : "更新于"
+  : date === pubDatetime
+    ? "Published"
+    : "Updated";
 ---
 
-<li class="my-6">
-  <a
-    href={getPostUrl(id, filePath, Astro.currentLocale)}
-    class:list={[
-      "text-accent inline-block text-lg font-medium",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
-    ]}
-  >
+<li class="entry">
+  <time datetime={date.toISOString()} title={dateLabel}>
+    <span class="sr-only">{dateLabel} {displayDate}</span>
+    <span class="day" aria-hidden="true">{day}</span>
+    <span aria-hidden="true">{year} · {month}</span>
+  </time>
+  <div class="entry-copy">
     <Heading>
-      {title}
+      <a href={getPostUrl(id, filePath, locale)}>{title}</a>
     </Heading>
-  </a>
-  <Datetime {...props} />
-  <p>{description}</p>
+  </div>
+  <IconArrowRight class="entry-arrow" aria-hidden="true" />
 </li>
+
+<style>
+  .entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4.2rem minmax(0, 1fr) 1rem;
+    gap: clamp(0.75rem, 2vw, 1.6rem);
+    padding: clamp(1.15rem, 2vw, 1.65rem) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 76%, transparent);
+    align-items: center;
+  }
+  time {
+    display: grid;
+    justify-items: start;
+    gap: 0.23rem;
+    color: var(--muted-foreground);
+    font: 0.62rem/1.5 var(--station-mono);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .day {
+    font:
+      italic 1.85rem/1 Georgia,
+      var(--station-serif);
+    color: var(--accent);
+  }
+  .entry-copy a {
+    font: 400 clamp(1.08rem, 1.65vw, 1.45rem)/1.65 var(--station-serif);
+    overflow-wrap: anywhere;
+  }
+  .entry-copy a::after {
+    position: absolute;
+    content: "";
+    inset: 0;
+  }
+  .entry-arrow {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--accent);
+    transition: transform 0.2s ease;
+  }
+  .entry:is(:hover, :focus-within) a {
+    color: var(--accent);
+  }
+  .entry:is(:hover, :focus-within) .entry-arrow {
+    transform: translateX(0.15rem);
+  }
+  @media (max-width: 32rem) {
+    .entry {
+      grid-template-columns: 3.35rem minmax(0, 1fr) 0.85rem;
+      gap: 0.68rem;
+    }
+  }
+</style>

@@ -4,6 +4,9 @@
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
     @apply prose;
+    line-height: 1.92;
+
+    :is(h1,h2,h3,h4) { font-family: var(--station-serif); line-height: 1.48; }
 
     h1,
     h2,
@@ -13,9 +16,7 @@
       @apply text-foreground mb-3;
     }
 
-    h3 {
-      @apply italic;
-    }
+    h3 { font-style: normal; }
 
     p,
     strong,

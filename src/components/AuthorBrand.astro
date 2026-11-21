@@ -1,0 +1,57 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import config from "@/config";
+import avatar from "@/assets/images/helian-github-avatar.webp";
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const name = "Helian Nuits";
+---
+
+<a
+  class="author-brand"
+  href={getRelativeLocaleUrl(locale, "")}
+  aria-label={`${name} · ${locale.startsWith("zh") ? "首页" : "Home"}`}
+>
+  <img src={avatar.src} width="40" height="40" alt="" decoding="async" />
+  <span>{name}</span>
+</a>
+
+<style>
+  .author-brand {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    gap: 0.7rem;
+    min-height: 44px;
+    white-space: nowrap;
+    color: inherit;
+    text-decoration: none;
+    font:
+      400 clamp(1.35rem, 1.65vw, 1.75rem)/1.1 Georgia,
+      "Times New Roman",
+      serif;
+    letter-spacing: -0.025em;
+  }
+  .author-brand img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  @media (max-width: 590px) {
+    .author-brand {
+      font-size: 1.13rem;
+      gap: 0.4rem;
+    }
+    .author-brand img {
+      width: 28px;
+      height: 28px;
+    }
+  }
+  @media (max-width: 360px) {
+    .author-brand {
+      font-size: 1.02rem;
+      gap: 0.3rem;
+    }
+  }
+</style>

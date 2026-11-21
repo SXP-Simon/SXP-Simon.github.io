@@ -6,6 +6,18 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+@font-face {
+  font-family: "Station Lettering";
+  src: url("../assets/fonts/station-lettering.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --station-display: "Station Lettering", "LXGW WenKai", var(--station-serif);
+}
+
 @layer base {
   html,
   body {
@@ -30,11 +42,11 @@
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-4xl;
 }
 
 @utility app-layout {
-  @apply max-w-app mx-auto w-full px-4;
+  @apply max-w-app mx-auto w-full px-5 sm:px-8;
 }
 
 @utility active-nav {
@@ -42,5 +54,59 @@
 }
 
 :target {
-  scroll-margin-block: 1rem;
+  scroll-margin-block: 6rem;
+}
+
+/* One illustration sits behind the page chrome and outside the reading column. */
+body {
+  isolation: isolate;
+}
+body::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  inset: 4.9rem 0 auto auto;
+  width: min(57vw, 90vh);
+  height: calc(100vh - 4.9rem);
+  background: url("../assets/evening-carriage.webp") center top / cover
+    no-repeat;
+  opacity: 0.78;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 49%),
+    linear-gradient(#000 55%, transparent 100%);
+  mask-composite: intersect;
+}
+body:has([data-pagefind-body])::before {
+  opacity: 0.16;
+}
+body:has(.broadcast) {
+  background-color: #191820;
+}
+body:has(.broadcast)::before {
+  opacity: 0.28;
+}
+@media (max-width: 55rem) {
+  body::before {
+    position: absolute;
+    width: min(75vw, 31rem);
+    height: clamp(14rem, 45vw, 22rem);
+    mask-image:
+      linear-gradient(90deg, transparent, #000 43%),
+      linear-gradient(#000 24%, transparent 99%);
+  }
+  body:has(.broadcast)::before {
+    position: fixed;
+    top: 12%;
+  }
+}
+@media (max-width: 42rem) {
+  body::before {
+    top: 4rem;
+  }
+}
+@media print {
+  body::before {
+    display: none;
+  }
 }

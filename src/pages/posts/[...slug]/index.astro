@@ -107,108 +107,71 @@ const ogImage = ogImageUrl
   pubDatetime={pubDatetime}
   modDatetime={modDatetime}
 >
-  <Header class="xl:max-w-6xl" />
+  <Header />
 
   <BackButton class="xl:max-w-6xl" />
 
   <main
     id="main-content"
     class:list={[
-      "app-layout w-full min-w-0 overflow-x-clip xl:max-w-6xl",
+      "app-layout xl:max-w-6xl w-full min-w-0 overflow-x-clip",
       { "mt-8": !config.features.showBackButton },
     ]}
     data-pagefind-body
   >
-    <h1 class="text-accent inline-block text-2xl font-bold sm:text-3xl">
-      {title}
-    </h1>
-
-    <div
-      class="text-muted-foreground my-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
-    >
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      {
-        readingTime && (
-          <>
-            <span aria-hidden="true" class="opacity-60">
-              •
-            </span>
-            <span class="inline-flex items-center gap-1">
-              <svg
-                class="text-accent inline-block size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <>
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </>
-              </svg>
-              <span>{readingTime}</span>
-            </span>
-          </>
-        )
-      }
-      {
-        wordCountStr && (
-          <>
-            <span aria-hidden="true" class="opacity-60">
-              •
-            </span>
-            <span class="inline-flex items-center gap-1">
-              <svg
-                class="text-accent inline-block size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <>
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                  <polyline points="10 9 9 9 8 9" />
-                </>
-              </svg>
-              <span>{wordCountStr}</span>
-            </span>
-          </>
-        )
-      }
-      <span
-        aria-hidden="true"
-        class:list={[
-          "text-muted-foreground max-sm:hidden",
-          { hidden: !config.features.editPost?.enabled || hideEditPost },
-        ]}
+    <header class="article-heading">
+      <h1
+        class="article-title"
       >
-        |
-      </span>
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
-    </div>
+        {title}
+      </h1>
 
-    <div class="relative w-full min-w-0 xl:flex xl:items-start xl:gap-10">
-      <div class="w-full max-w-full min-w-0 flex-1">
+      <div class="article-meta mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        {
+          readingTime && (
+            <>
+              <span aria-hidden="true" class="opacity-60">•</span>
+              <span class="inline-flex items-center gap-1">
+                <svg class="size-4 text-accent inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>{readingTime}</span>
+              </span>
+            </>
+          )
+        }
+        {
+          wordCountStr && (
+            <>
+              <span aria-hidden="true" class="opacity-60">•</span>
+              <span class="inline-flex items-center gap-1">
+                <svg class="size-4 text-accent inline-block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span>{wordCountStr}</span>
+              </span>
+            </>
+          )
+        }
+        <span
+          aria-hidden="true"
+          class:list={[
+            "text-muted-foreground max-sm:hidden",
+            { hidden: !config.features.editPost?.enabled || hideEditPost },
+          ]}
+        >
+          |
+        </span>
+        <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+      </div>
+    </header>
+
+    <div class="relative xl:flex xl:items-start xl:gap-10 w-full min-w-0">
+      <div class="min-w-0 flex-1 w-full max-w-full">
         {/* Mobile / Tablet Collapsible TOC */}
         <TableOfContents {headings} variant="inline" />
 
         <article
           id="article"
           class:list={[
-            "mt-6 w-full max-w-full min-w-0 overflow-x-clip",
+            "mt-6 w-full min-w-0 max-w-full overflow-x-clip",
             "app-prose max-w-full",
             "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
           ]}
@@ -223,11 +186,7 @@ const ogImage = ogImageUrl
         <BackToTopButton />
 
         <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-          {
-            tags.map(tag => (
-              <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
-            ))
-          }
+          {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
         </ul>
 
         <ShareLinks />
@@ -241,8 +200,17 @@ const ogImage = ogImageUrl
       <TableOfContents {headings} variant="sidebar" />
     </div>
   </main>
-  <Footer class="xl:max-w-6xl" />
+  <Footer />
 </PostLayout>
+
+<style>
+  .article-heading { margin: 1.8rem 0; padding: 0 0 1.9rem; border-bottom: 1px solid var(--border); }
+  .article-title { max-width: 59rem; font: 400 clamp(2.15rem, 4.2vw, 3.5rem)/1.38 var(--station-display, var(--station-serif)); overflow-wrap: anywhere; }
+  .article-meta { font-size: .8rem; }
+  .article-meta :global(time) { font: .78rem/1.5 var(--station-mono); }
+  #article { font-size: clamp(1rem, 1.15vw, 1.08rem); }
+  #main-content { padding-bottom: 3.5rem; }
+</style>
 
 <script is:inline data-astro-rerun>
   (() => {
@@ -298,6 +266,7 @@ const ogImage = ogImageUrl
         link.className =
           "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
         link.href = "#" + heading.id;
+        link.setAttribute("aria-label", heading.textContent);
 
         const span = document.createElement("span");
         span.ariaHidden = "true";
