@@ -231,22 +231,27 @@ export type AlbumFrame<A extends AlbumName> = Extract<
 >;
 export type FrameKey = { [A in AlbumName]: AlbumFrame<A> }[AlbumName];
 
-type Artwork = ReturnType<typeof frame> & {
-  full: string;
-  mobile: string;
-  thumb: string;
-};
+function imagePaths(path: string) {
+  return {
+    full: path + "-full.webp",
+    mobile: path + "-mobile.webp",
+    thumb: path + "-thumb.webp",
+  };
+}
+type ImagePaths = ReturnType<typeof imagePaths>;
+type Artwork = ReturnType<typeof frame> & ImagePaths & { local: ImagePaths };
+const cdnBase = import.meta.env.PUBLIC_SCENE_CDN_BASE;
 export const frames = Object.fromEntries(
   Object.entries(albums).flatMap(([folder, images]) =>
     Object.entries(images).map(([key, image]) => {
-      const path = getAssetPath(`scene-art/${folder}/${image.source}`);
+      const path = `scene-art/${folder}/${image.source}`;
+      const local = imagePaths(getAssetPath(path));
       return [
         key,
         {
           ...image,
-          full: path + "-full.webp",
-          mobile: path + "-mobile.webp",
-          thumb: path + "-thumb.webp",
+          ...(cdnBase ? imagePaths(new URL(path, cdnBase).href) : local),
+          local,
         },
       ];
     })

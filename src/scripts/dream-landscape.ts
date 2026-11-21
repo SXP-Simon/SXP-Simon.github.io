@@ -20,6 +20,20 @@ export class DreamLandscape extends HTMLElement {
   private readonly reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
   connectedCallback() {
+    this.controller = new AbortController();
+    const { signal } = this.controller;
+    this.addEventListener(
+      "error",
+      event => {
+        const img = event.target;
+        // A pending frame owns its decode/retry sequence below.
+        if (img instanceof HTMLImageElement && !this.pending?.contains(img))
+          this.useLocalImage(img);
+      },
+      { capture: true, signal }
+    );
+    const initial = this.querySelector("img");
+    if (initial?.complete && !initial.naturalWidth) this.useLocalImage(initial);
     if (this.hasAttribute("data-small")) return;
     this.active = this.querySelector<HTMLElement>(".dream-plate") ?? undefined;
     const canvas = this.querySelector<HTMLCanvasElement>(".dream-canvas");
@@ -28,8 +42,6 @@ export class DreamLandscape extends HTMLElement {
       this.querySelector<HTMLCanvasElement>(".dream-signal") ?? undefined;
     this.desired = this.active.dataset.frame as FrameKey;
     this.context = canvas.getContext("2d", { alpha: false });
-    this.controller = new AbortController();
-    const { signal } = this.controller;
     this.renderedLayout = "";
 
     // A picture can change source after rotation even if the frame key is unchanged.
@@ -218,6 +230,21 @@ export class DreamLandscape extends HTMLElement {
     return this.loading;
   }
 
+  private useLocalImage(img: HTMLImageElement) {
+    const plate = img.closest<HTMLElement>(".dream-plate");
+    const art = frames[(plate ?? this).dataset.frame as FrameKey];
+    const src = plate ? art.local.full : art.local.thumb;
+    if (art.full === art.local.full || img.getAttribute("src") === src) return;
+    if (plate) {
+      plate.querySelector("source")!.srcset = art.local.mobile;
+      plate.style.setProperty(
+        "--art-wash",
+        "url(" + JSON.stringify(art.local.thumb) + ")"
+      );
+    }
+    img.src = src;
+  }
+
   private async loadFrame(key: FrameKey) {
     if (!this.active || key === this.desired) return;
     const revision = ++this.generation;
@@ -250,6 +277,7 @@ export class DreamLandscape extends HTMLElement {
       await img.decode();
     } catch {
       if (revision !== this.generation) return;
+      this.useLocalImage(img);
       try {
         await img.decode();
       } catch {
