@@ -13,6 +13,7 @@ export class DreamLandscape extends HTMLElement {
   private target?: HTMLCanvasElement;
   private desired?: FrameKey;
   private loading?: Promise<void>;
+  private warmedPlate?: HTMLElement;
   private generation = 0;
   private tick = 0;
   private layoutTick = 0;
@@ -130,6 +131,8 @@ export class DreamLandscape extends HTMLElement {
     this.generation++;
     this.pending?.remove();
     this.pending = undefined;
+    this.warmedPlate = undefined;
+    this.loading = undefined;
     this.stop();
     cancelAnimationFrame(this.layoutTick);
     this.layoutTick = 0;
@@ -224,10 +227,38 @@ export class DreamLandscape extends HTMLElement {
     this.tick = requestAnimationFrame(draw);
   }
 
-  show(key: FrameKey) {
+  async show(key: FrameKey) {
     this.scheduleLayout();
     if (key !== this.desired) this.loading = this.loadFrame(key);
-    return this.loading;
+    await this.loading;
+    // The first plate comes from HTML and can still be downloading on entry.
+    const img = this.active?.querySelector("img");
+    if (this.desired === key && img && !(img.complete && img.naturalWidth))
+      await this.decodeImage(img, this.generation);
+  }
+
+  warm(key?: FrameKey) {
+    if (
+      !this.active ||
+      !key ||
+      key === this.desired ||
+      document.hidden ||
+      this.warmedPlate?.dataset.frame === key
+    )
+      return;
+    const connection = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    if (connection?.saveData || connection?.effectiveType?.includes("2g"))
+      return;
+    this.warmedPlate = this.preparePlate(this.active, key, "low");
+    // Keep the responsive picture itself so a click can join an in-flight load.
+    void this.warmedPlate
+      .querySelector("img")!
+      .decode()
+      .catch(() => {});
   }
 
   private useLocalImage(img: HTMLImageElement) {
@@ -245,14 +276,28 @@ export class DreamLandscape extends HTMLElement {
     img.src = src;
   }
 
-  private async loadFrame(key: FrameKey) {
-    if (!this.active || key === this.desired) return;
-    const revision = ++this.generation;
-    this.desired = key;
-    this.pending?.remove();
-    this.pending = undefined;
-    if (key === this.active.dataset.frame) return;
-    const next = this.active.cloneNode(true) as HTMLElement;
+  private async decodeImage(img: HTMLImageElement, revision: number) {
+    try {
+      await img.decode();
+      return true;
+    } catch {
+      if (revision !== this.generation) return false;
+      this.useLocalImage(img);
+      try {
+        await img.decode();
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  private preparePlate(
+    active: HTMLElement,
+    key: FrameKey,
+    priority: "low" | "high"
+  ) {
+    const next = active.cloneNode(true) as HTMLElement;
     const art = frames[key];
     const source = next.querySelector("source")!;
     const img = next.querySelector("img")!;
@@ -269,26 +314,36 @@ export class DreamLandscape extends HTMLElement {
     next.style.opacity = "0";
     next.setAttribute("aria-hidden", "true");
     img.alt = art.alt;
+    img.fetchPriority = priority;
     source.srcset = art.mobile;
     img.src = art.full;
+    return next;
+  }
+
+  private async loadFrame(key: FrameKey) {
+    if (!this.active || key === this.desired) return;
+    const revision = ++this.generation;
+    this.desired = key;
+    this.pending?.remove();
+    this.pending = undefined;
+    if (key === this.active.dataset.frame) return;
+    const next =
+      this.warmedPlate?.dataset.frame === key
+        ? this.warmedPlate
+        : this.preparePlate(this.active, key, "high");
+    this.warmedPlate = undefined;
+    const img = next.querySelector("img")!;
+    img.fetchPriority = "high";
     this.pending = next;
     this.active.after(next);
-    try {
-      await img.decode();
-    } catch {
-      if (revision !== this.generation) return;
-      this.useLocalImage(img);
-      try {
-        await img.decode();
-      } catch {
-        if (revision !== this.generation) return;
-        next.remove();
-        this.pending = undefined;
-        this.desired = this.active?.dataset.frame as FrameKey;
-        return;
-      }
-    }
+    const ready = await this.decodeImage(img, revision);
     if (revision !== this.generation) return;
+    if (!ready) {
+      next.remove();
+      this.pending = undefined;
+      this.desired = this.active.dataset.frame as FrameKey;
+      return;
+    }
     this.active.remove();
     this.active = next;
     this.pending = undefined;
