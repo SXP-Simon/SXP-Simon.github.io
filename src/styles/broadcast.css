@@ -669,6 +669,105 @@
       linear-gradient(0deg, #121c30 9%, #142236d9 32%, transparent 57%);
   }
 }
+.airscape[data-literature] {
+  --room-light: linear-gradient(
+    180deg,
+    #111b1bd9,
+    transparent 18%,
+    transparent 52%,
+    #10191bd9 86%,
+    #12191d
+  );
+}
+[data-literature] .airshade {
+  background: var(--room-light);
+}
+[data-literature] :is(.voice-panel, .aircopy) {
+  position: absolute;
+  left: 3%;
+  bottom: max(76px, 15%);
+  width: min(47%, 37rem);
+}
+[data-literature] .voice-speaker {
+  margin-bottom: 0.35em;
+  color: #eed8a6;
+  font-size: 0.86rem;
+}
+[data-literature] .voice-panel[data-frame="reading-room"][data-voice="柘榴"] {
+  left: auto;
+  right: 3%;
+  text-align: end;
+}
+[data-literature]:has(> [data-frame="on-the-roof"]) .airshade {
+  background:
+    var(--room-light), linear-gradient(90deg, #223a37e8, transparent 70%);
+}
+[data-literature]:has(> [data-frame="on-paper"]) .airshade {
+  background:
+    linear-gradient(
+      180deg,
+      #21201cbf,
+      transparent 17%,
+      transparent 84%,
+      #252320df
+    ),
+    linear-gradient(90deg, #eee4d2 16%, #f0e6d5e8 39%, transparent 70%);
+}
+[data-literature]
+  .voice-panel:is([data-frame="on-the-roof"], [data-frame="on-paper"]) {
+  bottom: 34%;
+}
+[data-literature]
+  .voice-panel[data-frame="on-paper"]
+  :is(.voice-line, .voice-speaker) {
+  color: #493b33;
+  text-shadow: none;
+}
+[data-literature] .voice-panel[data-frame="school-sky"] {
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+@media (min-width: 701px) and (min-height: 620px) {
+  [data-literature] .voice-panel[data-frame="on-paper"] {
+    left: 27%;
+    top: 24%;
+    bottom: auto;
+    width: auto;
+    writing-mode: vertical-rl;
+  }
+  [data-literature] .voice-panel[data-frame="on-paper"] .voice-line {
+    font-size: clamp(1.05rem, 2.45vh, 1.8rem);
+    white-space: nowrap;
+  }
+  [data-literature] .voice-panel[data-frame="on-paper"] .voice-speaker {
+    margin: 0 0 0 0.75em;
+  }
+}
+@media (max-width: 700px) {
+  .airscape[data-literature] :is(.voice-panel, .aircopy) {
+    left: 2%;
+    bottom: max(70px, 15%);
+    width: 96%;
+    padding: 0;
+  }
+  .airscape[data-literature]
+    .voice-panel[data-frame="reading-room"][data-voice="柘榴"] {
+    right: 2%;
+    left: auto;
+  }
+  [data-literature]:has(> [data-frame="on-paper"]) .airshade {
+    background: linear-gradient(
+      180deg,
+      #1e1b19c9,
+      transparent 18%,
+      transparent 52%,
+      #eee4d2 73%,
+      #eee4d2 86%,
+      #23211e
+    );
+  }
+}
 /* Text placements within the sunflower scene. */
 .airscape[data-sunflower] {
   --verse-ink: #fff3e1;

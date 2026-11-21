@@ -183,6 +183,10 @@ class NightBroadcast extends HTMLElement {
       "data-cyrano",
       scene.location === "西哈诺"
     );
+    this.element("stage").toggleAttribute(
+      "data-literature",
+      scene.cover === "reading-room"
+    );
     this.querySelectorAll<HTMLButtonElement>(
       "[data-tune], [data-chapter]"
     ).forEach(button =>
@@ -258,6 +262,7 @@ class NightBroadcast extends HTMLElement {
     this.element("stage").toggleAttribute("data-sunflower", !!verse);
     void this.presentFrame(turn && !hold ? turn.frame : passage.frame, () => {
       story.dataset.frame = passage.frame;
+      story.dataset.voice = passage.speaker ?? "";
       this.element("speaker").textContent = passage.speaker ?? "";
       this.element("speaker").hidden = !passage.speaker;
       const line = this.element("line");

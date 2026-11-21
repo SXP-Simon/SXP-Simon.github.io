@@ -289,7 +289,9 @@ const art = frames[frame];
     }
   }
   @media (min-width: 701px) {
-    :global(.airscape[data-cyrano]) .dream-plate[data-frame] .dream-focus {
+    :global(.airscape:is([data-cyrano], [data-literature]))
+      .dream-plate[data-frame]
+      .dream-focus {
       inset: 50% 50% auto auto;
       width: min(100cqw, calc(100cqh * var(--art-ratio)));
       height: auto;
@@ -304,14 +306,19 @@ const art = frames[frame];
       .dream-focus,
     :global(.airscape[data-cyrano])
       .dream-plate[data-frame="cyrano-piano"]
+      .dream-focus,
+    :global(.airscape[data-literature])
+      .dream-plate:is([data-frame="on-the-roof"], [data-frame="on-paper"])
       .dream-focus {
       right: 7%;
       transform: translateY(-50%);
     }
   }
   @media (max-width: 700px) {
-    :global(.airscape[data-cyrano]) .dream-plate[data-frame] .dream-focus,
-    :global(.airscape[data-cyrano][data-reading])
+    :global(.airscape:is([data-cyrano], [data-literature]))
+      .dream-plate[data-frame]
+      .dream-focus,
+    :global(.airscape:is([data-cyrano], [data-literature])[data-reading])
       .dream-plate[data-frame]
       .dream-focus {
       inset: 40% 50% auto auto;

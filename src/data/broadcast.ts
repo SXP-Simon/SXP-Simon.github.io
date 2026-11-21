@@ -157,7 +157,7 @@ const sceneDefinitions: Scene[] = [
       {
         frame: "reading-room",
         speaker: "希实香",
-        text: "凭文学是无法打败敌人的……能打倒敌人的学问只有化学跟物理！",
+        text: "凭文学是无法打败敌人的……\n能打倒敌人的学问只有化学跟物理！",
       },
       {
         frame: "reading-room",
@@ -166,9 +166,14 @@ const sceneDefinitions: Scene[] = [
       },
       { frame: "reading-room", speaker: "希实香", text: "不会输？" },
       {
+        frame: "on-the-roof",
+        speaker: "柘榴",
+        text: "文学不是为了胜利的学问……",
+      },
+      {
         frame: "on-paper",
         speaker: "柘榴",
-        text: "文学不是为了胜利的学问……而是为了立于不败之地的学问……",
+        text: "而是为了立于不败之地的学问……",
       },
       { frame: "school-sky", speaker: "柘榴", text: "所以我才能继续战斗" },
     ],
