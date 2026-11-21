@@ -2,7 +2,7 @@ import { frames, type FrameKey } from "../data/frames";
 import { composeFrame } from "./scene-canvas";
 import { createGrainDissolve } from "./grain-dissolve";
 
-class DreamLandscape extends HTMLElement {
+export class DreamLandscape extends HTMLElement {
   private controller?: AbortController;
   private observer?: ResizeObserver;
   private visibilityObserver?: IntersectionObserver;
@@ -12,6 +12,7 @@ class DreamLandscape extends HTMLElement {
   private context: CanvasRenderingContext2D | null = null;
   private target?: HTMLCanvasElement;
   private desired?: FrameKey;
+  private loading?: Promise<void>;
   private generation = 0;
   private tick = 0;
   private layoutTick = 0;
@@ -30,17 +31,6 @@ class DreamLandscape extends HTMLElement {
     this.controller = new AbortController();
     const { signal } = this.controller;
     this.renderedLayout = "";
-
-    window.addEventListener(
-      "dream:scene",
-      event => {
-        const key: unknown = (event as CustomEvent<{ frame: string }>).detail
-          ?.frame;
-        if (typeof key === "string" && Object.hasOwn(frames, key))
-          void this.show(key as FrameKey);
-      },
-      { signal }
-    );
 
     // A picture can change source after rotation even if the frame key is unchanged.
     this.addEventListener(
@@ -164,6 +154,7 @@ class DreamLandscape extends HTMLElement {
     const img = plate.querySelector("img")!;
     const key = [
       plate.dataset.frame,
+      this.parentElement?.hasAttribute("data-reading"),
       img.currentSrc,
       this.clientWidth,
       this.clientHeight,
@@ -220,7 +211,13 @@ class DreamLandscape extends HTMLElement {
     this.tick = requestAnimationFrame(draw);
   }
 
-  private async show(key: FrameKey) {
+  show(key: FrameKey) {
+    this.scheduleLayout();
+    if (key !== this.desired) this.loading = this.loadFrame(key);
+    return this.loading;
+  }
+
+  private async loadFrame(key: FrameKey) {
     if (!this.active || key === this.desired) return;
     const revision = ++this.generation;
     this.desired = key;
@@ -234,6 +231,7 @@ class DreamLandscape extends HTMLElement {
     next.dataset.frame = key;
     next.toggleAttribute("data-portrait", art.portrait);
     next.style.setProperty("--art-tone", art.tone);
+    next.style.setProperty("--art-ratio", String(art.ratio));
     next.style.setProperty("--art-x", art.x + "%");
     next.style.setProperty("--art-y", art.y + "%");
     next.style.setProperty(

@@ -5,7 +5,10 @@ type Patch = [x: number, y: number, radiusX: number, radiusY: number];
 
 // Centres and radii in the original, uncropped CG. Each patch is a piece of
 // sky, a window, a wall or another quiet surface selected around the figures.
-const patches: Record<FrameKey, Patch[]> = {
+const patches: Record<
+  Exclude<FrameKey, "sunflower-roof" | "cyrano-piano">,
+  Patch[]
+> = {
   "at-sunset": [
     [0.48, 0.19, 0.075, 0.23],
     [0.94, 0.48, 0.09, 0.25],
@@ -22,9 +25,30 @@ const patches: Record<FrameKey, Patch[]> = {
     [0.13, 0.36, 0.19, 0.23],
     [0.88, 0.075, 0.14, 0.065],
   ],
-  "empty-seat": [
-    [0.13, 0.19, 0.11, 0.16],
-    [0.84, 0.18, 0.13, 0.18],
+  "flower-bed": [
+    [0.89, 0.1, 0.14, 0.1],
+    [0.1, 0.88, 0.11, 0.1],
+  ],
+  "star-score": [
+    [0.18, 0.13, 0.17, 0.12],
+    [0.87, 0.52, 0.12, 0.15],
+  ],
+  "classroom-floor": [
+    [0.19, 0.81, 0.17, 0.17],
+    [0.87, 0.12, 0.11, 0.09],
+  ],
+  firelight: [
+    [0.26, 0.88, 0.24, 0.1],
+    [0.9, 0.76, 0.07, 0.12],
+  ],
+  "school-sky": [[0.13, 0.2, 0.1, 0.17]],
+  "dusk-roof": [
+    [0.16, 0.8, 0.14, 0.12],
+    [0.68, 0.13, 0.11, 0.09],
+  ],
+  "train-stars": [
+    [0.75, 0.14, 0.16, 0.1],
+    [0.45, 0.8, 0.1, 0.06],
   ],
   "last-warmth": [
     [0.09, 0.85, 0.11, 0.15],
@@ -127,7 +151,13 @@ export function paintAmbientSignal(
   ctx.scale(illustration.width / crop.width, illustration.height / crop.height);
   ctx.translate(-crop.x, -crop.y);
   ctx.scale(image.naturalWidth, image.naturalHeight);
-  for (const [x, y, rx, ry] of patches[frame]) {
+  for (const [x, y, rx, ry] of patches[
+    frame === "sunflower-roof"
+      ? "on-the-roof"
+      : frame === "cyrano-piano"
+        ? "night-piano"
+        : frame
+  ]) {
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(rx, ry);

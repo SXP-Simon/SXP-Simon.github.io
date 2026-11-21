@@ -301,49 +301,6 @@
   position: absolute;
   right: 0;
 }
-@media (min-width: 851px) {
-  .airframe {
-    container-type: size;
-  }
-  .vertical-passage .verse-continuation {
-    padding-inline-start: 0.75em;
-  }
-  .vertical-passage .verse-break {
-    margin-block-start: 0.25em;
-  }
-  .voice-line.vertical-passage {
-    writing-mode: vertical-rl;
-    white-space: normal;
-    text-wrap: nowrap;
-    font-size: min(
-      clamp(1.65rem, 2.25vw, 2.45rem),
-      calc((100cqh - 40px) / var(--column-length) / 1.15)
-    );
-    letter-spacing: 0.15em;
-    line-height: 1.7;
-    margin-inline: auto;
-  }
-  .vertical-passage span {
-    display: block;
-    white-space: nowrap;
-  }
-  .vertical-passage span:last-child:not(:first-child) {
-    color: #ffd5b8;
-  }
-  .voice-panel:has(.vertical-passage) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .voice-panel:has(.vertical-passage) .voice-speaker {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    margin: 0;
-    font-size: 0.85rem;
-    writing-mode: vertical-rl;
-  }
-}
 
 .scene-shelf,
 .journal {
@@ -366,7 +323,9 @@
   gap: clamp(14px, 1.7vw, 29px);
 }
 .scene-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   text-align: start;
   min-width: 0;
 }
@@ -385,6 +344,7 @@
   transform: scale(1.035);
 }
 .card-legend {
+  flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -393,10 +353,7 @@
   border-bottom: 1px solid var(--rule);
 }
 .card-legend strong {
-  text-wrap: balance;
   display: block;
-}
-.card-legend strong {
   text-wrap: balance;
   font: 400 clamp(1.2rem, 1.65vw, 1.65rem)/1.5 var(--station-display);
   letter-spacing: 0.05em;
@@ -495,22 +452,6 @@
   .station-tools :is(a, button) {
     width: 31px;
   }
-  .airframe {
-    min-height: 510px;
-    height: clamp(510px, 74svh, 650px);
-    padding-block: 76px 74px;
-  }
-  .airshade {
-    background:
-      linear-gradient(180deg, #141421cf, transparent 25%),
-      radial-gradient(
-        ellipse at 9% 50%,
-        #191621ab,
-        #19162166 44%,
-        transparent 78%
-      ),
-      linear-gradient(0deg, #151420dd, transparent 22%);
-  }
   .airtitle {
     font-size: clamp(2.4rem, 9.8vw, 3.6rem);
   }
@@ -554,25 +495,28 @@
   .notes span {
     font-size: 1rem;
   }
-  .airscape[data-reading] {
+  .airscape {
     --reading-picture: clamp(280px, 47svh, 420px);
     background: var(--ink);
   }
-  .airscape[data-reading] > dream-landscape,
-  .airscape[data-reading] .airshade {
+  .airscape > dream-landscape,
+  .airscape .airshade {
     bottom: auto;
     height: var(--reading-picture);
   }
-  .airscape[data-reading] .airshade {
+  .airscape .airshade {
     background:
       linear-gradient(180deg, #141421ce, transparent 23%),
       linear-gradient(0deg, var(--ink), transparent 18%);
   }
-  .airscape[data-reading] .airframe {
+  .airscape .airframe {
     display: block;
     height: auto;
     min-height: 0;
     padding: var(--reading-picture) 0 66px;
+  }
+  .aircopy {
+    padding: 14px 4px 8px;
   }
   .airscape[data-reading] .voice-panel {
     width: 100%;

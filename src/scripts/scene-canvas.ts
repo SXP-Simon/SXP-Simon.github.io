@@ -108,7 +108,7 @@ export function composeFrame(
   );
   ctx.globalCompositeOperation = "destination-in";
   ctx.fillStyle = edge;
-  ctx.fillRect(dest.x, 0, dest.width, dest.height);
+  ctx.fillRect(dest.x, dest.y, dest.width, dest.height);
 
   // Work at a small scale for the soft background. The face and figure above
   // are always sampled from the decoded CG at the canvas's full resolution.

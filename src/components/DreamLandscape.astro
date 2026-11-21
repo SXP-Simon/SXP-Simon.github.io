@@ -33,6 +33,7 @@ const art = frames[frame];
         data-portrait={art.portrait ? "" : undefined}
         style={{
           "--art-tone": art.tone,
+          "--art-ratio": art.ratio,
           "--art-x": art.x + "%",
           "--art-y": art.y + "%",
           "--art-wash": "url(" + JSON.stringify(art.thumb) + ")",
@@ -178,9 +179,19 @@ const art = frames[frame];
     --fade-out: 90%;
     --end-alpha: 0;
   }
-  .dream-plate[data-frame="two-windows"] .dream-focus {
-    width: min(67%, 92cqh);
-    right: 5%;
+  .dream-plate[data-frame="two-windows"] {
+    --panel-width: 74cqh;
+  }
+  .dream-plate[data-frame="train-stars"] {
+    --panel-width: 59.5cqh;
+  }
+  .dream-plate:is([data-frame="two-windows"], [data-frame="train-stars"])
+    .dream-focus {
+    width: min(100%, var(--panel-width));
+    right: 12%;
+    --fade-in: 4%;
+    --fade-out: 96%;
+    --end-alpha: 0;
   }
   .dream-plate[data-frame="blue-sky"] img,
   .dream-plate[data-frame="at-sunset"] img {
@@ -191,13 +202,21 @@ const art = frames[frame];
       filter: blur(15px) saturate(0.86) brightness(0.81);
     }
     .dream-plate .dream-focus,
-    .dream-plate[data-portrait] .dream-focus,
-    .dream-plate[data-frame="two-windows"] .dream-focus {
+    .dream-plate[data-portrait] .dream-focus {
       right: -4%;
       width: 105%;
       --fade-in: 13%;
       --fade-out: 100%;
       --end-alpha: 1;
+    }
+    .dream-plate:is([data-frame="two-windows"], [data-frame="train-stars"])
+      .dream-focus {
+      width: min(100%, var(--panel-width));
+      right: 50%;
+      transform: translateX(50%);
+      --fade-in: 4%;
+      --fade-out: 96%;
+      --end-alpha: 0;
     }
     .dream-plate::after {
       background: linear-gradient(
@@ -217,6 +236,24 @@ const art = frames[frame];
     }
     .dream-plate[data-frame="sunflowers"] img {
       object-position: var(--art-x) 100%;
+    }
+  }
+  /* Keep the whole illustration beside the passage, including tall panels. */
+  :global([data-reading]) .dream-plate[data-frame] .dream-focus {
+    inset: 50% 2.5% auto auto;
+    width: min(52cqw, calc(100cqh * var(--art-ratio)));
+    height: auto;
+    aspect-ratio: var(--art-ratio);
+    transform: translateY(-50%);
+    --fade-in: 5%;
+    --fade-out: 97%;
+    --end-alpha: 0;
+  }
+  @media (max-width: 700px) {
+    :global([data-reading]) .dream-plate[data-frame] .dream-focus {
+      right: 50%;
+      width: min(100cqw, calc(100cqh * var(--art-ratio)));
+      transform: translate(50%, -50%);
     }
   }
   @media (pointer: fine) and (prefers-reduced-motion: no-preference) {

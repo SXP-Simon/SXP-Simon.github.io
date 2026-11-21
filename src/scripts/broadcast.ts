@@ -2,34 +2,7 @@ import { gsap } from "gsap";
 import { scenes } from "@/data/broadcast";
 import type { FrameKey } from "@/data/frames";
 
-// Keep the supplied line breaks. Short clauses can also be set as vertical verse.
-function setPassage(element: HTMLElement, text: string) {
-  const lines = text.split("\n");
-  const parts = lines.map(
-    line => line.match(/[^。！？；，]+[。！？；，]*/gu) ?? [line]
-  );
-  const clauses = parts.flat();
-  const longest = Math.max(...clauses.map(clause => [...clause].length));
-  const vertical = clauses.length <= 5 && longest <= 10;
-  element.style.setProperty("--column-length", String(longest));
-  element.classList.toggle("vertical-passage", vertical);
-  if (!vertical) {
-    element.textContent = text;
-    return;
-  }
-  const fragment = document.createDocumentFragment();
-  parts.forEach((line, i) => {
-    if (i) fragment.append("\n");
-    line.forEach((clause, j) => {
-      const column = document.createElement("span");
-      if (i > 0) column.classList.add("verse-continuation");
-      if (i > 0 && j === 0) column.classList.add("verse-break");
-      column.textContent = clause;
-      fragment.append(column);
-    });
-  });
-  element.replaceChildren(fragment);
-}
+import type { DreamLandscape } from "./dream-landscape";
 
 // The broadcast has no audio files. Two quiet local tones share a slowly moving wind bed.
 function makeAmbience(context: AudioContext) {
@@ -81,6 +54,7 @@ function makeAmbience(context: AudioContext) {
 }
 
 class NightBroadcast extends HTMLElement {
+  private revision = 0;
   private index = 0;
   private line = 0;
   private reading = false;
@@ -134,6 +108,7 @@ class NightBroadcast extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this.revision++;
     this.listener?.abort();
     this.resetMotion();
     this.stopAudio();
@@ -195,8 +170,6 @@ class NightBroadcast extends HTMLElement {
     this.index = (rawIndex + scenes.length) % scenes.length;
     this.line = 0;
     const scene = scenes[this.index];
-    this.element("title-top").textContent = scene.title[0];
-    this.element("title-bottom").textContent = scene.title[1];
     this.querySelectorAll<HTMLButtonElement>(
       "[data-tune], [data-chapter]"
     ).forEach(button =>
@@ -210,11 +183,15 @@ class NightBroadcast extends HTMLElement {
     this.element("status").textContent =
       `第 ${this.index + 1} 幕，${scene.location}。`;
     this.retune?.(this.index);
-    if (this.reading) this.renderLine();
-    else this.showFrame(scene.cover);
-    if (this.reduced) return;
-
-    if (!this.reading) this.revealTitle();
+    if (this.reading) {
+      this.renderLine();
+    } else {
+      void this.presentFrame(scene.cover, () => {
+        this.element("title-top").textContent = scene.title[0];
+        this.element("title-bottom").textContent = scene.title[1];
+        if (!this.reduced) this.revealTitle();
+      });
+    }
   }
 
   private enterStory() {
@@ -239,19 +216,19 @@ class NightBroadcast extends HTMLElement {
     this.element("read").focus({ preventScroll: true });
   }
 
-  private showFrame(frame: FrameKey) {
-    this.dispatchEvent(
-      new CustomEvent("dream:scene", { bubbles: true, detail: { frame } })
-    );
+  private async presentFrame(frame: FrameKey, revealText: () => void) {
+    const revision = ++this.revision;
+    await customElements.whenDefined("dream-landscape");
+    if (revision !== this.revision) return;
+    const landscape =
+      this.element("stage").querySelector<DreamLandscape>("dream-landscape")!;
+    await landscape.show(frame);
+    if (revision === this.revision) revealText();
   }
 
   private renderLine() {
     const scene = scenes[this.index];
     const passage = scene.lines[this.line];
-    this.showFrame(passage.frame);
-    this.element("speaker").textContent = passage.speaker ?? "";
-    this.element("speaker").hidden = !passage.speaker;
-    setPassage(this.element("line"), passage.text);
     this.element<HTMLButtonElement>("back").disabled = this.line === 0;
     this.element("next-line").querySelector("span")!.textContent =
       this.line < scene.lines.length - 1
@@ -259,19 +236,24 @@ class NightBroadcast extends HTMLElement {
         : this.index === scenes.length - 1
           ? "回到开场"
           : "换一个视角";
-    if (!this.reduced) {
-      this.reveal?.revert();
-      this.reveal = gsap.fromTo(
-        this.element("line"),
-        { opacity: 0.4, y: 4 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.22,
-          clearProps: "transform,opacity",
-        }
-      );
-    }
+    void this.presentFrame(passage.frame, () => {
+      this.element("speaker").textContent = passage.speaker ?? "";
+      this.element("speaker").hidden = !passage.speaker;
+      this.element("line").textContent = passage.text;
+      if (!this.reduced) {
+        this.reveal?.revert();
+        this.reveal = gsap.fromTo(
+          this.element("line"),
+          { opacity: 0.4, y: 4 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.22,
+            clearProps: "transform,opacity",
+          }
+        );
+      }
+    });
   }
 
   private advance() {
