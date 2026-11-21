@@ -256,6 +256,51 @@ const art = frames[frame];
       transform: translate(50%, -50%);
     }
   }
+  :global([data-sunflower]) .dream-plate[data-frame] .dream-focus {
+    inset: 0 var(--shot-right) auto auto;
+    width: min(100cqw, var(--shot-width));
+    height: 100%;
+    transform: none;
+    --fade-in: 16%;
+    --fade-out: 85%;
+    --end-alpha: 0;
+  }
+  :global([data-sunflower]) .dream-plate[data-frame="flower-bed"] {
+    --shot-right: 6%;
+    --shot-width: 166cqh;
+  }
+  :global([data-sunflower]) .dream-plate[data-frame="at-sunset"] {
+    --shot-right: 30%;
+    --shot-width: 144cqh;
+  }
+  :global([data-sunflower]) .dream-plate[data-frame="night-piano"] {
+    --shot-right: 28%;
+    --shot-width: 84cqh;
+  }
+  @media (max-width: 700px) {
+    :global([data-sunflower]) .dream-plate[data-frame] .dream-focus {
+      width: 100%;
+      right: 0;
+      --fade-in: 0%;
+      --fade-out: 100%;
+      --end-alpha: 1;
+    }
+    :global([data-sunflower])
+      .dream-plate[data-frame="at-sunset"]
+      .dream-focus {
+      /* Keep both speakers in the same horizontal shot on a narrow screen. */
+      top: 3%;
+      height: min(88%, 128cqw);
+      --fade-block: 0.2;
+      mask-image: linear-gradient(
+        180deg,
+        transparent,
+        black 20%,
+        black 74%,
+        transparent
+      );
+    }
+  }
   @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .dream-canvas {
       transform: scale(1.006) translate(var(--art-dx, 0px), var(--art-dy, 0px));

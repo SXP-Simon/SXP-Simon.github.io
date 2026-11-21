@@ -1,11 +1,33 @@
 import type { AlbumFrame, AlbumName } from "./frames";
 
+type SunflowerPlacement =
+  "question" | "sunward" | "starlight" | "seasons" | "dedication";
+type SunflowerVerse = {
+  placement: SunflowerPlacement;
+  phrases: string[];
+  turn?: { after: number; frame: AlbumFrame<"夜晚的向日葵">; pause: number };
+};
+
+function sunflower(
+  frame: AlbumFrame<"夜晚的向日葵">,
+  placement: SunflowerPlacement,
+  phrases: string[],
+  turn?: SunflowerVerse["turn"]
+) {
+  return { frame, text: phrases.join(""), verse: { placement, phrases, turn } };
+}
+
 type Scene = {
   [A in AlbumName]: {
     location: A;
     title: [string, string];
     cover: AlbumFrame<A>;
-    lines: { text: string; frame: AlbumFrame<A>; speaker?: string }[];
+    lines: {
+      text: string;
+      frame: AlbumFrame<A>;
+      speaker?: string;
+      verse?: A extends "夜晚的向日葵" ? SunflowerVerse : never;
+    }[];
   };
 }[AlbumName];
 
@@ -16,20 +38,35 @@ export const scenes: Scene[] = [
     location: "夜晚的向日葵",
     cover: "flower-bed",
     lines: [
-      { frame: "flower-bed", text: "——夜晚的向日葵，存在的理由又是什么呢？" },
-      {
-        frame: "flower-bed",
-        text: "——命中注定要朝向阳光生长，那夜晚的向日葵们，岂不是很辛苦？",
-      },
-      {
-        frame: "at-sunset",
-        text: "——哈哈，总能忍过去。没有太阳，有一点点星光，一点点希望，活着，就足够了吧。",
-      },
-      {
-        frame: "flower-bed",
-        text: "——如初春雪，暮春樱，夏晚荷，秋寒叶，天降物哀，执拗、纯粹而绝美。",
-      },
-      { frame: "night-piano", text: "——这曲，是为一切不合时宜者而作。" },
+      sunflower("flower-bed", "question", [
+        "——夜晚的向日葵，",
+        "存在的理由又是什么呢？",
+      ]),
+      sunflower("at-sunset", "sunward", [
+        "——命中注定要朝向阳光生长，",
+        "那夜晚的向日葵们，",
+        "岂不是很辛苦？",
+      ]),
+      sunflower(
+        "at-sunset",
+        "starlight",
+        [
+          "——哈哈，总能忍过去。",
+          "没有太阳，",
+          "有一点点星光，一点点希望，",
+          "活着，就足够了吧。",
+        ],
+        { after: 2, frame: "night-piano", pause: 2100 }
+      ),
+      sunflower("night-piano", "seasons", [
+        "——如初春雪，暮春樱，",
+        "夏晚荷，秋寒叶，",
+        "天降物哀，执拗、纯粹而绝美。",
+      ]),
+      sunflower("night-piano", "dedication", [
+        "——这曲，",
+        "是为一切不合时宜者而作。",
+      ]),
     ],
   },
   {

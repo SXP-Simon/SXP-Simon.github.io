@@ -110,6 +110,22 @@ export function composeFrame(
   ctx.fillStyle = edge;
   ctx.fillRect(dest.x, dest.y, dest.width, dest.height);
 
+  const feather = Number(style.getPropertyValue("--fade-block"));
+  if (feather) {
+    const vertical = ctx.createLinearGradient(
+      0,
+      dest.y,
+      0,
+      dest.y + dest.height
+    );
+    vertical.addColorStop(0, "transparent");
+    vertical.addColorStop(feather, "black");
+    vertical.addColorStop(1 - feather * 1.3, "black");
+    vertical.addColorStop(1, "transparent");
+    ctx.fillStyle = vertical;
+    ctx.fillRect(dest.x, dest.y, dest.width, dest.height);
+  }
+
   // Work at a small scale for the soft background. The face and figure above
   // are always sampled from the decoded CG at the canvas's full resolution.
   const wash = document.createElement("canvas");

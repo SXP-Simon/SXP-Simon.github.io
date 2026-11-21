@@ -54,6 +54,7 @@ function makeAmbience(context: AudioContext) {
 }
 
 class NightBroadcast extends HTMLElement {
+  private verseTimer?: number;
   private revision = 0;
   private index = 0;
   private line = 0;
@@ -92,7 +93,7 @@ class NightBroadcast extends HTMLElement {
         } else if (event.key === "ArrowLeft" && this.line > 0) {
           event.preventDefault();
           this.line--;
-          this.renderLine();
+          this.renderLine(true);
         }
       },
       { signal }
@@ -100,7 +101,14 @@ class NightBroadcast extends HTMLElement {
     matchMedia("(prefers-reduced-motion: reduce)").addEventListener(
       "change",
       () => {
-        if (this.reduced) this.resetMotion();
+        if (this.reduced) {
+          this.resetMotion();
+          if (
+            this.reading &&
+            this.element("stage").hasAttribute("data-sunflower")
+          )
+            this.renderLine(true);
+        }
       },
       { signal }
     );
@@ -116,6 +124,7 @@ class NightBroadcast extends HTMLElement {
 
   private resetMotion() {
     this.reveal?.revert();
+    window.clearTimeout(this.verseTimer);
   }
 
   private revealTitle() {
@@ -161,7 +170,7 @@ class NightBroadcast extends HTMLElement {
     else if ("nextLine" in control) this.advance();
     else if ("back" in control && this.line > 0) {
       this.line--;
-      this.renderLine();
+      this.renderLine(true);
     } else if ("audio" in control) void this.toggleAudio();
   };
 
@@ -208,6 +217,7 @@ class NightBroadcast extends HTMLElement {
 
   private leaveStory(index = this.index) {
     this.reading = false;
+    this.element("stage").removeAttribute("data-sunflower");
     this.element("stage").removeAttribute("data-reading");
     this.element("story").hidden = true;
     this.element("reading-controls").hidden = true;
@@ -226,7 +236,8 @@ class NightBroadcast extends HTMLElement {
     if (revision === this.revision) revealText();
   }
 
-  private renderLine() {
+  private renderLine(settled = false) {
+    this.resetMotion();
     const scene = scenes[this.index];
     const passage = scene.lines[this.line];
     this.element<HTMLButtonElement>("back").disabled = this.line === 0;
@@ -236,10 +247,36 @@ class NightBroadcast extends HTMLElement {
         : this.index === scenes.length - 1
           ? "回到开场"
           : "换一个视角";
-    void this.presentFrame(passage.frame, () => {
+    const verse = passage.verse;
+    const turn = verse?.turn;
+    const hold = turn && !settled && !this.reduced;
+    const story = this.element("story");
+    this.element("stage").toggleAttribute("data-sunflower", !!verse);
+    void this.presentFrame(turn && !hold ? turn.frame : passage.frame, () => {
       this.element("speaker").textContent = passage.speaker ?? "";
       this.element("speaker").hidden = !passage.speaker;
-      this.element("line").textContent = passage.text;
+      const line = this.element("line");
+      if (verse) {
+        story.dataset.placement = verse.placement;
+        const phrases = verse.phrases.map((text, i) => {
+          const phrase = document.createElement("span");
+          phrase.textContent = text;
+          phrase.toggleAttribute("data-awaiting", !!hold && i >= turn.after);
+          return phrase;
+        });
+        line.replaceChildren(...phrases);
+        if (hold) {
+          this.verseTimer = window.setTimeout(() => {
+            void this.presentFrame(turn.frame, () => {
+              for (const phrase of phrases)
+                phrase.removeAttribute("data-awaiting");
+            });
+          }, turn.pause);
+        }
+        return;
+      }
+      delete story.dataset.placement;
+      line.textContent = passage.text;
       if (!this.reduced) {
         this.reveal?.revert();
         this.reveal = gsap.fromTo(

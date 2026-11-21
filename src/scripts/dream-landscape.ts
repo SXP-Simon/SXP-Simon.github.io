@@ -155,6 +155,7 @@ export class DreamLandscape extends HTMLElement {
     const key = [
       plate.dataset.frame,
       this.parentElement?.hasAttribute("data-reading"),
+      this.parentElement?.hasAttribute("data-sunflower"),
       img.currentSrc,
       this.clientWidth,
       this.clientHeight,
