@@ -18,80 +18,43 @@ const backUrl = config.features.showBackButton
 <main data-backUrl={backUrl} id="main-content" class="app-layout station-main">
   <header class="section-heading">
     <h1>{pageTitle}</h1>
-    <div class="dial" aria-hidden="true"><i></i></div>
   </header>
   <div class={className}><slot /></div>
 </main>
 
 <style>
   .station-main {
+    max-width: 74rem;
+    padding-inline: clamp(1rem, 4vw, 3rem);
     padding-bottom: clamp(3.5rem, 8vw, 6rem);
   }
-  .section-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    position: relative;
-    border-bottom: 1px solid var(--border);
-    padding: clamp(2.6rem, 7vw, 5rem) 0 clamp(1.5rem, 3.5vw, 2.65rem);
-    margin-bottom: 1.5rem;
+  .section-heading,
+  .station-main > div {
+    max-width: min(60%, 42rem);
   }
-  .section-heading::after {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 2.8rem;
-    height: 2px;
-    background: var(--accent);
+  .section-heading {
+    padding-block: clamp(3.4rem, 8vh, 7rem) clamp(1.5rem, 4vh, 3rem);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.3rem;
   }
   h1 {
-    min-width: 0;
-    font: 400 clamp(2.75rem, 7vw, 4.5rem)/1.18
-      var(--station-display, var(--station-serif));
-    letter-spacing: 0.025em;
+    font: 400 clamp(2.9rem, 5.4vw, 4.8rem)/1.2 var(--station-display);
+    letter-spacing: 0.09em;
     overflow-wrap: anywhere;
   }
-  .dial {
-    flex: 0 0 auto;
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: clamp(4.5rem, 12vw, 8rem);
-    aspect-ratio: 1.6;
-    color: var(--accent);
-    overflow: hidden;
-  }
-  .dial i {
-    width: 61%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: linear-gradient(to bottom, var(--sky-glow), var(--accent));
-    mask: linear-gradient(
-      to bottom,
-      #000 48%,
-      transparent 48% 51%,
-      #000 51% 58%,
-      transparent 58% 62%,
-      #000 62% 68%,
-      transparent 68% 74%,
-      #000 74% 80%,
-      transparent 80% 87%,
-      #000 87% 91%,
-      transparent 91%
-    );
-  }
-  .dial::before,
-  .dial::after {
-    content: "";
-    position: absolute;
-    inset: 52% 0 auto;
-    border-top: 1px solid color-mix(in srgb, currentColor 42%, transparent);
-  }
-  .dial::after {
-    inset: 59% 20% auto 10%;
-    opacity: 0.5;
+  @media (max-width: 55rem) {
+    .section-heading,
+    .station-main > div {
+      max-width: none;
+    }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      min-height: clamp(10rem, 26vw, 14rem);
+    }
+    h1 {
+      max-width: 78%;
+    }
   }
 </style>
 

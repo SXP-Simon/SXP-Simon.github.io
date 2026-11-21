@@ -26,16 +26,14 @@ const locale = Astro.currentLocale ?? config.site.lang;
   .subject {
     display: inline-flex;
     align-items: baseline;
-    border: 1px solid var(--border);
-    padding: 0.43rem 0.7rem;
-    font-size: 0.86rem;
-    border-radius: 0.15rem;
+    border-bottom: 1px solid var(--border);
+    padding: 0.48rem 0.25rem;
+    font: 400 1rem/1.5 var(--station-serif);
   }
   .subject:hover,
   .subject:focus-visible {
     border-color: var(--accent);
     color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 6%, transparent);
   }
   .sm {
     font-size: 0.75rem;

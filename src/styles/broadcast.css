@@ -18,7 +18,7 @@
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   display: block;
   min-height: 100svh;
-  background: var(--ink);
+  background: transparent;
   color: var(--paper);
   font:
     400 1rem/1.6 "Segoe UI",
