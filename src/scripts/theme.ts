@@ -24,7 +24,7 @@ function reflect(): void {
   const root = document.firstElementChild;
   root?.setAttribute("data-theme", themeValue);
   root?.classList.toggle("dark", themeValue === DARK);
-  document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
+  document.querySelector("#theme-btn")?.setAttribute("aria-pressed", String(themeValue === DARK));
 
   // Fill <meta name="theme-color"> with the computed background colour so
   // Android's browser chrome matches the page background.
@@ -73,6 +73,7 @@ document.addEventListener("astro:before-swap", event => {
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", ({ matches }) => {
+    if (localStorage.getItem(THEME_KEY)) return;
     themeValue = matches ? DARK : LIGHT;
-    persist();
+    reflect();
   });

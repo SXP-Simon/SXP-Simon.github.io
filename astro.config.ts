@@ -67,13 +67,15 @@ export default defineConfig({
   },
   fonts: [
     {
-      name: "Google Sans Code",
-      cssVariable: "--font-google-sans-code",
-      provider: fontProviders.google(),
-      fallbacks: ["monospace"],
-      weights: [300, 400, 500, 600, 700],
-      styles: ["normal", "italic"],
-      formats: ["woff", "ttf"],
+      name: "Noto Serif SC",
+      cssVariable: "--font-og-serif",
+      provider: fontProviders.local(),
+      options: {
+        variants: [
+          { src: ["./src/assets/fonts/NotoSerifSC-400.woff"], weight: 400, style: "normal" },
+          { src: ["./src/assets/fonts/NotoSerifSC-700.woff"], weight: 700, style: "normal" },
+        ],
+      },
     },
   ],
   env: {

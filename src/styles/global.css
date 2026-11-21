@@ -6,6 +6,18 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+@font-face {
+  font-family: "Station Lettering";
+  src: url("../assets/fonts/station-lettering.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --station-display: "Station Lettering", "LXGW WenKai", var(--station-serif);
+}
+
 @layer base {
   html,
   body {
@@ -30,11 +42,11 @@
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-4xl;
 }
 
 @utility app-layout {
-  @apply max-w-app mx-auto w-full px-4;
+  @apply max-w-app mx-auto w-full px-5 sm:px-8;
 }
 
 @utility active-nav {
@@ -42,5 +54,5 @@
 }
 
 :target {
-  scroll-margin-block: 1rem;
+  scroll-margin-block: 6rem;
 }
