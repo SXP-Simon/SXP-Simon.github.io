@@ -55,6 +55,8 @@ function makeAmbience(context: AudioContext) {
 
 class NightBroadcast extends HTMLElement {
   private verseTimer?: number;
+  private waitingControl?: HTMLElement;
+  private lastStep = -Infinity;
   private revision = 0;
   private index = 0;
   private line = 0;
@@ -77,6 +79,14 @@ class NightBroadcast extends HTMLElement {
     this.addEventListener(
       "keydown",
       event => {
+        if (
+          event.repeat &&
+          ["Enter", " ", "ArrowLeft", "ArrowRight"].includes(event.key) &&
+          this.element("stage").contains(event.target as Node)
+        ) {
+          event.preventDefault();
+          return;
+        }
         if (!this.reading) return;
         if (event.key === "Escape") this.leaveStory();
         if (
@@ -89,11 +99,10 @@ class NightBroadcast extends HTMLElement {
           return;
         if (event.key === "ArrowRight") {
           event.preventDefault();
-          this.advance();
+          this.step(1);
         } else if (event.key === "ArrowLeft" && this.line > 0) {
           event.preventDefault();
-          this.line--;
-          this.renderLine(true);
+          this.step(-1);
         }
       },
       { signal }
@@ -117,6 +126,7 @@ class NightBroadcast extends HTMLElement {
 
   disconnectedCallback() {
     this.revision++;
+    this.setWaiting();
     this.listener?.abort();
     this.resetMotion();
     this.stopAudio();
@@ -154,9 +164,9 @@ class NightBroadcast extends HTMLElement {
     );
     if (!button || !this.contains(button)) return;
     const control = button.dataset;
-    if ("chapter" in control) this.tune(Number(control.chapter));
+    if ("chapter" in control) this.selectChapter(Number(control.chapter));
     else if ("tune" in control) {
-      this.tune(Number(control.tune));
+      this.selectChapter(Number(control.tune));
       const target = this.reading
         ? this.element("next-line")
         : this.element("heading");
@@ -167,12 +177,15 @@ class NightBroadcast extends HTMLElement {
       });
     } else if ("read" in control) this.enterStory();
     else if ("close" in control) this.leaveStory();
-    else if ("nextLine" in control) this.advance();
-    else if ("back" in control && this.line > 0) {
-      this.line--;
-      this.renderLine(true);
-    } else if ("audio" in control) void this.toggleAudio();
+    else if ("nextLine" in control) this.step(1);
+    else if ("back" in control) this.step(-1);
+    else if ("audio" in control) void this.toggleAudio();
   };
+
+  private selectChapter(index: number) {
+    if (index !== this.index || (this.reading && this.line !== 0))
+      this.tune(index);
+  }
 
   private tune(rawIndex: number) {
     this.resetMotion();
@@ -204,10 +217,13 @@ class NightBroadcast extends HTMLElement {
     this.element("status").textContent =
       `第 ${this.index + 1} 幕，${scene.label}。`;
     this.retune?.(this.index);
+    const control = this.querySelector<HTMLElement>(
+      `[data-chapter="${this.index}"]`
+    )!;
     if (this.reading) {
-      this.renderLine();
+      this.renderLine(false, control);
     } else {
-      void this.presentFrame(scene.cover, () => {
+      void this.presentFrame(scene.cover, control, () => {
         this.element("title-top").textContent = scene.title[0];
         this.element("title-bottom").textContent = scene.title[1];
         if (!this.reduced) this.revealTitle();
@@ -238,17 +254,33 @@ class NightBroadcast extends HTMLElement {
     this.element("read").focus({ preventScroll: true });
   }
 
-  private async presentFrame(frame: FrameKey, revealText: () => void) {
-    const revision = ++this.revision;
-    await customElements.whenDefined("dream-landscape");
-    if (revision !== this.revision) return;
-    const landscape =
-      this.element("stage").querySelector<DreamLandscape>("dream-landscape")!;
-    await landscape.show(frame);
-    if (revision === this.revision) revealText();
+  private setWaiting(control?: HTMLElement) {
+    this.waitingControl?.removeAttribute("data-waiting");
+    this.waitingControl = control;
+    control?.setAttribute("data-waiting", "");
+    this.element("stage").setAttribute("aria-busy", String(!!control));
   }
 
-  private renderLine(settled = false) {
+  private async presentFrame(
+    frame: FrameKey,
+    control: HTMLElement,
+    revealText: (landscape: DreamLandscape) => void
+  ) {
+    const revision = ++this.revision;
+    this.setWaiting(control);
+    try {
+      await customElements.whenDefined("dream-landscape");
+      if (revision !== this.revision) return;
+      const landscape =
+        this.element("stage").querySelector<DreamLandscape>("dream-landscape")!;
+      await landscape.show(frame);
+      if (revision === this.revision) revealText(landscape);
+    } finally {
+      if (revision === this.revision) this.setWaiting();
+    }
+  }
+
+  private renderLine(settled = false, control = this.element("next-line")) {
     this.resetMotion();
     const scene = scenes[this.index];
     const passage = scene.lines[this.line];
@@ -264,7 +296,12 @@ class NightBroadcast extends HTMLElement {
     const hold = turn && !settled && !this.reduced;
     const story = this.element("story");
     this.element("stage").toggleAttribute("data-sunflower", !!verse);
-    void this.presentFrame(turn && !hold ? turn.frame : passage.frame, () => {
+    const frame = turn && !hold ? turn.frame : passage.frame;
+    const upcoming = scene.lines
+      .slice(this.line + 1)
+      .find(line => line.frame !== frame)?.frame;
+    void this.presentFrame(frame, control, landscape => {
+      landscape.warm(hold ? turn.frame : upcoming);
       story.dataset.frame = passage.frame;
       story.dataset.voice = passage.speaker ?? "";
       this.element("speaker").textContent = passage.speaker ?? "";
@@ -281,10 +318,15 @@ class NightBroadcast extends HTMLElement {
         line.replaceChildren(...phrases);
         if (hold) {
           this.verseTimer = window.setTimeout(() => {
-            void this.presentFrame(turn.frame, () => {
-              for (const phrase of phrases)
-                phrase.removeAttribute("data-awaiting");
-            });
+            void this.presentFrame(
+              turn.frame,
+              this.element("next-line"),
+              landscape => {
+                landscape.warm(upcoming);
+                for (const phrase of phrases)
+                  phrase.removeAttribute("data-awaiting");
+              }
+            );
           }, turn.pause);
         }
         return;
@@ -307,7 +349,30 @@ class NightBroadcast extends HTMLElement {
     });
   }
 
-  private advance() {
+  private step(direction: -1 | 1) {
+    const now = performance.now();
+    if (!this.reading || this.waitingControl || now - this.lastStep < 240)
+      return;
+    if (direction === -1 && this.line === 0) return;
+    this.lastStep = now;
+    const button = this.element(direction === 1 ? "next-line" : "back");
+    if (!this.reduced) {
+      button
+        .querySelector("svg")
+        ?.animate(
+          [
+            { transform: "translateX(0)" },
+            { transform: `translateX(${direction * 4}px)` },
+            { transform: "translateX(0)" },
+          ],
+          { duration: 220, easing: "ease-out" }
+        );
+    }
+    if (direction === -1) {
+      this.line--;
+      this.renderLine(true, button);
+      return;
+    }
     if (this.line < scenes[this.index].lines.length - 1) {
       this.line++;
       this.renderLine();
