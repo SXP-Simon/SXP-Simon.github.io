@@ -1,0 +1,180 @@
+---
+import { frames, type FrameKey } from "../data/frames";
+
+interface Props {
+  frame: FrameKey;
+  small?: boolean;
+}
+
+const { frame, small = false } = Astro.props;
+const art = frames[frame];
+---
+
+<dream-landscape
+  data-frame={frame}
+  data-small={small ? "" : undefined}
+  aria-hidden={small ? "true" : undefined}
+>
+  {
+    small ? (
+      <img
+        class="dream-thumb"
+        src={art.thumb}
+        width="480"
+        height="300"
+        loading="lazy"
+        decoding="async"
+        alt=""
+      />
+    ) : (
+      <div
+        class="dream-plate"
+        data-frame={frame}
+        data-portrait={art.portrait ? "" : undefined}
+        style={{
+          "--art-tone": art.tone,
+          "--art-x": art.x + "%",
+          "--art-y": art.y + "%",
+          "--art-wash": "url(" + JSON.stringify(art.thumb) + ")",
+        }}
+      >
+        <picture class="dream-focus">
+          <source media="(max-width: 700px)" srcset={art.mobile} />
+          <img
+            src={art.full}
+            alt={art.alt}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+      </div>
+    )
+  }
+</dream-landscape>
+
+<script>
+  import "../scripts/dream-landscape";
+</script>
+
+<style>
+  dream-landscape {
+    position: absolute;
+    inset: 0;
+    display: block;
+    isolation: isolate;
+    overflow: hidden;
+    pointer-events: none;
+    container-type: size;
+    background: #302c38;
+  }
+  .dream-thumb,
+  .dream-focus img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .dream-plate {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--art-tone);
+  }
+  /* The wash uses the same illustration as the sharp field, including the
+     local colour behind its feathered edges. */
+  .dream-plate::before {
+    content: "";
+    position: absolute;
+    inset: -9%;
+    background: var(--art-tone) var(--art-wash) center / cover no-repeat;
+    filter: blur(clamp(16px, 2.2vw, 34px)) saturate(0.79) brightness(0.76);
+  }
+  .dream-plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      #18162780 0%,
+      #211a3029 31%,
+      transparent 61%
+    );
+  }
+  .dream-focus {
+    display: block;
+    position: absolute;
+    inset-block: 0;
+    right: 0;
+    width: min(83%, 196cqh);
+    mask-image: linear-gradient(90deg, transparent, #000 18%, #000 100%);
+  }
+  .dream-focus img {
+    object-position: var(--art-x) var(--art-y);
+  }
+  .dream-plate[data-portrait] .dream-focus {
+    right: 2.5%;
+    width: min(68%, 127cqh);
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 19%,
+      #000 90%,
+      transparent
+    );
+  }
+  .dream-plate[data-frame="two-windows"] .dream-focus {
+    width: min(67%, 92cqh);
+    right: 5%;
+  }
+  .dream-plate[data-frame="blue-sky"] img,
+  .dream-plate[data-frame="at-sunset"] img {
+    object-position: var(--art-x) 12%;
+  }
+  @media (max-width: 700px) {
+    .dream-plate::before {
+      filter: blur(15px) saturate(0.86) brightness(0.81);
+    }
+    .dream-plate .dream-focus,
+    .dream-plate[data-portrait] .dream-focus,
+    .dream-plate[data-frame="two-windows"] .dream-focus {
+      right: -4%;
+      width: 105%;
+      mask-image: linear-gradient(90deg, transparent, #000 13%, #000 100%);
+    }
+    .dream-plate::after {
+      background: linear-gradient(
+        90deg,
+        #1e142757,
+        #211a3014 55%,
+        transparent 85%
+      );
+    }
+    .dream-plate[data-frame="blue-sky"] img,
+    .dream-plate[data-frame="at-sunset"] img {
+      object-position: var(--art-x) var(--art-y);
+    }
+    .dream-plate[data-frame="sunflowers"] .dream-focus {
+      right: -28%;
+      width: 123%;
+    }
+    .dream-plate[data-frame="sunflowers"] img {
+      object-position: var(--art-x) 100%;
+    }
+  }
+  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .dream-plate::before {
+      transform: translate(var(--art-dx, 0px), var(--art-dy, 0px));
+      transition: transform 460ms ease-out;
+    }
+    .dream-focus img {
+      transform: scale(1.018)
+        translate(
+          calc(var(--art-dx, 0px) * 2.5),
+          calc(var(--art-dy, 0px) * 2.5)
+        );
+      transition: transform 460ms ease-out;
+    }
+  }
+</style>

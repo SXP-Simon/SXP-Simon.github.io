@@ -1,143 +1,194 @@
 ---
 import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import { Icon } from "astro-icon/components";
 import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
-import Card from "@/components/Card.astro";
-import LinkButton from "@/components/LinkButton.astro";
+import AuthorBrand from "@/components/AuthorBrand.astro";
+import DreamLandscape from "@/components/DreamLandscape.astro";
+import { scenes } from "@/data/broadcast";
 import { getSortedPosts } from "@/utils/getSortedPosts";
-import { useTranslations } from "@/i18n";
+import { getPostUrl } from "@/utils/getPostPaths";
 import config from "@/config";
-
-const { socials, posts: postsConfig } = config;
+import "@/styles/broadcast.css";
 
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
-
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const homePath = getRelativeLocaleUrl(locale, "");
+const url = (path: string) => getRelativeLocaleUrl(locale, path);
+const posts = getSortedPosts(await getCollection("posts")).slice(
+  0,
+  config.posts.perIndex
+);
+const first = scenes[0];
 ---
 
-<Layout>
-  <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout my-1"
-  >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <div class="flex items-center gap-3">
-        <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-          你好，我是 Helian
-        </h1>
-        <a
-          target="_blank"
-          href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-          class="inline-block"
-          aria-label="RSS Feed"
-          title="RSS Feed"
-        >
-          <IconRss
-            width={20}
-            height={20}
-            class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-          />
-          <span class="sr-only">RSS Feed</span>
-        </a>
+<Layout
+  description="Helian 的夜間放送。由《素晴日》相关的图像与文字编排而成的五幕视觉叙事。"
+>
+  <night-broadcast class="broadcast">
+    <a class="skip-broadcast" href="#main-content">跳到正文</a>
+    <header class="station-header">
+      <div class="station-shell masthead">
+        <AuthorBrand />
+        <nav class="station-nav" aria-label="主导航">
+          <a href={url("posts")}>文章</a>
+          {config.features.showArchives && <a href={url("archives")}>归档</a>}
+          <a href={url("about")}>关于</a>
+        </nav>
+        <div class="station-tools">
+          {
+            config.features.search && (
+              <a
+                class="station-search"
+                href={url("search")}
+                aria-label="搜索文章"
+                title="搜索文章"
+              >
+                <Icon name="lucide:search" size={17} />
+              </a>
+            )
+          }
+          <button
+            class="audio-toggle"
+            data-audio
+            type="button"
+            aria-pressed="false"
+            aria-label="开启环境音"
+            title="开启环境音"
+          >
+            <Icon name="lucide:volume-x" size={18} class="audio-off" />
+            <Icon name="lucide:volume-2" size={18} class="audio-on" />
+          </button>
+        </div>
       </div>
-
-      <p class="text-base sm:text-lg leading-relaxed">
-        欢迎来到我的个人博客。这里是我记录日常技术探索、思考见解与生活点滴的极简空间。
-      </p>
-      <p class="mt-2 text-foreground/80">
-        探索
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href={getRelativeLocaleUrl(locale, "posts")}
-        >
-          最新文章
-        </LinkButton>
-        或了解更多
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href={getRelativeLocaleUrl(locale, "about")}
-        >
-          关于我
-        </LinkButton>。
-      </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
+    </header>
+    <main id="main-content" tabindex="-1">
+      <section class="airscape" aria-label="互动叙事放送" data-stage>
+        <DreamLandscape frame={first.cover} />
+        <div class="airshade" aria-hidden="true"></div>
+        <div class="window-glint" data-glint aria-hidden="true"></div>
+        <div class="station-shell airframe">
+          <div class="aircopy" data-copy>
+            <h1 class="airtitle" tabindex="-1" data-heading>
+              <span data-title-top>{first.title[0]}</span><em data-title-bottom
+                >{first.title[1]}</em
+              >
+            </h1>
+            <div class="air-actions">
+              <button type="button" class="listen-button" data-read
+                ><Icon name="lucide:play" size={14} />进入叙事</button
+              >
             </div>
-            <Socials />
           </div>
-        )
-      }
-    </section>
-
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.recentPosts}
-          </h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
-  </main>
-  <Footer />
+          <section class="voice-panel" data-story hidden aria-label="场景独白">
+            <span class="voice-speaker" data-speaker></span>
+            <p class="voice-line" data-line aria-live="polite"></p>
+          </section>
+          <div class="signal-footer">
+            <div class="voice-controls" data-reading-controls hidden>
+              <button
+                type="button"
+                class="close-reading"
+                data-close
+                aria-label="退出叙事"
+              >
+                <Icon name="lucide:corner-up-left" size={15} /><span>退出</span>
+              </button>
+              <button
+                type="button"
+                data-back
+                aria-label="上一句"
+                title="上一句"
+              >
+                <Icon name="lucide:arrow-left" size={17} />
+              </button>
+              <button type="button" class="voice-advance" data-next-line>
+                <span>下一句</span><Icon name="lucide:arrow-right" size={19} />
+              </button>
+            </div>
+            <nav class="scene-register" aria-label="切换场景">
+              {
+                scenes.map((scene, i) => (
+                  <button
+                    type="button"
+                    data-chapter={i}
+                    aria-pressed={i === 0}
+                    aria-label={`第${i + 1}幕，${scene.location}`}
+                    title={scene.location}
+                  >
+                    {["一", "二", "三", "四", "五"][i]}
+                  </button>
+                ))
+              }
+            </nav>
+          </div>
+        </div>
+      </section>
+      <section
+        class="station-shell scene-shelf"
+        id="scene-index"
+        aria-labelledby="scene-index-title"
+      >
+        <div class="shelf-heading">
+          <h2 id="scene-index-title">场景索引</h2>
+        </div>
+        <div class="scene-cards">
+          {
+            scenes.map((scene, i) => (
+              <button
+                type="button"
+                class="scene-card"
+                data-tune={i}
+                aria-pressed={i === 0}
+                aria-label={`切换至第 ${i + 1} 幕，${scene.location}`}
+              >
+                <span class="card-art">
+                  <DreamLandscape frame={scene.cover} small />
+                </span>
+                <span class="card-legend">
+                  <>
+                    <strong>{scene.location}</strong>
+                    <i aria-hidden="true">
+                      <Icon name="lucide:arrow-up-right" size={17} />
+                    </i>
+                  </>
+                </span>
+              </button>
+            ))
+          }
+        </div>
+      </section>
+      <section class="station-shell journal" aria-labelledby="journal-title">
+        <div class="shelf-heading">
+          <h2 id="journal-title">最近手记</h2><a
+            class="journal-index"
+            href={url("posts")}
+            >全部文章 <Icon name="lucide:arrow-up-right" size={14} /></a
+          >
+        </div>
+        <ul class="notes">
+          {
+            posts.map(({ id, filePath, data }) => (
+              <li>
+                <a href={getPostUrl(id, filePath, locale)}>
+                  <>
+                    <span>{data.title}</span>
+                    <Icon name="lucide:arrow-up-right" size={17} />
+                  </>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </main>
+    <footer class="station-shell signoff">
+      <span>© {new Date().getFullYear()} Helian</span><a href={url("rss.xml")}
+        >RSS <Icon name="lucide:rss" size={13} /></a
+      >
+    </footer>
+    <div class="sr-only" role="status" data-status></div>
+  </night-broadcast>
 </Layout>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset;
-    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-    if (indexLayout?.layout) {
-      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
-    }
-  });
+  import "@/scripts/broadcast";
 </script>
