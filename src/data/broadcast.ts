@@ -119,34 +119,33 @@ const sceneDefinitions: Scene[] = [
     lines: [
       {
         frame: "dusk-roof",
-        text: "矗立在天台，薄烟渺渺，裙摆轻扬。沉重地吸入，轻盈地呼出。",
+        text: "矗立在天台，薄烟渺渺，裙摆轻扬。\n沉重地吸入，轻盈地呼出。",
       },
-      { frame: "dusk-roof", text: "我是谁" },
+      { frame: "dusk-roof", text: "我是谁？" },
       {
         frame: "blue-sky",
-        text: "漫天流云飘散，消散的可是皎洁月光。我是摘去帽尖白羽的西哈诺。",
+        text: "漫天流云飘散，消散的可是皎洁月光。\n我是摘去帽尖白羽的西哈诺。",
       },
       {
         frame: "blue-sky",
-        text: "焦灼日光透过泪眸，泛出肥皂泡般的斑斓。诗人、剑客、空气动力学家？而我，太过沉重。",
+        text: "焦灼日光透过泪眸，泛出肥皂泡般的斑斓。",
       },
       {
-        frame: "edge-of-sight",
-        text: "我们的情人不过是随便借个名字用\n幻想吹出来的肥泡……",
+        frame: "blue-sky",
+        text: "诗人、剑客、空气动力学家？\n而我，太过沉重。",
       },
+      // The letter passes from Cyrano to Christian in Act II, scene X.
       { frame: "edge-of-sight", text: "把信拿去吧——你可以使假戏成真。" },
       {
         frame: "edge-of-sight",
-        text: "我本来是无病呻吟，漫无目的地吐露爱情……. 现在这些漂泊不定的鸟几有地方栖息了，你可以从信里看出来——",
+        text: "拿去吧！由于不是出自真心，\n话就说得格外动听！",
       },
-      {
-        frame: "edge-of-sight",
-        text: "拿去吧！由于不是出自真心，话\n就说得格外动听！",
-      },
+      // Keep the final words of Act V on the same still as the preceding breath.
       {
         frame: "cyrano-piano",
-        text: "桂枝和玫瑰都被你们拔光了！拔吧！但有一样东西，你们只能任凭我今晚带进天堂，我一行礼就把蔚蓝的门槛打扫干净，我有一样毫无皱纹毫无斑点的东西，你们只好任凭我带走，这就是我冠上的羽毛。",
+        text: "我有一样毫无皱纹毫无斑点的东西，\n你们只好任凭我带走，",
       },
+      { frame: "cyrano-piano", text: "这就是我冠上的羽毛。" },
     ],
   },
   {

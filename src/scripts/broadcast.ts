@@ -179,6 +179,10 @@ class NightBroadcast extends HTMLElement {
     this.index = (rawIndex + scenes.length) % scenes.length;
     this.line = 0;
     const scene = scenes[this.index];
+    this.element("stage").toggleAttribute(
+      "data-cyrano",
+      scene.location === "西哈诺"
+    );
     this.querySelectorAll<HTMLButtonElement>(
       "[data-tune], [data-chapter]"
     ).forEach(button =>

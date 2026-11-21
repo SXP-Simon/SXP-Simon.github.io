@@ -586,6 +586,89 @@
     text-align: center;
   }
 }
+.airscape[data-cyrano] {
+  --cyrano-edges: linear-gradient(
+    180deg,
+    #151525ac,
+    transparent 19%,
+    transparent 78%,
+    #141323df
+  );
+}
+.airscape[data-cyrano] .airshade {
+  background:
+    var(--cyrano-edges),
+    linear-gradient(90deg, transparent 40%, #211a3475 74%, #1e152d8c);
+}
+.airscape[data-cyrano]:has(> [data-frame="blue-sky"]) .airshade {
+  background:
+    var(--cyrano-edges), linear-gradient(90deg, #122439a3, transparent 56%);
+}
+.airscape[data-cyrano]:has(> [data-frame="edge-of-sight"]) .airshade {
+  background:
+    var(--cyrano-edges),
+    linear-gradient(90deg, #e7eef0 7%, #e7eef0ec 30%, transparent 64%);
+}
+.voice-panel[data-frame="edge-of-sight"] .voice-line {
+  color: #253944;
+  text-shadow: none;
+}
+.airscape[data-cyrano]:has(> [data-frame="cyrano-piano"]) .airshade {
+  background:
+    var(--cyrano-edges), linear-gradient(90deg, #141729bd, transparent 70%);
+}
+@media (min-width: 701px) {
+  .airscape[data-cyrano] :is(.aircopy, .voice-panel) {
+    position: absolute;
+    bottom: 22%;
+    left: 3%;
+    width: 45%;
+  }
+  .airscape[data-cyrano] :is(.aircopy, .voice-panel[data-frame="dusk-roof"]) {
+    left: auto;
+    right: 2%;
+    text-align: end;
+  }
+  .airscape[data-cyrano] .air-actions {
+    justify-content: flex-end;
+  }
+  .airscape[data-cyrano] .voice-panel[data-frame="blue-sky"] {
+    top: 23%;
+    bottom: auto;
+    width: 39%;
+  }
+  .airscape[data-cyrano] .voice-panel[data-frame="cyrano-piano"] {
+    left: 8%;
+    bottom: 28%;
+  }
+}
+@media (max-width: 700px) {
+  .airscape[data-cyrano] :is(.voice-panel, .aircopy) {
+    position: absolute;
+    bottom: max(70px, 17%);
+    left: 2%;
+    width: 96%;
+    padding: 0;
+  }
+  .airscape[data-cyrano] .airshade {
+    background:
+      var(--cyrano-edges),
+      linear-gradient(0deg, #161526 7%, #181827bf 28%, transparent 52%);
+  }
+  .airscape[data-cyrano]:has(> [data-frame="edge-of-sight"]) .airshade {
+    background:
+      var(--cyrano-edges),
+      linear-gradient(0deg, #e7eef0 8%, #e7eef0ef 32%, transparent 62%);
+  }
+  .airscape[data-cyrano]:has(
+      > :is([data-frame="blue-sky"], [data-frame="cyrano-piano"])
+    )
+    .airshade {
+    background:
+      var(--cyrano-edges),
+      linear-gradient(0deg, #121c30 9%, #142236d9 32%, transparent 57%);
+  }
+}
 /* Text placements within the sunflower scene. */
 .airscape[data-sunflower] {
   --verse-ink: #fff3e1;

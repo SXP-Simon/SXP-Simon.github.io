@@ -288,6 +288,43 @@ const art = frames[frame];
       top: 33%;
     }
   }
+  @media (min-width: 701px) {
+    :global(.airscape[data-cyrano]) .dream-plate[data-frame] .dream-focus {
+      inset: 50% 50% auto auto;
+      width: min(100cqw, calc(100cqh * var(--art-ratio)));
+      height: auto;
+      aspect-ratio: var(--art-ratio);
+      transform: translate(50%, -50%);
+      --fade-in: 3%;
+      --fade-out: 98%;
+      --end-alpha: 0;
+    }
+    :global(.airscape[data-cyrano])
+      .dream-plate[data-frame="edge-of-sight"]
+      .dream-focus,
+    :global(.airscape[data-cyrano])
+      .dream-plate[data-frame="cyrano-piano"]
+      .dream-focus {
+      right: 7%;
+      transform: translateY(-50%);
+    }
+  }
+  @media (max-width: 700px) {
+    :global(.airscape[data-cyrano]) .dream-plate[data-frame] .dream-focus,
+    :global(.airscape[data-cyrano][data-reading])
+      .dream-plate[data-frame]
+      .dream-focus {
+      inset: 40% 50% auto auto;
+      width: min(100cqw, calc(62cqh * var(--art-ratio)));
+      height: auto;
+      aspect-ratio: var(--art-ratio);
+      transform: translate(50%, -50%);
+      --fade-in: 1%;
+      --fade-out: 99%;
+      --end-alpha: 0;
+      --fade-block: 0.08;
+    }
+  }
   :global([data-sunflower]) .dream-plate[data-frame] .dream-focus {
     inset: 0 var(--shot-right) auto auto;
     width: min(100cqw, var(--shot-width));
